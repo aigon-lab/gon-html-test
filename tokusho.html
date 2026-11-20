@@ -1,116 +1,180 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>特定商取引法に基づく表記｜Esprit Artisan</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --red:#c0392b; --red-d:#96281b;
-  --black:#1a1a1a; --mid:#555;
-  --light:#f5f3f0; --white:#ffffff;
-  --border2:rgba(0,0,0,0.08);
-  --font-d:"Cormorant Garamond",serif; --font-b:"Noto Sans JP",sans-serif;
-  --radius:12px; --max:800px;
-}
-*{box-sizing:border-box} html,body{margin:0;padding:0;background:var(--white);color:var(--black);font-family:var(--font-b);font-size:16px;line-height:1.7}
-
-/* NAV */
-.nav-wrap{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--border2);box-shadow:0 2px 12px rgba(0,0,0,0.06)}
-.nav{max-width:1100px;margin:auto;display:flex;align-items:center;justify-content:space-between;padding:14px 24px}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
-.brand-mark{width:36px;height:36px;border-radius:6px;background:linear-gradient(135deg,var(--red-d),var(--red));display:grid;place-items:center;font-family:var(--font-d);font-size:17px;color:#fff;font-weight:700}
-.brand-name{font-family:var(--font-d);font-size:22px;letter-spacing:.1em;color:var(--black);font-style:italic}
-.nav-back{color:var(--mid);text-decoration:none;font-size:13px;padding:7px 12px;border-radius:8px;transition:background .18s}
-.nav-back:hover{background:var(--light)}
-
-/* CONTENT */
-.page-wrap{max-width:var(--max);margin:60px auto;padding:0 24px 80px}
-.page-title{font-family:var(--font-d);font-size:clamp(1.8rem,1.4rem+2vw,2.8rem);color:var(--black);margin:0 0 48px;font-weight:600}
-table{width:100%;border-collapse:collapse;font-size:.88rem}
-th,td{padding:16px 18px;border-bottom:1px solid var(--border2);vertical-align:top;line-height:1.8}
-th{width:200px;color:var(--mid);font-weight:500;background:var(--light);white-space:nowrap}
-td{color:var(--black)}
-@media(max-width:560px){th{width:120px;font-size:.78rem}td{font-size:.82rem}}
-
-/* FOOTER */
-footer{background:#1a1a1a;color:#ccc;padding:28px 24px;text-align:center;font-size:.74rem}
-footer a{color:#888;text-decoration:none}
-footer a:hover{color:#fff}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#050914">
+  <title>特定商取引法に基づく表記｜AIGON.LAB</title>
+  <link rel="icon" href="AIGON_LAB_favicon_gold.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="custom.css">
+  <style>
+    body {
+      background: #f6f3ec;
+      color: #191b1f;
+    }
+    .legal-wrap {
+      max-width: 860px;
+      margin: 48px auto 72px auto;
+      padding: 0 20px;
+    }
+    .legal-card {
+      background: #ffffff;
+      border-top: 4px solid #8c6d2e;
+      border-radius: 12px;
+      padding: 36px 28px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+    }
+    .legal-eyebrow {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #8c6d2e;
+      margin: 0 0 6px 0;
+    }
+    .legal-card h1 {
+      font-size: 1.65rem;
+      margin: 0 0 24px 0;
+      color: #191b1f;
+    }
+    .legal-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      line-height: 1.75;
+    }
+    .legal-table th,
+    .legal-table td {
+      padding: 14px 12px;
+      border-bottom: 1px solid rgba(25, 27, 31, 0.12);
+      text-align: left;
+      vertical-align: top;
+    }
+    .legal-table th {
+      width: 30%;
+      font-weight: 700;
+      color: #191b1f;
+      background: #faf8f3;
+    }
+    @media (max-width: 640px) {
+      .legal-table th,
+      .legal-table td {
+        display: block;
+        width: 100%;
+      }
+      .legal-table th {
+        padding-bottom: 6px;
+        border-bottom: none;
+      }
+      .legal-table td {
+        padding-top: 6px;
+      }
+    }
+    .back-home-wrap {
+      margin-top: 28px;
+      text-align: center;
+    }
+    .back-home-btn {
+      display: inline-block;
+      padding: 12px 28px;
+      background: #191b1f;
+      color: #f3d28b !important;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      text-decoration: none;
+      border: 1px solid #8c6d2e;
+    }
+  </style>
 </head>
 <body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">
+        <img class="brand-logo" src="AIGON_LAB_logo_gold.png" alt="AIGON.LAB" width="190" height="56" style="border-radius:6px;">
+      </a>
+      <a class="header-cta" href="index.html">トップページへ戻る</a>
+    </div>
+  </header>
 
-<div class="nav-wrap">
-  <nav class="nav">
-    <a class="brand" href="index.html">
-      <div class="brand-mark">E</div>
-      <span class="brand-name">Esprit Artisan</span>
-    </a>
-    <a class="nav-back" href="index.html">← トップへ戻る</a>
-  </nav>
-</div>
-
-<div class="page-wrap">
-  <h1 class="page-title">特定商取引法に基づく表記</h1>
-  <table>
-    <tr>
-      <th>販売業者名</th>
-      <td>【ここに屋号または氏名を記入】</td>
-    </tr>
-    <tr>
-      <th>運営責任者</th>
-      <td>【ここに氏名を記入】</td>
-    </tr>
-    <tr>
-      <th>所在地</th>
-      <td>神奈川県小田原市【ここに番地を記入】</td>
-    </tr>
-    <tr>
-      <th>電話番号</th>
-      <td>【ここに電話番号を記入】<br><small style="color:var(--mid)">※お問い合わせはLINEにて承っております。</small></td>
-    </tr>
-    <tr>
-      <th>メールアドレス</th>
-      <td>【ここにメールアドレスを記入】</td>
-    </tr>
-    <tr>
-      <th>サービス内容</th>
-      <td>ホームページ制作・管理代行サービス</td>
-    </tr>
-    <tr>
-      <th>販売価格</th>
-      <td>各サービスページに記載の価格（税込）</td>
-    </tr>
-    <tr>
-      <th>支払方法</th>
-      <td>銀行振込</td>
-    </tr>
-    <tr>
-      <th>支払時期</th>
-      <td>ご契約時に着手金50%、納品時に残金50%をお振込みください。</td>
-    </tr>
-    <tr>
-      <th>サービス提供時期</th>
-      <td>ご契約・着手金入金確認後、制作を開始します。納期はプランにより異なります（7日〜）。</td>
-    </tr>
-    <tr>
-      <th>キャンセル・返品</th>
-      <td>制作開始後のキャンセルはお受けできません。制作開始前のキャンセルについては、着手金の返金はいたしかねます。</td>
-    </tr>
-    <tr>
-      <th>特別条件</th>
-      <td>デジタルコンテンツのため、納品後の返品・返金はお受けできません。</td>
-    </tr>
-  </table>
-</div>
-
-<footer>
-  <p>© 2025 Esprit Artisan — <a href="index.html">トップページ</a> ｜ <a href="privacy.html">プライバシーポリシー</a></p>
-</footer>
-
+  <main class="legal-wrap">
+    <div class="legal-card">
+      <p class="legal-eyebrow">SPECIFIED COMMERCIAL TRANSACTIONS ACT</p>
+      <h1>特定商取引法に基づく表記</h1>
+      <table class="legal-table">
+        <tr>
+          <th>販売事業者名（屋号）</th>
+          <td>AIGON.LAB（アイゴン・ラボ）／ エスプリ・アルティザン</td>
+        </tr>
+        <tr>
+          <th>運営統括責任者</th>
+          <td>中川 昌則</td>
+        </tr>
+        <tr>
+          <th>所在地</th>
+          <td>〒250-0105 神奈川県南足柄市関本（※詳細な番地はご請求時に遅滞なく開示いたします）</td>
+        </tr>
+        <tr>
+          <th>電話番号</th>
+          <td>090-3988-9970（受付時間：9:00〜18:00／ご相談は予約制で承ります）</td>
+        </tr>
+        <tr>
+          <th>メールアドレス</th>
+          <td>akebono489@gmail.com</td>
+        </tr>
+        <tr>
+          <th>販売URL</th>
+          <td>https://toretamoo.com/tenjiCorp/</td>
+        </tr>
+        <tr>
+          <th>販売価格</th>
+          <td>
+            各サービス・プランページに記載の金額（すべて税込表示）<br>
+            ・QRコード名刺＋スマホ専用1枚サイト（会員様特別価格）：19,800円（通常29,800円〜39,800円）<br>
+            ・業種別オリジナル1枚サイト：39,800円〜99,800円<br>
+            ・本格ホームページ・独自機能構築：150,000円〜（個別お見積り）<br>
+            ・安心保守＋AI実践メンバーシップ（会員様特別価格）：月額 1,000円（通常月額 3,000円）
+          </td>
+        </tr>
+        <tr>
+          <th>商品代金以外の必要料金</th>
+          <td>
+            ・銀行振込の場合の振込手数料<br>
+            ・独自ドメインの取得・更新をご希望の場合の実費<br>
+            ・インターネット接続にかかる通信料（お客様負担）
+          </td>
+        </tr>
+        <tr>
+          <th>お支払い方法</th>
+          <td>クレジットカード決済（Stripe）、銀行振込</td>
+        </tr>
+        <tr>
+          <th>お支払い時期</th>
+          <td>
+            ・Web制作・単発プラン：お申し込み確定後、制作着手前（またはご請求書発行後7日以内）<br>
+            ・月額メンバーシップ：初回お申し込み時に決済され、以降は毎月同日に自動課金されます
+          </td>
+        </tr>
+        <tr>
+          <th>商品の引き渡し・サービス提供時期</th>
+          <td>
+            ・Web制作プラン：必要資料（写真・文章等）のご提出およびご入金確認後、通常7日〜14営業日以内に公開・納品いたします（規模により別途ご案内）。<br>
+            ・月額メンバーシップ：決済完了後、ただちに会員専用ルームおよびサポートをご利用いただけます。
+          </td>
+        </tr>
+        <tr>
+          <th>返品・キャンセル・解約について</th>
+          <td>
+            ・デジタルコンテンツおよびオーダーメイド制作の性質上、制作着手後および納品後の返品・返金はお受けいたしかねます。<br>
+            ・制作着手前のキャンセルにつきましては、お支払い済みの代金から振込手数料を差し引いた全額を返金いたします。<br>
+            ・月額メンバーシップはいつでも解約可能です。次回課金日の前日までにお申し出いただければ、翌月以降の請求は発生いたしません（日割りでの返金は行っておりません）。
+          </td>
+        </tr>
+      </table>
+      <div class="back-home-wrap">
+        <a class="back-home-btn" href="index.html">← AIGON.LAB トップページへ戻る</a>
+      </div>
+    </div>
+  </main>
 </body>
 </html>

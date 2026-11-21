@@ -55,7 +55,7 @@
       color: #ffffff;
     }
 
-    /* ヒーロー背景：corporate-reference.png の漆黒ディープネイビー×ブルー＆ゴールドをそのまま再現 */
+    /* ヒーロー背景 */
     .hero {
       background: #040812 !important;
       position: relative !important;
@@ -88,7 +88,7 @@
       text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
     }
 
-    /* 4マスの実績グリッドを左右均等＆文字を完全中央揃えにする */
+    /* 4マスの実績グリッド */
     .quick-info-grid {
       display: grid !important;
       grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
@@ -123,7 +123,7 @@
       text-align: center !important;
     }
 
-    /* 赤いアクセント線・赤文字をすべて上品なゴールド（#8c6d2e）に統一 */
+    /* ゴールドアクセント統一 */
     .eyebrow,
     .outcomes-title span,
     .outcome-grid article > span {
@@ -140,7 +140,7 @@
       background: #8c6d2e !important;
     }
 
-    /* 現場主義のAI活用セクション（巨大空白・画像消失を完全遮断） */
+    /* 現場主義のAI活用セクション */
     #ai-field-wrap {
       display: block !important;
       position: relative !important;
@@ -237,7 +237,7 @@
       color: #44474e !important;
     }
 
-    /* 料金カードのバッジ・価格・Stripeボタン枠をピタッと揃える */
+    /* 料金カード */
     .outcome-grid {
       gap: 20px !important;
     }
@@ -323,7 +323,7 @@
       opacity: 0.88;
     }
 
-    /* カテゴリー別制作実績カード（ライブプレビュー） */
+    /* カテゴリー別制作実績カード */
     .works-category {
       margin-top: 40px;
     }
@@ -422,6 +422,7 @@
       text-decoration: none;
       border: 1px solid #8c6d2e;
       transition: opacity 0.2s ease;
+      cursor: pointer;
     }
     .work-btn:hover {
       opacity: 0.88;
@@ -458,24 +459,42 @@
       opacity: 1 !important;
     }
 
-    /* Firebase活動日誌受け皿＋会員室・フェローチャットリンク枠 */
+    /* 活動日誌リアルタイム枠 */
     .firebase-feed-slot {
       margin-top: 22px;
       padding: 18px 20px;
       background: #ffffff;
-      border: 1px dashed #8c6d2e;
+      border: 1px solid #8c6d2e;
       border-radius: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
     }
-    .firebase-feed-slot p {
+    .journal-entry-card {
+      border-top: 1px solid rgba(25, 27, 31, 0.12);
+      padding: 12px 0;
+    }
+    .journal-entry-card:first-child {
+      border-top: none;
+      padding-top: 4px;
+    }
+    .journal-entry-card h4 {
+      margin: 0 0 4px 0;
+      font-size: 0.98rem;
+      color: #191b1f;
+    }
+    .journal-entry-card time {
+      display: block;
+      font-size: 0.75rem;
+      color: #8c6d2e;
+      margin-bottom: 4px;
+    }
+    .journal-entry-card p {
       margin: 0;
       font-size: 0.88rem;
       color: #333;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
     }
+
+    /* お問い合わせ・会員室 */
     .tel-box {
       margin-top: 18px;
       padding-top: 18px;
@@ -546,6 +565,7 @@
       color: #f3d28b !important;
     }
   </style>
+<style id="r2-small-fixes">button:disabled{opacity:.55;cursor:wait}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #f3d28b;outline-offset:3px} .card-grid>*{min-width:0} @media(max-width:420px){.card-grid{grid-template-columns:1fr}}</style>
 </head>
 <body>
   <header class="site-header" id="header">
@@ -637,7 +657,7 @@
               <div class="plan-step-title">04 / 安心保守 ＋ AI実践メンバーシップ使い放題</div>
               <div class="plan-price-note">通常価格 月額 3,000円 のところ</div>
               <h3>月額 1,000円<small>（税込・1日約33円）</small></h3>
-              <p>サイトの更新保守・検索点検に加え、改造・商用利用自由の「AI業務ツール倉庫」と、いつでも直接相談できる「フェローチャットリンク（会員直通窓口）」をご利用いただけます。</p>
+              <p>サイトの更新保守・検索点検に加え、「AI業務ツール倉庫」と、実務に使える会員向けAIプロンプト集をご利用いただけます。</p>
             </div>
             <div class="plan-action-slot" id="stripe-slot-member">
               <a class="plan-action-btn" href="#contact">メンバーシップを申し込む →</a>
@@ -1015,8 +1035,14 @@
         </div>
 
         <div class="firebase-feed-slot" id="firebase-post-area">
-          <p><strong>📝 現場のひとこと活動日誌（スマホ即時更新枠）</strong><br>日々の相談現場やAI検証メモをスマホから随時更新・公開しています。</p>
-          <a class="work-btn" style="width:auto;padding:9px 18px;" href="https://vien.espoir.jpn.com/category/news/" target="_blank" rel="noopener noreferrer">最新のお知らせ一覧 →</a>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+            <strong style="font-size:1rem; color:#191b1f;">📝 現場のひとこと活動日誌（最新5件）</strong>
+            <button type="button" id="reload-journals" class="work-btn" style="width:auto; padding:6px 14px; font-size:0.8rem;">最新の内容を取得</button>
+          </div>
+          <p id="journals-status" style="margin:0 0 8px 0; font-size:0.85rem; color:#8c6d2e;" role="status"></p>
+          <div id="journals-list">
+            <p style="margin:0; font-size:0.88rem; color:#333;">日々の相談現場やAI検証メモを随時更新・公開しています。</p>
+          </div>
         </div>
       </div>
     </section>
@@ -1027,36 +1053,34 @@
         <div>
           <p class="eyebrow">CONTACT &amp; MEMBER ROOM</p>
           <h2>お問い合わせ・会員室</h2>
-          <p><strong>ご相談は予約制で承ります。</strong><br>制作のご依頼、AI活用講座のご相談、会員様専用ルーム（AI道具箱・フェローチャットリンク）はこちらからアクセスいただけます。</p>
+          <p><strong>ご相談は予約制で承ります。</strong><br>制作のご依頼、AI活用講座のご相談、会員様専用ルーム（AIプロンプト集・AI業務ツール倉庫）はこちらからアクセスいただけます。</p>
 
-          <!-- ▼ 会員専用ルーム（パスワード認証＋AIプロンプト集＋ツール倉庫＋FCLボタン） ▼ -->
+          <!-- ▼ 会員専用ルーム（会員専用パスワード認証・閲覧＆コピー専用） ▼ -->
           <div class="member-room-box" id="member-room-slot">
             <div id="mr-lock-view">
               <h3>🔒 メンバーシップ会員様専用ルーム</h3>
-              <p>ご登録時にお送りした「合言葉（パスワード）」を入力すると、現場でそのまま使える厳選AIプロンプト集・AI業務ツール倉庫・フェローチャットリンク（FCL）が開きます。</p>
-              <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
-                <input type="password" id="mr-pass-input" placeholder="合言葉を入力" style="flex:1 1 160px; padding:10px 12px; border-radius:6px; border:1px solid #8c6d2e; background:#ffffff; color:#191b1f; font-size:0.95rem;">
-                <button type="button" id="mr-unlock-btn" class="member-room-btn" style="border:none; cursor:pointer; padding:10px 18px;">入室する</button>
-              </div>
-              <p id="mr-error-msg" style="color:#f87171; font-size:0.82rem; margin:8px 0 0 0; display:none;">合言葉が一致しません。最新の合言葉をご確認ください。</p>
+              <p>ご登録時にお送りした「会員の合言葉」を入力すると、現場でそのまま使える厳選AIプロンプト集・AI業務ツール倉庫をご利用いただけます。</p>
+              <form id="mr-login-form" style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
+                <input type="password" id="mr-pass-input" placeholder="会員の合言葉を入力" autocomplete="current-password" required style="flex:1 1 160px; padding:10px 12px; border-radius:6px; border:1px solid #8c6d2e; background:#ffffff; color:#191b1f; font-size:0.95rem;">
+                <button type="submit" id="mr-unlock-btn" class="member-room-btn" style="border:none; cursor:pointer; padding:10px 18px;">会員室に入る</button>
+              </form>
+              <p id="mr-error-msg" role="status" style="color:#f87171; font-size:0.82rem; margin:8px 0 0 0; display:none;"></p>
             </div>
 
             <div id="mr-unlocked-view" style="display:none;">
               <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:12px; border-bottom:1px solid rgba(243,210,139,0.3); padding-bottom:10px;">
-                <h3 style="margin:0;">🔓 会員認証済み｜AIGON.LAB 実践ルーム</h3>
-                <button type="button" id="mr-lock-btn" style="background:transparent; color:#cbd5e1; border:1px solid #64748b; border-radius:4px; padding:4px 10px; font-size:0.76rem; cursor:pointer;">ロックする</button>
+                <h3 style="margin:0;">🔓 会員入室済み｜AIGON.LAB 実践ルーム</h3>
+                <button type="button" id="mr-lock-btn" style="background:transparent; color:#cbd5e1; border:1px solid #64748b; border-radius:4px; padding:4px 10px; font-size:0.76rem; cursor:pointer;">会員室から退出</button>
               </div>
 
               <div class="member-room-links" style="margin-bottom:12px;">
-                <a class="member-room-btn" href="member.html">📂 会員専用ページ（一覧表示）を開く</a>
-                <a class="member-room-btn outline" href="https://toretamoo.com/apps/" target="_blank" rel="noopener noreferrer">🧰 AI業務ツール倉庫</a>
+                <a class="member-room-btn" href="member.html">📂 会員専用ページ（全プロンプト一覧）</a>
+                <a class="member-room-btn outline" href="member.html#tool-warehouse">🧰 AI業務ツール倉庫</a>
               </div>
 
-              <div style="margin-bottom:16px;">
-                <a class="member-room-btn outline" href="#contact" id="fcl-link-btn">💬 フェローチャットリンク（個別相談予約）</a>
-              </div>
+              <p style="font-size:0.82rem;color:#cbd5e1;">管理者が登録したプロンプト・ツールは、上の会員専用ページでご利用いただけます。</p>
 
-              <div style="font-size:0.86rem; font-weight:bold; color:#f3d28b; margin-bottom:8px;">📋 現場即戦力プロンプト（押すとコピーできます）</div>
+              <div style="font-size:0.86rem; font-weight:bold; color:#f3d28b; margin-bottom:8px;">📋 体験サンプルプロンプト（押すとコピーできます）</div>
 
               <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(243,210,139,0.25); border-radius:8px; padding:12px; margin-bottom:10px;">
                 <div style="font-size:0.85rem; font-weight:bold; color:#ffffff; margin-bottom:4px;">1. Googleマップ口コミ返信文（3パターン作成）</div>
@@ -1073,6 +1097,10 @@
 【一番伝えたい強み】〇〇</pre>
                 <button type="button" class="mr-copy-btn member-room-btn outline" data-target="mr-p2" style="width:100%; cursor:pointer; font-size:0.8rem; padding:7px;">プロンプトをコピー</button>
               </div>
+            </div>
+            <div class="admin-entry-r2" style="margin-top:20px;padding-top:14px;border-top:1px solid rgba(243,210,139,.3);">
+              <p style="margin:0 0 8px;font-size:.82rem;color:#cbd5e1;">運営者の方はこちら（会員用とは別の入口です）</p>
+              <a class="member-room-btn outline" href="post.html">管理者専用・登録／削除画面へ</a>
             </div>
           </div>
         </div>
@@ -1107,7 +1135,7 @@
       </nav>
     </div>
     <div class="container footer-bottom">
-      <span>© 2026 AIGON.LAB</span>
+      <span>© 2026 AIGON.LAB（表示版：tenjiCorp-r2-20261121）</span>
       <span>サイト制作：エスプリ・アルティザン</span>
     </div>
   </footer>
@@ -1130,7 +1158,7 @@
       window.addEventListener('resize', scalePreviews);
       scalePreviews();
 
-      // 2. 文字サイズ切り替え（標準／拡大中）
+      // 2. 文字サイズ切り替え
       var btn = document.getElementById('fontSizeToggle');
       if (btn) {
         btn.addEventListener('click', function () {
@@ -1142,65 +1170,88 @@
         });
       }
 
-      // 3. 会員専用ルーム認証＆コピー機能（初期合言葉：aigon2026）
-      var PASSCODE = 'aigon2026';
+      // 3. 会員専用ルーム認証（会員用合言葉：aigon2026 / キー：aigon_member_ok）
+      var MEMBER_PASS = 'aigon2026';
       var KEY = 'aigon_member_ok';
       var lockView = document.getElementById('mr-lock-view');
       var unlockView = document.getElementById('mr-unlocked-view');
       var passInput = document.getElementById('mr-pass-input');
-      var unlockBtn = document.getElementById('mr-unlock-btn');
+      var loginForm = document.getElementById('mr-login-form');
       var lockBtn = document.getElementById('mr-lock-btn');
       var errMsg = document.getElementById('mr-error-msg');
 
-      function setMemberState(unlocked) {
-        if (!lockView || !unlockView) return;
-        lockView.style.display = unlocked ? 'none' : 'block';
-        unlockView.style.display = unlocked ? 'block' : 'none';
-        if (errMsg) errMsg.style.display = 'none';
+      function saved(k) { try { return localStorage.getItem(k) === '1'; } catch (e) { return false; } }
+      function remember(k) { try { localStorage.setItem(k, '1'); return true; } catch (e) { return false; } }
+      function forget(k) { try { localStorage.removeItem(k); } catch (e) {} }
+
+      function syncGate() {
+        var ok = saved(KEY);
+        if (lockView) lockView.style.display = ok ? 'none' : 'block';
+        if (unlockView) unlockView.style.display = ok ? 'block' : 'none';
+        if (ok && errMsg) errMsg.style.display = 'none';
+        return ok;
       }
 
-      if (localStorage.getItem(KEY) === '1') setMemberState(true);
-
-      if (unlockBtn) {
-        unlockBtn.addEventListener('click', function () {
-          if (passInput && passInput.value.trim() === PASSCODE) {
-            localStorage.setItem(KEY, '1');
-            setMemberState(true);
-          } else if (errMsg) {
-            errMsg.style.display = 'block';
+      if (loginForm) {
+        loginForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          if (!passInput || passInput.value !== MEMBER_PASS) {
+            if (errMsg) {
+              errMsg.textContent = '合言葉が一致しません。最新の合言葉をご確認ください。';
+              errMsg.style.display = 'block';
+            }
+            return;
           }
+          if (!remember(KEY)) {
+            if (errMsg) {
+              errMsg.textContent = 'ブラウザの保存機能を有効にしてください。';
+              errMsg.style.display = 'block';
+            }
+            return;
+          }
+          passInput.value = '';
+          syncGate();
         });
       }
-      if (passInput) {
-        passInput.addEventListener('keypress', function (e) {
-          if (e.key === 'Enter' && unlockBtn) unlockBtn.click();
-        });
-      }
+
       if (lockBtn) {
         lockBtn.addEventListener('click', function () {
-          localStorage.removeItem(KEY);
+          forget(KEY);
           if (passInput) passInput.value = '';
-          setMemberState(false);
+          syncGate();
         });
       }
+
+      window.addEventListener('storage', function (e) {
+        if (e.key === KEY || e.key === null) syncGate();
+      });
+      window.addEventListener('pageshow', syncGate);
+      syncGate();
+
+      // 4. サンプルプロンプトのワンクリックコピー（フォールバック付き）
       document.querySelectorAll('.mr-copy-btn').forEach(function (b) {
         b.addEventListener('click', function () {
           var el = document.getElementById(b.getAttribute('data-target'));
           if (!el) return;
-          navigator.clipboard.writeText(el.innerText).then(function () {
-            var old = b.textContent;
-            b.textContent = 'コピー完了！';
-            setTimeout(function () { b.textContent = old; }, 1800);
-          });
+          var text = el.innerText;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function () {
+              var old = b.textContent;
+              b.textContent = 'コピーしました！';
+              setTimeout(function () { b.textContent = old; }, 1800);
+            }).catch(function () {
+              b.textContent = '上の枠内の文章を長押し・またはCtrl+Cでコピーしてください';
+            });
+          } else {
+            b.textContent = '上の枠内の文章を長押し・またはCtrl+Cでコピーしてください';
+          }
         });
       });
     })();
   </script>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    const firebaseConfig = {
+  <script type="module">
+    const CONFIG = {
       apiKey: "AIzaSyAcGs-cwFjSO2B5UOJAwUCKu_varuBcJo0",
       authDomain: "aigon-lab.firebaseapp.com",
       projectId: "aigon-lab",
@@ -1209,30 +1260,95 @@
       appId: "1:783745519408:web:283454bf6a50398b5fc2f5"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    const $ = id => document.getElementById(id);
+    function message(id, text) { const el = $(id); if (el) el.textContent = text; }
+    function errorText(e) {
+      console.error(e);
+      if (e.code === 'permission-denied') return '権限がありません。Firestoreのルールを確認してください。';
+      if (e.code === 'invalid-argument' || e.code === 'unauthenticated') return 'Firebaseの設定または認証を確認してください。詳細：' + (e.message || e.code);
+      if (e.code === 'unavailable') return '通信できません。接続を確認して再読み込みしてください。';
+      return e.message || '読み込みに失敗しました。再読み込みしてください。';
+    }
+    function limit(p, ms = 15000) {
+      let timer;
+      return Promise.race([p, new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error('15秒以内に応答がありません。通信を確認してください。')), ms);
+      })]).finally(() => clearTimeout(timer));
+    }
 
-    async function loadRecentJournals() {
-      const area = document.getElementById("firebase-post-area");
-      if (!area) return;
+    let apiPromise;
+    function api() {
+      if (!apiPromise) {
+        apiPromise = limit(Promise.all([
+          import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
+          import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
+        ])).then(([app, fs]) => {
+          const instance = app.getApps().find(a => a.name === '[DEFAULT]') || app.initializeApp(CONFIG);
+          return { ...fs, db: fs.getFirestore(instance) };
+        }).catch(e => { apiPromise = null; throw e; });
+      }
+      return apiPromise;
+    }
+
+    function timestamp(v) { const n = Number(v); return Number.isFinite(n) ? n : 0; }
+    async function readAll(name) {
+      const f = await api();
+      const snapshot = await limit(f.getDocs(f.collection(f.db, name)));
+      if (snapshot.metadata.fromCache) {
+        throw new Error('サーバーの最新データを確認できません。古い保存データは表示していません。通信を確認して再取得してください。');
+      }
+      return snapshot.docs.map(d => ({ ...d.data(), id: d.id })).sort((a, b) =>
+        timestamp(b.createdAtMs) - timestamp(a.createdAtMs) || a.id.localeCompare(b.id));
+    }
+    function fetchedMessage(count) {
+      return '取得完了：' + count + '件 ／ ' + new Date().toLocaleTimeString('ja-JP');
+    }
+
+    function node(tag, text, className) {
+      const e = document.createElement(tag);
+      if (text !== undefined) e.textContent = String(text ?? '');
+      if (className) e.className = className;
+      return e;
+    }
+
+    function journalCard(row) {
+      const e = node('article', undefined, 'journal-entry-card');
+      e.append(node('h4', row.title || '現場メモ'));
+      const n = timestamp(row.createdAtMs), d = new Date(n);
+      if (n > 0 && !Number.isNaN(d.getTime())) {
+        const t = node('time', d.toLocaleString('ja-JP'));
+        t.dateTime = d.toISOString();
+        e.append(t);
+      }
+      e.append(node('p', row.body || ''));
+      return e;
+    }
+
+    let version = 0;
+    async function loadJournals() {
+      const listEl = $('journals-list');
+      const button = $('reload-journals');
+      if (!listEl) return;
+      const v = ++version;
+      listEl.replaceChildren();
+      if (button) { button.disabled = true; button.textContent = '取得中...'; }
+      message('journals-status', 'サーバーから最新の活動日誌を取得中...');
       try {
-        const q = query(collection(db, "journals"), orderBy("createdAt", "desc"), limit(3));
-        const snap = await getDocs(q);
-        if (snap.empty) return;
-        let html = '<div style="width:100%;"><strong>📝 最新の現場活動日誌（リアルタイム更新）</strong><ul style="margin:8px 0 0 0; padding-left:18px;">';
-        snap.forEach(doc => {
-          const d = doc.data();
-          const safeTitle = String(d.title || "").replace(/</g, "&lt;");
-          const safeBody = String(d.body || "").replace(/</g, "&lt;");
-          html += `<li style="margin-bottom:6px;"><strong>${safeTitle}</strong>：${safeBody}</li>`;
-        });
-        html += '</ul></div>';
-        area.innerHTML = html;
+        const rows = await readAll('journals');
+        if (v !== version) return;
+        listEl.replaceChildren(...rows.slice(0, 5).map(journalCard));
+        message('journals-status', rows.length ? fetchedMessage(rows.length) + '（最新5件まで表示）' : '取得完了：0件。活動日誌はまだ登録されていません。');
       } catch (e) {
-        console.error(e);
+        if (v === version) { listEl.replaceChildren(); message('journals-status', errorText(e)); }
+      } finally {
+        if (v === version && button) { button.disabled = false; button.textContent = '最新の内容を取得'; }
       }
     }
-    loadRecentJournals();
+    $('reload-journals')?.addEventListener('click', loadJournals);
+    window.addEventListener('pageshow', loadJournals);
+    window.addEventListener('storage', e => { if (e.key === 'aigon_content_changed') loadJournals(); });
+    window.addEventListener('focus', loadJournals);
+    loadJournals();
   </script>
 </body>
 </html>

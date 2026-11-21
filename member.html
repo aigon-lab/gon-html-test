@@ -3,8 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>会員専用ルーム｜AIGON.LAB 実践メンバーシップ</title>
+  <meta name="robots" content="noindex,nofollow">
+  <title>AIGON.LAB｜会員専用ルーム（プロンプト集・AI業務ツール倉庫）</title>
   <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
       padding: 0;
@@ -15,7 +18,7 @@
     }
     .header {
       background: rgba(6, 9, 19, 0.96);
-      border-bottom: 1px solid rgba(212, 175, 55, 0.4);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.45);
       padding: 14px 20px;
       display: flex;
       justify-content: space-between;
@@ -34,14 +37,16 @@
       color: #cbd5e1;
       text-decoration: none;
       font-size: 0.88rem;
-      border: 1px solid rgba(255,255,255,0.25);
+      border: 1px solid rgba(255, 255, 255, 0.25);
       padding: 6px 14px;
       border-radius: 6px;
+      background: transparent;
+      cursor: pointer;
     }
     .container {
-      max-width: 1200px;
+      max-width: 1180px;
       margin: 0 auto;
-      padding: 36px 20px 64px 20px;
+      padding: 32px 20px 64px 20px;
     }
     .lock-panel {
       max-width: 480px;
@@ -54,7 +59,6 @@
     }
     .lock-panel input {
       width: 100%;
-      box-sizing: border-box;
       padding: 12px 16px;
       border-radius: 8px;
       border: 1px solid #8c6d2e;
@@ -63,7 +67,7 @@
     }
     .gold-btn {
       display: inline-block;
-      padding: 12px 24px;
+      padding: 11px 22px;
       background: linear-gradient(135deg, #f3d06b, #c89d28);
       color: #090d16;
       font-weight: 900;
@@ -71,61 +75,110 @@
       border-radius: 8px;
       cursor: pointer;
       text-decoration: none;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
     }
-    .fcl-banner {
+    .gold-btn:disabled { opacity: 0.55; cursor: wait; }
+    .top-bar {
       background: linear-gradient(135deg, rgba(29, 78, 216, 0.25), rgba(212, 175, 55, 0.15));
       border: 1px solid rgba(212, 175, 55, 0.45);
       border-radius: 12px;
-      padding: 20px;
+      padding: 18px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .sec-nav {
+      display: flex;
       gap: 14px;
-      margin-bottom: 32px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .sec-nav a {
+      color: #f3d28b;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.92rem;
+      border-bottom: 1px solid #8c6d2e;
+      padding-bottom: 2px;
     }
     .sec-title {
       font-size: 1.2rem;
       color: #f3d28b;
       border-left: 4px solid #d4af37;
       padding-left: 12px;
-      margin: 32px 0 16px 0;
+      margin: 32px 0 14px 0;
     }
-    /* ▼ 横3〜4列で自動増殖するグリッド ▼ */
-    .prompt-grid {
+    .status-msg {
+      color: #f3d28b;
+      font-size: 0.9rem;
+      margin: 0 0 12px 0;
+      white-space: pre-wrap;
+    }
+    .card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 18px;
     }
-    .prompt-card {
+    .item-card {
       background: #0f172a;
-      border: 1px solid rgba(212, 175, 55, 0.35);
+      border: 1px solid rgba(212, 175, 55, 0.38);
       border-radius: 10px;
       padding: 18px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
-    .prompt-card h3 {
-      font-size: 1rem;
+    .item-card h3 {
+      font-size: 1.02rem;
       color: #ffffff;
-      margin: 0 0 10px 0;
+      margin: 0 0 6px 0;
+    }
+    .item-card time {
+      display: block;
+      font-size: 0.74rem;
+      color: #94a3b8;
+      margin-bottom: 8px;
     }
     .prompt-body {
       background: rgba(0, 0, 0, 0.45);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 6px;
       padding: 10px;
       font-size: 0.82rem;
       color: #e2e8f0;
       white-space: pre-wrap;
-      max-height: 180px;
+      overflow-wrap: anywhere;
+      max-height: 200px;
       overflow-y: auto;
       margin-bottom: 12px;
     }
-    .copy-btn {
+    .tool-desc {
+      font-size: 0.86rem;
+      color: #cbd5e1;
+      margin: 0 0 14px 0;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .fallback-area {
       width: 100%;
+      min-height: 90px;
+      margin-top: 8px;
+      background: #020617;
+      color: #f8fafc;
+      border: 1px solid #f3d28b;
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 0.8rem;
+    }
+    .action-btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      text-decoration: none;
       padding: 10px;
       background: rgba(212, 175, 55, 0.16);
       border: 1px solid #d4af37;
@@ -133,13 +186,23 @@
       font-weight: bold;
       border-radius: 6px;
       cursor: pointer;
+      font-size: 0.9rem;
     }
-    .copy-btn.done {
+    .action-btn.done {
       background: #16a34a;
       border-color: #16a34a;
       color: #ffffff;
     }
+    footer {
+      margin-top: 48px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+    [hidden] { display: none !important; }
   </style>
+<style id="r2-small-fixes">button:disabled{opacity:.55;cursor:wait}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #f3d28b;outline-offset:3px} .card-grid>*{min-width:0} @media(max-width:420px){.card-grid{grid-template-columns:1fr}}</style>
 </head>
 <body>
   <header class="header">
@@ -147,42 +210,57 @@
     <a href="index.html" class="back-link">← トップページへ戻る</a>
   </header>
 
-  <div class="container">
-    <!-- 入室ロック画面 -->
-    <div id="lock-screen" class="lock-panel">
+  <main class="container">
+    <!-- 会員様入室ゲート -->
+    <form id="member-login" class="lock-panel">
       <div style="font-size:0.8rem; color:#f3d28b; font-weight:bold;">MEMBERS ONLY</div>
       <h1 style="font-size:1.35rem; margin:8px 0;">会員専用ルーム 入室認証</h1>
-      <p style="font-size:0.88rem; color:#cbd5e1;">ご登録時にお送りした「合言葉」を入力してください。</p>
-      <input type="password" id="member-pass" placeholder="合言葉を入力（例：aigon2026）">
-      <button type="button" id="enter-btn" class="gold-btn" style="width:100%;">入室する</button>
-      <p id="err-txt" style="color:#f87171; font-size:0.85rem; margin-top:10px; display:none;">合言葉が一致しません。</p>
-    </div>
+      <p style="font-size:0.88rem; color:#cbd5e1;">ご登録時にお送りした「会員の合言葉」を入力してください。</p>
+      <input type="password" id="member-password" placeholder="会員の合言葉を入力" autocomplete="current-password" required>
+      <button type="submit" class="gold-btn" style="width:100%;">会員室に入る</button>
+      <p id="login-status" role="status" style="color:#f87171; font-size:0.85rem; margin:10px 0 0 0;"></p>
+    </form>
 
-    <!-- 認証後コンテンツ -->
-    <div id="member-content" style="display:none;">
-      <div class="fcl-banner">
+    <!-- 会員専用コンテンツ（閲覧・コピー・ツール利用のみ） -->
+    <div id="member-room" hidden>
+      <div class="top-bar">
         <div>
-          <div style="font-weight:bold; font-size:1.08rem; color:#ffffff;">💬 フェローチャットリンク（FCL）＆ 個別相談窓口</div>
-          <div style="font-size:0.88rem; color:#cbd5e1;">サイトの修正依頼・AI活用のご相談はこちらから直接ご連絡ください（ご相談は予約制で承ります）。</div>
+          <div style="font-weight:bold; font-size:1.05rem; color:#ffffff;">会員専用｜AIプロンプト集・AI業務ツール倉庫</div>
+          <div style="font-size:0.86rem; color:#cbd5e1;">管理者が登録した内容を取得し、プロンプトのコピー・ツールの利用ができます。</div>
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <a href="https://toretamoo.com/apps/" target="_blank" rel="noopener noreferrer" class="gold-btn">🧰 AI業務ツール倉庫を開く</a>
-          <a href="index.html#contact" class="back-link" style="background:#1e293b;">個別相談を予約する</a>
+          <a href="index.html#contact" class="gold-btn">お問い合わせ・ご相談予約</a>
+          <button type="button" id="reload-member" class="back-link">最新の内容を取得</button>
+          <button type="button" id="member-logout" class="back-link">会員室から退出</button>
         </div>
       </div>
 
-      <h2 class="sec-title">📋 現場即戦力・AIプロンプト集（ワンクリックコピー）</h2>
-      <div id="dynamic-prompt-grid" class="prompt-grid">
-        <p style="color:#cbd5e1;">プロンプトを読み込み中...</p>
-      </div>
+      <nav class="sec-nav" aria-label="会員ページ内メニュー">
+        <a href="#prompt-library">▼ 現場即戦力・AIプロンプト集へ</a>
+        <a href="#tool-warehouse">▼ 会員限定・AI業務ツール倉庫へ</a>
+      </nav>
+
+      <section id="prompt-library">
+        <h2 class="sec-title">📋 現場即戦力・AIプロンプト集（ワンクリックコピー）</h2>
+        <p id="prompts-status" class="status-msg" role="status"></p>
+        <div id="prompts-list" class="card-grid"></div>
+      </section>
+
+      <section id="tool-warehouse">
+        <h2 class="sec-title">🧰 会員限定・AI業務ツール倉庫</h2>
+        <p id="tools-status" class="status-msg" role="status"></p>
+        <div id="tools-list" class="card-grid"></div>
+      </section>
     </div>
-  </div>
 
+    <footer>
+      © 2026 AIGON.LAB（表示版：tenjiCorp-r2-20261121 / 会員閲覧専用）
+    </footer>
+  </main>
+
+  <noscript>JavaScriptを有効にしてください。</noscript>
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    const firebaseConfig = {
+    const CONFIG = {
       apiKey: "AIzaSyAcGs-cwFjSO2B5UOJAwUCKu_varuBcJo0",
       authDomain: "aigon-lab.firebaseapp.com",
       projectId: "aigon-lab",
@@ -191,90 +269,235 @@
       appId: "1:783745519408:web:283454bf6a50398b5fc2f5"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    const PASS = "aigon2026";
-    const lockScreen = document.getElementById("lock-screen");
-    const memberContent = document.getElementById("member-content");
-
-    function unlock() {
-      lockScreen.style.display = "none";
-      memberContent.style.display = "block";
-      loadPrompts();
+    const $ = id => document.getElementById(id);
+    function message(id, text) { $(id).textContent = text; }
+    function errorText(e) {
+      console.error(e);
+      if (e.code === 'permission-denied') return '権限がありません。Firestoreのルールを確認してください。';
+      if (e.code === 'invalid-argument' || e.code === 'unauthenticated') return 'Firebaseの設定または認証を確認してください。詳細：' + (e.message || e.code);
+      if (e.code === 'unavailable') return '通信できません。接続を確認して再読み込みしてください。';
+      return e.message || '処理に失敗しました。再読み込みしてください。';
+    }
+    function limit(p, ms = 15000) {
+      let timer;
+      return Promise.race([p, new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error('15秒以内に応答がありません。通信を確認して再読み込みしてください。')), ms);
+      })]).finally(() => clearTimeout(timer));
     }
 
-    if (localStorage.getItem("aigon_member_ok") === "1") {
-      unlock();
-    }
-
-    document.getElementById("enter-btn").addEventListener("click", () => {
-      const val = document.getElementById("member-pass").value.trim();
-      if (val === PASS) {
-        localStorage.setItem("aigon_member_ok", "1");
-        unlock();
-      } else {
-        document.getElementById("err-txt").style.display = "block";
+    let apiPromise;
+    function api() {
+      if (!apiPromise) {
+        apiPromise = limit(Promise.all([
+          import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
+          import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
+        ])).then(([app, fs]) => {
+          const instance = app.getApps().find(a => a.name === '[DEFAULT]') || app.initializeApp(CONFIG);
+          return { ...fs, db: fs.getFirestore(instance) };
+        }).catch(e => { apiPromise = null; throw e; });
       }
+      return apiPromise;
+    }
+
+    function timestamp(v) { const n = Number(v); return Number.isFinite(n) ? n : 0; }
+    async function readAll(name) {
+      const f = await api();
+      const snapshot = await limit(f.getDocs(f.collection(f.db, name)));
+      if (snapshot.metadata.fromCache) {
+        throw new Error('サーバーの最新データを確認できません。古い保存データは表示していません。通信を確認して再取得してください。');
+      }
+      return snapshot.docs.map(d => ({ ...d.data(), id: d.id })).sort((a, b) =>
+        timestamp(b.createdAtMs) - timestamp(a.createdAtMs) || a.id.localeCompare(b.id));
+    }
+    function fetchedMessage(count) {
+      return '取得完了：' + count + '件 ／ ' + new Date().toLocaleTimeString('ja-JP');
+    }
+
+    function node(tag, text, className) {
+      const e = document.createElement(tag);
+      if (text !== undefined) e.textContent = String(text ?? '');
+      if (className) e.className = className;
+      return e;
+    }
+
+    function safeURL(value) {
+      try {
+        const u = new URL(String(value));
+        return ['https:', 'http:'].includes(u.protocol) && !u.username && !u.password ? u.href : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function saved(key) { try { return localStorage.getItem(key) === '1'; } catch { return false; } }
+    function remember(key) { try { localStorage.setItem(key, '1'); return true; } catch { return false; } }
+    function forget(key) { try { localStorage.removeItem(key); } catch {} }
+
+    const KEY = 'aigon_member_ok';
+    const MEMBER_PASS = 'aigon2026';
+    let version = 0;
+
+
+    function afterLeave() {
+      version++;
+      $('reload-member').disabled = false;
+      $('reload-member').textContent = '最新の内容を取得';
+      for (const name of ['prompts', 'tools']) {
+        $(name + '-list').replaceChildren();
+        message(name + '-status', '');
+      }
+    }
+
+    async function copyText(text, article, button) {
+      try {
+        await navigator.clipboard.writeText(String(text ?? ''));
+        button.textContent = 'コピーしました！';
+        button.classList.add('done');
+        setTimeout(() => {
+          button.textContent = 'プロンプトをコピー';
+          button.classList.remove('done');
+        }, 1800);
+      } catch {
+        if (!article.querySelector('.fallback-area')) {
+          const area = node('textarea', undefined, 'fallback-area');
+          area.value = String(text ?? '');
+          area.readOnly = true;
+          article.append(area);
+          area.focus();
+          area.select();
+        }
+        button.textContent = '下の枠内を長押し・またはCtrl+Cでコピー';
+      }
+    }
+
+    function buildPromptCard(row) {
+      const e = node('article', undefined, 'item-card');
+      const top = node('div');
+      top.append(node('h3', row.title || '実務プロンプト'));
+      const n = timestamp(row.createdAtMs), d = new Date(n);
+      if (n > 0 && !Number.isNaN(d.getTime())) {
+        const t = node('time', d.toLocaleString('ja-JP'));
+        t.dateTime = d.toISOString();
+        top.append(t);
+      }
+      top.append(node('div', row.body || '', 'prompt-body'));
+      e.append(top);
+
+      const b = node('button', 'プロンプトをコピー', 'action-btn');
+      b.type = 'button';
+      b.addEventListener('click', () => { if (saved(KEY)) copyText(row.body, e, b); });
+      e.append(b);
+      return e;
+    }
+
+    function buildToolCard(row) {
+      const e = node('article', undefined, 'item-card');
+      const top = node('div');
+      top.append(node('h3', row.title || 'AI業務ツール'));
+      const n = timestamp(row.createdAtMs), d = new Date(n);
+      if (n > 0 && !Number.isNaN(d.getTime())) {
+        const t = node('time', d.toLocaleString('ja-JP'));
+        t.dateTime = d.toISOString();
+        top.append(t);
+      }
+      top.append(node('p', row.body || '', 'tool-desc'));
+      e.append(top);
+
+      const url = safeURL(row.url);
+      if (!url) {
+        e.append(node('p', 'URLが未設定、または使えない形式です。', 'tool-desc'));
+      } else {
+        const a = node('a', 'このツールを開く →', 'action-btn');
+        a.href = url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        e.append(a);
+      }
+      return e;
+    }
+
+    async function loadOne(name, v) {
+      const list = $(name + '-list');
+      list.replaceChildren();
+      message(name + '-status', 'サーバーから最新の内容を取得中...');
+      try {
+        const rows = await readAll(name);
+        if (v !== version || !saved(KEY)) return;
+        list.replaceChildren(...rows.map(name === 'prompts' ? buildPromptCard : buildToolCard));
+        message(name + '-status', rows.length ? fetchedMessage(rows.length) :
+          '取得完了：0件。管理者が登録した' + (name === 'prompts' ? 'プロンプト' : 'ツール') + 'はまだありません。');
+      } catch (e) {
+        if (v === version && saved(KEY)) {
+          list.replaceChildren();
+          message(name + '-status', errorText(e));
+        }
+      }
+    }
+
+    async function afterEnter() {
+      const v = ++version;
+      const b = $('reload-member');
+      b.disabled = true;
+      b.textContent = '取得中...';
+      try {
+        await Promise.allSettled(['prompts', 'tools'].map(n => loadOne(n, v)));
+      } finally {
+        if (v === version) { b.disabled = false; b.textContent = '最新の内容を取得'; }
+      }
+      if (v === version && saved(KEY) && location.hash === '#tool-warehouse') {
+        requestAnimationFrame(() => $('tool-warehouse').scrollIntoView());
+      }
+    }
+
+    function syncGate() {
+      const ok = saved(KEY);
+      $('member-login').hidden = ok;
+      $('member-room').hidden = !ok;
+      return ok;
+    }
+
+    $('member-login').addEventListener('submit', e => {
+      e.preventDefault();
+      if ($('member-password').value !== MEMBER_PASS) {
+        message('login-status', '合言葉が一致しません。');
+        return;
+      }
+      if (!remember(KEY)) {
+        message('login-status', 'ブラウザの保存機能を有効にしてください。');
+        return;
+      }
+      $('member-password').value = '';
+      message('login-status', '');
+      syncGate();
+      afterEnter();
     });
 
-    const defaultPrompts = [
-      {
-        title: "1. Googleマップ口コミ返信文（3パターン作成）",
-        body: "あなたは地域で愛される店舗のベテラン店主です。以下のGoogleマップの口コミに対し、感謝と誠実さが伝わる返信文を3パターン（丁寧・親しみやすい・簡潔）作成してください。\n【業種】〇〇\n【口コミ】ここに貼り付け"
-      },
-      {
-        title: "2. 店頭POP・LINEお知らせ文の作成",
-        body: "小規模店舗の集客アドバイザーとして、以下の商品・サービスの「店頭POP用キャッチコピー」5案と「常連様向けLINE案内文」を作ってください。\n【商品・サービス名】〇〇\n【一番伝えたい強み】〇〇"
+    $('member-logout').addEventListener('click', () => {
+      forget(KEY);
+      syncGate();
+      afterLeave();
+    });
+
+    $('reload-member').addEventListener('click', () => {
+      if (syncGate()) afterEnter();
+    });
+
+    window.addEventListener('storage', e => {
+      if (e.key === KEY || e.key === null) {
+        if (syncGate()) afterEnter();
+        else afterLeave();
       }
-    ];
+    });
+    window.addEventListener('pageshow', () => {
+      if (syncGate()) afterEnter();
+      else afterLeave();
+    });
 
-    async function loadPrompts() {
-      const grid = document.getElementById("dynamic-prompt-grid");
-      let items = [...defaultPrompts];
-      try {
-        const q = query(collection(db, "prompts"), orderBy("createdAt", "desc"));
-        const snap = await getDocs(q);
-        snap.forEach(d => {
-          items.unshift(d.data());
-        });
-      } catch (e) {
-        console.error(e);
-      }
-
-      grid.innerHTML = "";
-      items.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "prompt-card";
-
-        const top = document.createElement("div");
-        const h3 = document.createElement("h3");
-        h3.textContent = item.title;
-        const pre = document.createElement("div");
-        pre.className = "prompt-body";
-        pre.textContent = item.body;
-        top.appendChild(h3);
-        top.appendChild(pre);
-
-        const btn = document.createElement("button");
-        btn.className = "copy-btn";
-        btn.textContent = "プロンプトをコピー";
-        btn.onclick = () => {
-          navigator.clipboard.writeText(item.body).then(() => {
-            btn.textContent = "コピー完了！";
-            btn.classList.add("done");
-            setTimeout(() => {
-              btn.textContent = "プロンプトをコピー";
-              btn.classList.remove("done");
-            }, 1800);
-          });
-        };
-
-        card.appendChild(top);
-        card.appendChild(btn);
-        grid.appendChild(card);
-      });
-    }
+    window.addEventListener('storage', e => {
+      if (e.key === 'aigon_content_changed' && syncGate()) afterEnter();
+    });
+    window.addEventListener('focus', () => { if (syncGate()) afterEnter(); });
+    if (syncGate()) afterEnter();
   </script>
 </body>
 </html>

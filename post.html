@@ -3,163 +3,233 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>AIGON.LAB｜スマホ即時投稿・管理画面</title>
+  <meta name="robots" content="noindex,nofollow">
+  <title>AIGON.LAB｜管理者専用・コンテンツ更新画面</title>
   <style>
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      padding: 20px 16px;
+      padding: 20px 16px 64px 16px;
       background: #060913;
       color: #f8fafc;
       font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
-      line-height: 1.6;
+      line-height: 1.7;
     }
-    .wrap {
-      max-width: 640px;
+    main {
+      max-width: 820px;
       margin: 0 auto;
     }
-    h1 {
-      font-size: 1.3rem;
-      color: #f3d28b;
-      margin: 0 0 16px 0;
-      border-bottom: 1px solid rgba(243, 210, 139, 0.35);
-      padding-bottom: 10px;
+    header {
+      border-bottom: 1px solid rgba(212, 175, 55, 0.45);
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
     }
-    .card {
+    h1 {
+      font-size: 1.35rem;
+      color: #f3d28b;
+      margin: 0;
+    }
+    nav a {
+      color: #93c5fd;
+      text-decoration: none;
+      font-size: 0.88rem;
+      margin-left: 14px;
+    }
+    section, article {
       background: #0f172a;
-      border: 1px solid rgba(212, 175, 55, 0.45);
+      border: 1px solid rgba(212, 175, 55, 0.42);
       border-radius: 12px;
       padding: 20px;
-      margin-bottom: 20px;
+      margin: 20px 0;
+    }
+    article {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.14);
+      padding: 14px 16px;
+      margin: 12px 0;
+    }
+    .badge {
+      display: inline-block;
+      background: #8c6d2e;
+      color: #ffffff;
+      font-size: 0.76rem;
+      font-weight: bold;
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+    h2 {
+      font-size: 1.15rem;
+      color: #f3d28b;
+      margin: 0 0 12px 0;
+    }
+    h3 {
+      margin: 0 0 6px 0;
+      font-size: 1rem;
+      color: #ffffff;
     }
     label {
       display: block;
+      margin: 12px 0;
       font-size: 0.88rem;
       font-weight: bold;
-      color: #f3d28b;
-      margin-bottom: 6px;
+      color: #e2e8f0;
     }
-    input, textarea, select {
+    input, textarea, button { font: inherit; }
+    input, textarea {
+      display: block;
       width: 100%;
-      box-sizing: border-box;
-      padding: 12px;
-      border-radius: 8px;
+      padding: 10px 12px;
+      margin-top: 5px;
       border: 1px solid #475569;
+      border-radius: 8px;
       background: #1e293b;
       color: #ffffff;
-      font-size: 1rem;
-      margin-bottom: 14px;
-      font-family: inherit;
     }
-    .tab-group {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-    .tab-btn {
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #8c6d2e;
-      background: #1e293b;
-      color: #cbd5e1;
-      font-weight: bold;
-      font-size: 0.92rem;
-      cursor: pointer;
-    }
-    .tab-btn.active {
-      background: #8c6d2e;
-      color: #ffffff;
-    }
-    .submit-btn {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 8px;
+    textarea { min-height: 120px; }
+    button, .button {
+      display: inline-block;
       background: linear-gradient(135deg, #f3d06b, #c89d28);
       color: #090d16;
       font-weight: 900;
-      font-size: 1.05rem;
-      cursor: pointer;
-    }
-    .list-item {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 0;
       border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
-    }
-    .del-btn {
-      background: #dc2626;
-      color: #ffffff;
-      border: none;
-      border-radius: 6px;
-      padding: 6px 12px;
-      font-size: 0.8rem;
-      font-weight: bold;
+      padding: 10px 18px;
+      margin: 6px 8px 6px 0;
       cursor: pointer;
-      flex-shrink: 0;
+      text-decoration: none;
     }
-    .nav-links {
-      display: flex;
-      gap: 14px;
+    button:disabled { opacity: 0.55; cursor: wait; }
+    .sub-btn {
+      background: #1e293b;
+      color: #cbd5e1;
+      border: 1px solid #64748b;
+      font-weight: bold;
+    }
+    .danger {
+      background: #b91c1c;
+      color: #ffffff;
+      font-weight: bold;
+      padding: 7px 14px;
       font-size: 0.85rem;
-      margin-bottom: 16px;
     }
-    .nav-links a {
+    .body {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      font-size: 0.86rem;
+      color: #cbd5e1;
+      margin: 6px 0 10px 0;
+    }
+    .status {
+      white-space: pre-wrap;
+      color: #4ade80;
+      font-weight: bold;
+      font-size: 0.88rem;
+      margin: 8px 0;
+    }
+    time {
+      display: block;
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+    a.tool-url-link {
       color: #93c5fd;
+      overflow-wrap: anywhere;
+      display: inline-block;
+      margin: 4px 0 8px 0;
+      font-size: 0.85rem;
     }
+    footer {
+      margin-top: 32px;
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+    [hidden] { display: none !important; }
   </style>
+<style id="r2-small-fixes">button:disabled{opacity:.55;cursor:wait}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #f3d28b;outline-offset:3px} .card-grid>*{min-width:0} @media(max-width:420px){.card-grid{grid-template-columns:1fr}}</style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>AIGON.LAB｜スマホ即時投稿・管理画面</h1>
-    <div class="nav-links">
-      <a href="index.html">← トップページを見る</a>
-      <a href="member.html">会員専用ページを見る →</a>
-    </div>
+  <main>
+    <header>
+      <h1>AIGON.LAB｜管理者専用・更新画面</h1>
+      <nav>
+        <a href="index.html">トップページ確認</a>
+        <a href="member.html">会員ページ確認</a>
+      </nav>
+    </header>
 
-    <!-- ロック画面 -->
-    <div id="auth-box" class="card">
-      <label>管理者パスワードを入力してください</label>
-      <input type="password" id="admin-pass" placeholder="パスワード（aigon2026）">
-      <button type="button" id="login-btn" class="submit-btn">管理画面を開く</button>
-    </div>
+    <form id="admin-login" style="max-width:460px; margin:40px auto; background:#0f172a; border:1px solid rgba(212,175,55,0.5); border-radius:12px; padding:24px;">
+      <label>管理者専用パスワード
+        <input id="admin-password" type="password" autocomplete="current-password" placeholder="管理者パスワードを入力" required>
+      </label>
+      <button type="submit" style="width:100%;">管理画面を開く</button>
+      <p id="admin-login-status" class="status" role="status" style="color:#f87171;"></p>
+    </form>
 
-    <!-- 投稿フォーム -->
-    <div id="editor-box" style="display:none;">
-      <div class="card">
-        <label>投稿先を選んでください</label>
-        <div class="tab-group">
-          <button type="button" class="tab-btn active" data-type="journal">① 活動日誌に投稿</button>
-          <button type="button" class="tab-btn" data-type="prompt">② 会員プロンプトに追加</button>
-        </div>
-
-        <label id="title-label">活動日誌の見出し（任意）</label>
-        <input type="text" id="post-title" placeholder="例：小田原の飲食店様とQR名刺の打ち合わせ">
-
-        <label id="body-label">本文・メモ（音声入力でもそのままOK）</label>
-        <textarea id="post-body" rows="5" placeholder="ここに内容を入力してください"></textarea>
-
-        <button type="button" id="send-btn" class="submit-btn">この内容で公開する</button>
-        <p id="status-msg" style="color:#4ade80; font-weight:bold; margin:10px 0 0 0; display:none;"></p>
+    <div id="admin-room" hidden>
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+        <span style="font-size:0.88rem; color:#f3d28b;">※会員用とは別の入室判定です。登録・削除はこの画面で行います。</span>
+        <button id="admin-logout" type="button" class="sub-btn">管理画面から退出</button>
       </div>
 
-      <div class="card">
-        <h2 style="font-size:1rem; color:#f3d28b; margin-top:0;">投稿済み一覧（削除もここからできます）</h2>
-        <div id="manage-list">読み込み中...</div>
-      </div>
-    </div>
-  </div>
+      <!-- ① 活動日誌（ブログ速報） -->
+      <section>
+        <span class="badge">トップページ「活動日誌」へ登録（閲覧側で最新の内容を取得）</span>
+        <h2>① 活動日誌・ブログ速報の投稿</h2>
+        <form id="journals-form">
+          <label>記事・日誌のタイトル<input name="title" maxlength="200" placeholder="例：小田原の飲食店様とQR名刺の打ち合わせ" required></label>
+          <label>本文<textarea name="body" maxlength="100000" placeholder="現場の活動報告やメモを入力してください" required></textarea></label>
+          <button id="journals-submit" type="submit">① 活動日誌を登録する</button>
+          <p id="journals-save-status" class="status" role="status"></p>
+        </form>
+        <button id="journals-reload" type="button" class="sub-btn">この一覧を再取得</button>
+        <p id="journals-status" class="status" role="status"></p>
+        <div id="journals-list"></div>
+      </section>
 
+      <!-- ② 会員プロンプト -->
+      <section>
+        <span class="badge">会員専用ページ「AIプロンプト集」へ登録（閲覧側で最新の内容を取得）</span>
+        <h2>② 会員プロンプトの追加</h2>
+        <form id="prompts-form">
+          <label>プロンプトのタイトル<input name="title" maxlength="200" placeholder="例：Googleマップ口コミ返信文（3パターン作成）" required></label>
+          <label>プロンプト本文（会員様がコピーする文章）<textarea name="body" maxlength="100000" placeholder="AIに貼り付けて使うプロンプト全文を入力してください" required></textarea></label>
+          <button id="prompts-submit" type="submit">② 会員プロンプトを登録する</button>
+          <p id="prompts-save-status" class="status" role="status"></p>
+        </form>
+        <button id="prompts-reload" type="button" class="sub-btn">この一覧を再取得</button>
+        <p id="prompts-status" class="status" role="status"></p>
+        <div id="prompts-list"></div>
+      </section>
+
+      <!-- ③ AI業務ツール倉庫 -->
+      <section>
+        <span class="badge">会員専用ページ「AI業務ツール倉庫」へ登録（閲覧側で最新の内容を取得）</span>
+        <h2>③ AI業務ツール倉庫への追加</h2>
+        <form id="tools-form">
+          <label>ツール・アプリ名<input name="title" maxlength="200" placeholder="例：メニュー原価・利益率計算ツール" required></label>
+          <label>ツールのURL（https:// から入力）<input name="url" type="url" maxlength="2000" placeholder="https://aigon-lab.github.io/..." required></label>
+          <label>ツールの説明・使い方<textarea name="body" maxlength="100000" placeholder="会員様向けにツールの目的や使い方を入力してください" required></textarea></label>
+          <button id="tools-submit" type="submit">③ AI業務ツールを登録する</button>
+          <p id="tools-save-status" class="status" role="status"></p>
+        </form>
+        <button id="tools-reload" type="button" class="sub-btn">この一覧を再取得</button>
+        <p id="tools-status" class="status" role="status"></p>
+        <div id="tools-list"></div>
+      </section>
+    </div>
+
+    <footer>表示版：tenjiCorp-r2-20261121 / 管理者専用（管理者の登録・削除専用）</footer>
+  </main>
+
+  <noscript>JavaScriptを有効にしてください。</noscript>
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    const firebaseConfig = {
+    const CONFIG = {
       apiKey: "AIzaSyAcGs-cwFjSO2B5UOJAwUCKu_varuBcJo0",
       authDomain: "aigon-lab.firebaseapp.com",
       projectId: "aigon-lab",
@@ -168,129 +238,237 @@
       appId: "1:783745519408:web:283454bf6a50398b5fc2f5"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    const PASS = "aigon2026";
-    let currentType = "journal";
-
-    const authBox = document.getElementById("auth-box");
-    const editorBox = document.getElementById("editor-box");
-    const passInput = document.getElementById("admin-pass");
-    const loginBtn = document.getElementById("login-btn");
-
-    if (localStorage.getItem("aigon_admin_ok") === "1") {
-      authBox.style.display = "none";
-      editorBox.style.display = "block";
-      loadItems();
+    const $ = id => document.getElementById(id);
+    function message(id, text) { $(id).textContent = text; }
+    function errorText(e) {
+      console.error(e);
+      if (e.code === 'permission-denied') return '権限がありません。Firestoreのルールとテストモードの期限を確認してください。';
+      if (e.code === 'invalid-argument' || e.code === 'unauthenticated') return 'Firebaseの設定または認証を確認してください。詳細：' + (e.message || e.code);
+      if (e.code === 'unavailable') return '通信できません。接続を確認して再読み込みしてください。';
+      return e.message || '処理に失敗しました。再読み込みしてください。';
+    }
+    function limit(p, ms = 15000) {
+      let timer;
+      return Promise.race([p, new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error('15秒以内に応答がありません。通信を確認して再読み込みしてください。')), ms);
+      })]).finally(() => clearTimeout(timer));
     }
 
-    loginBtn.addEventListener("click", () => {
-      if (passInput.value.trim() === PASS) {
-        localStorage.setItem("aigon_admin_ok", "1");
-        authBox.style.display = "none";
-        editorBox.style.display = "block";
-        loadItems();
-      } else {
-        alert("パスワードが違います");
+    let apiPromise;
+    function api() {
+      if (!apiPromise) {
+        apiPromise = limit(Promise.all([
+          import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
+          import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
+        ])).then(([app, fs]) => {
+          const instance = app.getApps().find(a => a.name === '[DEFAULT]') || app.initializeApp(CONFIG);
+          return { ...fs, db: fs.getFirestore(instance) };
+        }).catch(e => { apiPromise = null; throw e; });
       }
-    });
+      return apiPromise;
+    }
 
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        currentType = btn.dataset.type;
-        if (currentType === "journal") {
-          document.getElementById("title-label").textContent = "活動日誌の見出し（任意）";
-          document.getElementById("post-title").placeholder = "例：小田原の飲食店様とQR名刺の打ち合わせ";
-          document.getElementById("body-label").textContent = "本文・メモ（音声入力でもそのままOK）";
-        } else {
-          document.getElementById("title-label").textContent = "プロンプトのタイトル（必須）";
-          document.getElementById("post-title").placeholder = "例：Googleマップ口コミ返信（3パターン作成）";
-          document.getElementById("body-label").textContent = "プロンプト本文（会員がコピーして使う文章）";
-        }
-        loadItems();
-      });
-    });
+    function timestamp(v) { const n = Number(v); return Number.isFinite(n) ? n : 0; }
+    async function readAll(name) {
+      const f = await api();
+      const snapshot = await limit(f.getDocs(f.collection(f.db, name)));
+      if (snapshot.metadata.fromCache) {
+        throw new Error('サーバーの最新データを確認できません。古い保存データは表示していません。通信を確認して再取得してください。');
+      }
+      return snapshot.docs.map(d => ({ ...d.data(), id: d.id })).sort((a, b) =>
+        timestamp(b.createdAtMs) - timestamp(a.createdAtMs) || a.id.localeCompare(b.id));
+    }
+    function fetchedMessage(count) {
+      return '取得完了：' + count + '件 ／ ' + new Date().toLocaleTimeString('ja-JP');
+    }
 
-    document.getElementById("send-btn").addEventListener("click", async () => {
-      const title = document.getElementById("post-title").value.trim();
-      const body = document.getElementById("post-body").value.trim();
-      if (!body) {
-        alert("本文を入力してください");
+    function node(tag, text, className) {
+      const e = document.createElement(tag);
+      if (text !== undefined) e.textContent = String(text ?? '');
+      if (className) e.className = className;
+      return e;
+    }
+
+    function card(row) {
+      const e = node('article');
+      e.append(node('h3', row.title || '無題'));
+      const n = timestamp(row.createdAtMs), d = new Date(n);
+      if (n > 0 && !Number.isNaN(d.getTime())) {
+        const t = node('time', d.toLocaleString('ja-JP'));
+        t.dateTime = d.toISOString();
+        e.append(t);
+      }
+      e.append(node('p', row.body || '', 'body'));
+      return e;
+    }
+
+    function safeURL(value) {
+      try {
+        const u = new URL(String(value));
+        return ['https:', 'http:'].includes(u.protocol) && !u.username && !u.password ? u.href : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function toolLink(row, e) {
+      const url = safeURL(row.url);
+      if (!url) {
+        e.append(node('p', 'URLが未設定、または使えない形式です。'));
         return;
       }
-      const colName = currentType === "journal" ? "journals" : "prompts";
-      const btn = document.getElementById("send-btn");
-      btn.disabled = true;
-      btn.textContent = "送信中...";
+      const a = node('a', url, 'tool-url-link');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      e.append(a);
+    }
 
-      try {
-        await addDoc(collection(db, colName), {
-          title: title || (currentType === "journal" ? "現場メモ" : "実務プロンプト"),
-          body: body,
-          createdAt: serverTimestamp()
-        });
-        document.getElementById("post-title").value = "";
-        document.getElementById("post-body").value = "";
-        const msg = document.getElementById("status-msg");
-        msg.textContent = "公開しました！サイトに即時反映されています。";
-        msg.style.display = "block";
-        setTimeout(() => { msg.style.display = "none"; }, 3000);
-        loadItems();
-      } catch (e) {
-        alert("エラーが発生しました: " + e.message);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "この内容で公開する";
+    function saved(key) { try { return localStorage.getItem(key) === '1'; } catch { return false; } }
+    function remember(key) { try { localStorage.setItem(key, '1'); return true; } catch { return false; } }
+    function forget(key) { try { localStorage.removeItem(key); } catch {} }
+
+    const KEY = 'aigon_super_admin_ok';
+    const ADMIN_PASS = 'aigon-admin-9970';
+    const names = ['journals', 'prompts', 'tools'];
+    const versions = { journals: 0, prompts: 0, tools: 0 };
+    const busy = new Set();
+
+    function syncAdmin() {
+      const ok = saved(KEY);
+      $('admin-login').hidden = ok;
+      $('admin-room').hidden = !ok;
+      if (!ok) {
+        for (const name of names) {
+          versions[name]++;
+          $(name + '-list').replaceChildren();
+          $(name + '-form').reset();
+          message(name + '-status', '');
+        }
       }
-    });
+      return ok;
+    }
 
-    async function loadItems() {
-      const listEl = document.getElementById("manage-list");
-      listEl.textContent = "読み込み中...";
-      const colName = currentType === "journal" ? "journals" : "prompts";
+    async function load(name) {
+      if (!saved(KEY)) return;
+      const v = ++versions[name];
+      $(name + '-list').replaceChildren();
+      message(name + '-status', '読み込み中...');
       try {
-        const q = query(collection(db, colName), orderBy("createdAt", "desc"));
-        const snap = await getDocs(q);
-        if (snap.empty) {
-          listEl.textContent = "まだ投稿がありません。";
+        const rows = await readAll(name);
+        if (v !== versions[name] || !saved(KEY)) return;
+        const cards = rows.map(row => {
+          const e = card(row);
+          if (name === 'tools') toolLink(row, e);
+          const b = node('button', '削除', 'danger');
+          b.type = 'button';
+          b.disabled = busy.has(name);
+          b.addEventListener('click', () => remove(name, row));
+          e.append(b);
+          return e;
+        });
+        $(name + '-list').replaceChildren(...cards);
+        message(name + '-status', rows.length ? fetchedMessage(rows.length) : '取得完了：0件。まだ登録されていません。');
+      } catch (e) {
+        if (v === versions[name] && saved(KEY)) message(name + '-status', errorText(e));
+      }
+    }
+
+    function all() { for (const n of names) load(n); }
+
+    function lock(name, on) {
+      if (on) busy.add(name);
+      else busy.delete(name);
+      $(name + '-submit').disabled = on;
+      $(name + '-list').querySelectorAll('button').forEach(b => b.disabled = on);
+    }
+
+    async function write(name, job, success) {
+      if (!saved(KEY) || busy.has(name)) return;
+      lock(name, true);
+      message(name + '-save-status', '送信中...');
+      const timer = setTimeout(() => message(name + '-save-status', 'サーバーの確認待ちです。接続を確認してください。二重登録を避けるため再送しないでください。画面を閉じても送信が取り消されるとは限りません。'), 12000);
+      try {
+        const f = await api();
+        if (!saved(KEY)) throw new Error('退出したため送信を中止しました。');
+        await job(f);
+        success();
+        try { localStorage.setItem('aigon_content_changed', Date.now() + ':' + Math.random()); } catch {}
+        message(name + '-save-status', 'サーバーへの反映を確認しました！');
+
+      } catch (e) {
+        message(name + '-save-status', errorText(e));
+      } finally {
+        clearTimeout(timer);
+        lock(name, false);
+        if (saved(KEY)) await load(name);
+      }
+    }
+
+    async function remove(name, row) {
+      if (!saved(KEY) || busy.has(name)) return;
+      if (!confirm('「' + String(row.title || '無題') + '」を削除しますか？ この操作は元に戻せません。')) return;
+      await write(name, f => f.deleteDoc(f.doc(f.db, name, row.id)), () => {});
+    }
+
+    for (const name of names) {
+      const form = $(name + '-form');
+      form.addEventListener('submit', async e => {
+        e.preventDefault();
+        if (!saved(KEY) || busy.has(name)) return;
+        const values = new FormData(form);
+        const data = {
+          title: String(values.get('title') || '').trim(),
+          body: String(values.get('body') || '').trim(),
+          createdAtMs: Date.now()
+        };
+        if (!data.title || !data.body) {
+          message(name + '-save-status', 'タイトルと本文を入力してください。');
           return;
         }
-        listEl.innerHTML = "";
-        snap.forEach(d => {
-          const data = d.data();
-          const row = document.createElement("div");
-          row.className = "list-item";
-          row.innerHTML = `
-            <div>
-              <div style="font-weight:bold; color:#f3d28b; font-size:0.92rem;">${escapeHtml(data.title)}</div>
-              <div style="font-size:0.82rem; color:#cbd5e1; white-space:pre-wrap; margin-top:4px;">${escapeHtml(data.body).slice(0, 100)}...</div>
-            </div>
-          `;
-          const del = document.createElement("button");
-          del.className = "del-btn";
-          del.textContent = "削除";
-          del.onclick = async () => {
-            if (confirm("この投稿を削除しますか？")) {
-              await deleteDoc(doc(db, colName, d.id));
-              loadItems();
-            }
-          };
-          row.appendChild(del);
-          listEl.appendChild(row);
-        });
-      } catch (e) {
-        listEl.textContent = "読み込みエラー: " + e.message;
-      }
+        if (name === 'tools') {
+          data.url = safeURL(values.get('url'));
+          if (!data.url) {
+            message(name + '-save-status', 'URLは http:// または https:// から正しく入力してください。');
+            return;
+          }
+        }
+        await write(name, f => f.addDoc(f.collection(f.db, name), data), () => form.reset());
+      });
+      $(name + '-reload').addEventListener('click', () => load(name));
     }
 
-    function escapeHtml(str) {
-      return String(str).replace(/[&<>"']/g, s => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-      }[s]));
-    }
+    $('admin-login').addEventListener('submit', e => {
+      e.preventDefault();
+      if ($('admin-password').value !== ADMIN_PASS) {
+        message('admin-login-status', '管理者パスワードが違います。');
+        return;
+      }
+      if (!remember(KEY)) {
+        message('admin-login-status', 'ブラウザの保存機能を有効にしてください。');
+        return;
+      }
+      $('admin-password').value = '';
+      message('admin-login-status', '');
+      syncAdmin();
+      all();
+    });
+
+    $('admin-logout').addEventListener('click', () => {
+      if (busy.size && !confirm('送信確認中です。退出しても送信は取り消されません。退出しますか？')) return;
+      forget(KEY);
+      syncAdmin();
+    });
+
+    window.addEventListener('storage', e => {
+      if (e.key === KEY || e.key === null) {
+        if (syncAdmin()) all();
+      }
+    });
+    window.addEventListener('pageshow', () => {
+      if (syncAdmin()) all();
+    });
+    if (syncAdmin()) all();
   </script>
 </body>
 </html>

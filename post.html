@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AIGON.LAB｜スマホ即時投稿・管理画面</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px 16px;
+      background: #060913;
+      color: #f8fafc;
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      line-height: 1.6;
+    }
+    .wrap {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 1.3rem;
+      color: #f3d28b;
+      margin: 0 0 16px 0;
+      border-bottom: 1px solid rgba(243, 210, 139, 0.35);
+      padding-bottom: 10px;
+    }
+    .card {
+      background: #0f172a;
+      border: 1px solid rgba(212, 175, 55, 0.45);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: bold;
+      color: #f3d28b;
+      margin-bottom: 6px;
+    }
+    input, textarea, select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #475569;
+      background: #1e293b;
+      color: #ffffff;
+      font-size: 1rem;
+      margin-bottom: 14px;
+      font-family: inherit;
+    }
+    .tab-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .tab-btn {
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #8c6d2e;
+      background: #1e293b;
+      color: #cbd5e1;
+      font-weight: bold;
+      font-size: 0.92rem;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: #8c6d2e;
+      color: #ffffff;
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #f3d06b, #c89d28);
+      color: #090d16;
+      font-weight: 900;
+      font-size: 1.05rem;
+      cursor: pointer;
+    }
+    .list-item {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .del-btn {
+      background: #dc2626;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .nav-links {
+      display: flex;
+      gap: 14px;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+    }
+    .nav-links a {
+      color: #93c5fd;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>AIGON.LAB｜スマホ即時投稿・管理画面</h1>
+    <div class="nav-links">
+      <a href="index.html">← トップページを見る</a>
+      <a href="member.html">会員専用ページを見る →</a>
+    </div>
+
+    <!-- ロック画面 -->
+    <div id="auth-box" class="card">
+      <label>管理者パスワードを入力してください</label>
+      <input type="password" id="admin-pass" placeholder="パスワード（aigon2026）">
+      <button type="button" id="login-btn" class="submit-btn">管理画面を開く</button>
+    </div>
+
+    <!-- 投稿フォーム -->
+    <div id="editor-box" style="display:none;">
+      <div class="card">
+        <label>投稿先を選んでください</label>
+        <div class="tab-group">
+          <button type="button" class="tab-btn active" data-type="journal">① 活動日誌に投稿</button>
+          <button type="button" class="tab-btn" data-type="prompt">② 会員プロンプトに追加</button>
+        </div>
+
+        <label id="title-label">活動日誌の見出し（任意）</label>
+        <input type="text" id="post-title" placeholder="例：小田原の飲食店様とQR名刺の打ち合わせ">
+
+        <label id="body-label">本文・メモ（音声入力でもそのままOK）</label>
+        <textarea id="post-body" rows="5" placeholder="ここに内容を入力してください"></textarea>
+
+        <button type="button" id="send-btn" class="submit-btn">この内容で公開する</button>
+        <p id="status-msg" style="color:#4ade80; font-weight:bold; margin:10px 0 0 0; display:none;"></p>
+      </div>
+
+      <div class="card">
+        <h2 style="font-size:1rem; color:#f3d28b; margin-top:0;">投稿済み一覧（削除もここからできます）</h2>
+        <div id="manage-list">読み込み中...</div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAcGs-cwFjSO2B5UOJAwUCKu_varuBcJo0",
+      authDomain: "aigon-lab.firebaseapp.com",
+      projectId: "aigon-lab",
+      storageBucket: "aigon-lab.firebasestorage.app",
+      messagingSenderId: "783745519408",
+      appId: "1:783745519408:web:283454bf6a50398b5fc2f5"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const PASS = "aigon2026";
+    let currentType = "journal";
+
+    const authBox = document.getElementById("auth-box");
+    const editorBox = document.getElementById("editor-box");
+    const passInput = document.getElementById("admin-pass");
+    const loginBtn = document.getElementById("login-btn");
+
+    if (localStorage.getItem("aigon_admin_ok") === "1") {
+      authBox.style.display = "none";
+      editorBox.style.display = "block";
+      loadItems();
+    }
+
+    loginBtn.addEventListener("click", () => {
+      if (passInput.value.trim() === PASS) {
+        localStorage.setItem("aigon_admin_ok", "1");
+        authBox.style.display = "none";
+        editorBox.style.display = "block";
+        loadItems();
+      } else {
+        alert("パスワードが違います");
+      }
+    });
+
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentType = btn.dataset.type;
+        if (currentType === "journal") {
+          document.getElementById("title-label").textContent = "活動日誌の見出し（任意）";
+          document.getElementById("post-title").placeholder = "例：小田原の飲食店様とQR名刺の打ち合わせ";
+          document.getElementById("body-label").textContent = "本文・メモ（音声入力でもそのままOK）";
+        } else {
+          document.getElementById("title-label").textContent = "プロンプトのタイトル（必須）";
+          document.getElementById("post-title").placeholder = "例：Googleマップ口コミ返信（3パターン作成）";
+          document.getElementById("body-label").textContent = "プロンプト本文（会員がコピーして使う文章）";
+        }
+        loadItems();
+      });
+    });
+
+    document.getElementById("send-btn").addEventListener("click", async () => {
+      const title = document.getElementById("post-title").value.trim();
+      const body = document.getElementById("post-body").value.trim();
+      if (!body) {
+        alert("本文を入力してください");
+        return;
+      }
+      const colName = currentType === "journal" ? "journals" : "prompts";
+      const btn = document.getElementById("send-btn");
+      btn.disabled = true;
+      btn.textContent = "送信中...";
+
+      try {
+        await addDoc(collection(db, colName), {
+          title: title || (currentType === "journal" ? "現場メモ" : "実務プロンプト"),
+          body: body,
+          createdAt: serverTimestamp()
+        });
+        document.getElementById("post-title").value = "";
+        document.getElementById("post-body").value = "";
+        const msg = document.getElementById("status-msg");
+        msg.textContent = "公開しました！サイトに即時反映されています。";
+        msg.style.display = "block";
+        setTimeout(() => { msg.style.display = "none"; }, 3000);
+        loadItems();
+      } catch (e) {
+        alert("エラーが発生しました: " + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "この内容で公開する";
+      }
+    });
+
+    async function loadItems() {
+      const listEl = document.getElementById("manage-list");
+      listEl.textContent = "読み込み中...";
+      const colName = currentType === "journal" ? "journals" : "prompts";
+      try {
+        const q = query(collection(db, colName), orderBy("createdAt", "desc"));
+        const snap = await getDocs(q);
+        if (snap.empty) {
+          listEl.textContent = "まだ投稿がありません。";
+          return;
+        }
+        listEl.innerHTML = "";
+        snap.forEach(d => {
+          const data = d.data();
+          const row = document.createElement("div");
+          row.className = "list-item";
+          row.innerHTML = `
+            <div>
+              <div style="font-weight:bold; color:#f3d28b; font-size:0.92rem;">${escapeHtml(data.title)}</div>
+              <div style="font-size:0.82rem; color:#cbd5e1; white-space:pre-wrap; margin-top:4px;">${escapeHtml(data.body).slice(0, 100)}...</div>
+            </div>
+          `;
+          const del = document.createElement("button");
+          del.className = "del-btn";
+          del.textContent = "削除";
+          del.onclick = async () => {
+            if (confirm("この投稿を削除しますか？")) {
+              await deleteDoc(doc(db, colName, d.id));
+              loadItems();
+            }
+          };
+          row.appendChild(del);
+          listEl.appendChild(row);
+        });
+      } catch (e) {
+        listEl.textContent = "読み込みエラー: " + e.message;
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, s => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[s]));
+    }
+  </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ja">
 <head>
   <meta charset="utf-8">
@@ -1028,12 +1028,51 @@
           <p class="eyebrow">CONTACT &amp; MEMBER ROOM</p>
           <h2>お問い合わせ・会員室</h2>
           <p><strong>ご相談は予約制で承ります。</strong><br>制作のご依頼、AI活用講座のご相談、会員様専用ルーム（AI道具箱・フェローチャットリンク）はこちらからアクセスいただけます。</p>
+
+          <!-- ▼ 会員専用ルーム（パスワード認証＋AIプロンプト集＋ツール倉庫＋FCLボタン） ▼ -->
           <div class="member-room-box" id="member-room-slot">
-            <h3>🔒 メンバーシップ会員様専用ルーム</h3>
-            <p>安心保守＋AI実践メンバーシップ会員様は、下記より「フェローチャットリンク（会員専用直通相談）」および「AI業務ツール倉庫」をご利用いただけます。</p>
-            <div class="member-room-links">
-              <a class="member-room-btn" href="#contact" id="fcl-link-btn">💬 フェローチャットリンク</a>
-              <a class="member-room-btn outline" href="https://toretamoo.com/apps/" target="_blank" rel="noopener noreferrer">🧰 AI業務ツール倉庫</a>
+            <div id="mr-lock-view">
+              <h3>🔒 メンバーシップ会員様専用ルーム</h3>
+              <p>ご登録時にお送りした「合言葉（パスワード）」を入力すると、現場でそのまま使える厳選AIプロンプト集・AI業務ツール倉庫・フェローチャットリンク（FCL）が開きます。</p>
+              <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
+                <input type="password" id="mr-pass-input" placeholder="合言葉を入力" style="flex:1 1 160px; padding:10px 12px; border-radius:6px; border:1px solid #8c6d2e; background:#ffffff; color:#191b1f; font-size:0.95rem;">
+                <button type="button" id="mr-unlock-btn" class="member-room-btn" style="border:none; cursor:pointer; padding:10px 18px;">入室する</button>
+              </div>
+              <p id="mr-error-msg" style="color:#f87171; font-size:0.82rem; margin:8px 0 0 0; display:none;">合言葉が一致しません。最新の合言葉をご確認ください。</p>
+            </div>
+
+            <div id="mr-unlocked-view" style="display:none;">
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:12px; border-bottom:1px solid rgba(243,210,139,0.3); padding-bottom:10px;">
+                <h3 style="margin:0;">🔓 会員認証済み｜AIGON.LAB 実践ルーム</h3>
+                <button type="button" id="mr-lock-btn" style="background:transparent; color:#cbd5e1; border:1px solid #64748b; border-radius:4px; padding:4px 10px; font-size:0.76rem; cursor:pointer;">ロックする</button>
+              </div>
+
+              <div class="member-room-links" style="margin-bottom:12px;">
+                <a class="member-room-btn" href="member.html">📂 会員専用ページ（一覧表示）を開く</a>
+                <a class="member-room-btn outline" href="https://toretamoo.com/apps/" target="_blank" rel="noopener noreferrer">🧰 AI業務ツール倉庫</a>
+              </div>
+
+              <div style="margin-bottom:16px;">
+                <a class="member-room-btn outline" href="#contact" id="fcl-link-btn">💬 フェローチャットリンク（個別相談予約）</a>
+              </div>
+
+              <div style="font-size:0.86rem; font-weight:bold; color:#f3d28b; margin-bottom:8px;">📋 現場即戦力プロンプト（押すとコピーできます）</div>
+
+              <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(243,210,139,0.25); border-radius:8px; padding:12px; margin-bottom:10px;">
+                <div style="font-size:0.85rem; font-weight:bold; color:#ffffff; margin-bottom:4px;">1. Googleマップ口コミ返信文（3パターン作成）</div>
+                <pre id="mr-p1" style="margin:0 0 8px 0; white-space:pre-wrap; font-size:0.78rem; color:#e2e8f0; background:rgba(0,0,0,0.4); padding:8px; border-radius:4px;">あなたは地域で愛される店舗のベテラン店主です。以下のGoogleマップの口コミに対し、感謝と誠実さが伝わる返信文を3パターン（丁寧・親しみやすい・簡潔）作成してください。
+【業種】〇〇
+【口コミ】ここに貼り付け</pre>
+                <button type="button" class="mr-copy-btn member-room-btn outline" data-target="mr-p1" style="width:100%; cursor:pointer; font-size:0.8rem; padding:7px;">プロンプトをコピー</button>
+              </div>
+
+              <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(243,210,139,0.25); border-radius:8px; padding:12px;">
+                <div style="font-size:0.85rem; font-weight:bold; color:#ffffff; margin-bottom:4px;">2. 店頭POP・LINEお知らせ文の作成</div>
+                <pre id="mr-p2" style="margin:0 0 8px 0; white-space:pre-wrap; font-size:0.78rem; color:#e2e8f0; background:rgba(0,0,0,0.4); padding:8px; border-radius:4px;">小規模店舗の集客アドバイザーとして、以下の商品・サービスの「店頭POP用キャッチコピー」5案と「常連様向けLINE案内文」を作ってください。
+【商品・サービス名】〇〇
+【一番伝えたい強み】〇〇</pre>
+                <button type="button" class="mr-copy-btn member-room-btn outline" data-target="mr-p2" style="width:100%; cursor:pointer; font-size:0.8rem; padding:7px;">プロンプトをコピー</button>
+              </div>
             </div>
           </div>
         </div>
@@ -1102,7 +1141,98 @@
           scalePreviews();
         });
       }
+
+      // 3. 会員専用ルーム認証＆コピー機能（初期合言葉：aigon2026）
+      var PASSCODE = 'aigon2026';
+      var KEY = 'aigon_member_ok';
+      var lockView = document.getElementById('mr-lock-view');
+      var unlockView = document.getElementById('mr-unlocked-view');
+      var passInput = document.getElementById('mr-pass-input');
+      var unlockBtn = document.getElementById('mr-unlock-btn');
+      var lockBtn = document.getElementById('mr-lock-btn');
+      var errMsg = document.getElementById('mr-error-msg');
+
+      function setMemberState(unlocked) {
+        if (!lockView || !unlockView) return;
+        lockView.style.display = unlocked ? 'none' : 'block';
+        unlockView.style.display = unlocked ? 'block' : 'none';
+        if (errMsg) errMsg.style.display = 'none';
+      }
+
+      if (localStorage.getItem(KEY) === '1') setMemberState(true);
+
+      if (unlockBtn) {
+        unlockBtn.addEventListener('click', function () {
+          if (passInput && passInput.value.trim() === PASSCODE) {
+            localStorage.setItem(KEY, '1');
+            setMemberState(true);
+          } else if (errMsg) {
+            errMsg.style.display = 'block';
+          }
+        });
+      }
+      if (passInput) {
+        passInput.addEventListener('keypress', function (e) {
+          if (e.key === 'Enter' && unlockBtn) unlockBtn.click();
+        });
+      }
+      if (lockBtn) {
+        lockBtn.addEventListener('click', function () {
+          localStorage.removeItem(KEY);
+          if (passInput) passInput.value = '';
+          setMemberState(false);
+        });
+      }
+      document.querySelectorAll('.mr-copy-btn').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var el = document.getElementById(b.getAttribute('data-target'));
+          if (!el) return;
+          navigator.clipboard.writeText(el.innerText).then(function () {
+            var old = b.textContent;
+            b.textContent = 'コピー完了！';
+            setTimeout(function () { b.textContent = old; }, 1800);
+          });
+        });
+      });
     })();
+  </script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAcGs-cwFjSO2B5UOJAwUCKu_varuBcJo0",
+      authDomain: "aigon-lab.firebaseapp.com",
+      projectId: "aigon-lab",
+      storageBucket: "aigon-lab.firebasestorage.app",
+      messagingSenderId: "783745519408",
+      appId: "1:783745519408:web:283454bf6a50398b5fc2f5"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function loadRecentJournals() {
+      const area = document.getElementById("firebase-post-area");
+      if (!area) return;
+      try {
+        const q = query(collection(db, "journals"), orderBy("createdAt", "desc"), limit(3));
+        const snap = await getDocs(q);
+        if (snap.empty) return;
+        let html = '<div style="width:100%;"><strong>📝 最新の現場活動日誌（リアルタイム更新）</strong><ul style="margin:8px 0 0 0; padding-left:18px;">';
+        snap.forEach(doc => {
+          const d = doc.data();
+          const safeTitle = String(d.title || "").replace(/</g, "&lt;");
+          const safeBody = String(d.body || "").replace(/</g, "&lt;");
+          html += `<li style="margin-bottom:6px;"><strong>${safeTitle}</strong>：${safeBody}</li>`;
+        });
+        html += '</ul></div>';
+        area.innerHTML = html;
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    loadRecentJournals();
   </script>
 </body>
 </html>

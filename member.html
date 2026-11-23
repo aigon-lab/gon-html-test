@@ -217,6 +217,18 @@
     [hidden] { display: none !important; }
   </style>
 <style id="r2-small-fixes">button:disabled{opacity:.55;cursor:wait}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #f3d28b;outline-offset:3px} .card-grid>*{min-width:0} @media(max-width:420px){.card-grid{grid-template-columns:1fr}}</style>
+<style id="sp-fit">
+  /* スマホで長いボタンが画面からはみ出し、ページ全体が左右にずれる問題の追加修正 */
+  html, body { overflow-x: hidden; }
+  .top-bar > *, .top-bar a, .top-bar button { min-width: 0; max-width: 100%; }
+  .top-bar .gold-btn, .top-bar .back-link { white-space: normal !important; overflow-wrap: anywhere; text-align: center; }
+  .top-bar > div:last-child { width: 100%; }
+  .sec-nav a { overflow-wrap: anywhere; }
+  @media (max-width: 480px) {
+    .container { padding-left: 14px; padding-right: 14px; }
+    .top-bar > div:last-child > * { flex: 1 1 100%; }
+  }
+</style>
 </head>
 <body>
   <header class="header">
@@ -271,7 +283,7 @@
     </div>
 
     <footer>
-      © 2026 AIGON.LAB（表示版：tenjiCorp-r2-20261123-fcl / 会員閲覧専用）
+      © 2026 AIGON.LAB（表示版：tenjiCorp-r2-20261124-sp / 会員閲覧専用）
     </footer>
   </main>
 

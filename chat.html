@@ -837,6 +837,11 @@
     }
     [hidden] { display: none !important; }
   </style>
+<style id="sp-admin-tap">
+  /* 下の署名を3回タップしたとき、文字選択や「検索」が出ないようにする追加指定 */
+  footer, footer * { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
+  #fcl-secret-admin { display: inline-block; padding: 10px 6px; touch-action: manipulation; }
+</style>
 </head>
 <body>
   <header class="header">

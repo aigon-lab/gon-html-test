@@ -662,6 +662,59 @@
     }
   </style>
 <style id="r2-small-fixes">button:disabled{opacity:.55;cursor:wait}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #f3d28b;outline-offset:3px} .card-grid>*{min-width:0} @media(max-width:420px){.card-grid{grid-template-columns:1fr}}</style>
+<style id="sp-header-fit">
+  /* スマホ幅で上の帯がはみ出して、ページ全体が左に寄る問題の追加修正（既存CSSは変更しない） */
+  @media (max-width: 600px) {
+    .site-header .header-inner { gap: 8px !important; }
+    .site-header .brand-logo { width: 120px !important; height: auto !important; }
+    .site-header .font-size-btn { padding: 5px 9px !important; font-size: 0.72rem !important; }
+    .site-header .menu-toggle { flex-shrink: 0 !important; }
+  }
+  /* さらに狭い画面（表示サイズを大きくしているスマホなど）向けに、もう少し詰める */
+  @media (max-width: 400px) {
+    .site-header .header-inner { gap: 6px !important; }
+    .site-header .brand-logo { width: 104px !important; }
+    .site-header .font-size-btn { padding: 4px 7px !important; font-size: 0.66rem !important; }
+  }
+  @media (max-width: 480px) {
+    .quick-info-grid strong,
+    .quick-info-grid strong .nw { white-space: normal !important; overflow-wrap: anywhere; }
+  }
+  /* メニューを開いたとき、項目が上の帯の中に閉じ込められて隠れる問題の修正：
+     帯に「ぼかし」がかかっていると、画面いっぱいに出すはずのメニューが帯の中に収まってしまう */
+  body.menu-open .site-header {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+</style>
+<style id="sp-hero-tone">
+  /* 1) スマホでヒーロー画像の明るい渦が文字に重なって読みにくい問題：
+        暗い部分を文字の後ろに回し、流れ星のある辺りを見せ、薄い紺の膜で文字を浮かせる */
+  @media (max-width: 700px) {
+    .hero .hero-visual {
+      background-position: 62% center !important;
+      background-image:
+        linear-gradient(rgba(4, 8, 18, 0.45), rgba(4, 8, 18, 0.45)),
+        url("corporate-reference.png") !important;
+    }
+    .hero .hero-inner h1 em { color: #f0d195 !important; }
+    .hero .hero-inner h1 { text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85) !important; }
+  }
+  /* 2) ページ最上部で、三本線ボタンが白っぽくて見えない問題 */
+  @media (max-width: 960px) {
+    body:not(.menu-open) .site-header:not(.is-scrolled) .menu-toggle {
+      border-color: #b8a989 !important;
+      background: #ffffff !important;
+      color: #1d2738 !important;
+    }
+  }
+</style>
+<style id="sp-contact-fit">
+  /* スマホで問い合わせ・会員室の枠が右にはみ出す問題の追加修正 */
+  .contact-grid > *, .contact-grid form, .member-room-box, .contact-link-panel { min-width: 0 !important; max-width: 100% !important; }
+  .contact input, .contact textarea, .contact select, .member-room-box input { max-width: 100% !important; box-sizing: border-box; }
+  .contact h2, .contact h3, .contact p, .member-room-box * { overflow-wrap: anywhere; }
+</style>
 </head>
 <body>
   <header class="site-header" id="header">
@@ -1233,7 +1286,7 @@
       </nav>
     </div>
     <div class="container footer-bottom">
-      <span><span id="secret-admin-trigger" style="cursor:default; user-select:none; -webkit-user-select:none;">© 2026 AIGON.LAB</span>（表示版：tenjiCorp-r2-20261123-fcl）</span>
+      <span><span id="secret-admin-trigger" style="cursor:default; user-select:none; -webkit-user-select:none;">© 2026 AIGON.LAB</span>（表示版：tenjiCorp-r2-20261124-sp3）</span>
       <span>サイト制作：エスプリ・アルティザン</span>
     </div>
     <div id="secret-admin-door" class="container" style="display:none; padding-top:12px; padding-bottom:8px; text-align:center;"></div>

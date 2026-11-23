@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
   <title>AIGON.LAB｜会員専用ルーム（プロンプト集・AI業務ツール倉庫）</title>
+  <link rel="icon" href="AIGON_LAB_favicon_gold.png" type="image/png">
   <style>
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -42,6 +43,7 @@
       border-radius: 6px;
       background: transparent;
       cursor: pointer;
+      white-space: nowrap;
     }
     .container {
       max-width: 1180px;
@@ -76,6 +78,7 @@
       cursor: pointer;
       text-decoration: none;
       font-size: 0.92rem;
+      white-space: nowrap;
     }
     .gold-btn:disabled { opacity: 0.55; cursor: wait; }
     .top-bar {
@@ -89,6 +92,17 @@
       flex-wrap: wrap;
       gap: 12px;
       margin-bottom: 24px;
+    }
+    .member-status-badge {
+      display: inline-block;
+      background: rgba(22, 163, 74, 0.22);
+      border: 1px solid #4ade80;
+      color: #86efac;
+      font-size: 0.76rem;
+      font-weight: bold;
+      padding: 2px 10px;
+      border-radius: 999px;
+      margin-bottom: 6px;
     }
     .sec-nav {
       display: flex;
@@ -225,11 +239,13 @@
     <div id="member-room" hidden>
       <div class="top-bar">
         <div>
+          <span class="member-status-badge">🔓 会員入室中（認証済み）</span>
           <div style="font-weight:bold; font-size:1.05rem; color:#ffffff;">会員専用｜AIプロンプト集・AI業務ツール倉庫</div>
           <div style="font-size:0.86rem; color:#cbd5e1;">管理者が登録した内容を取得し、プロンプトのコピー・ツールの利用ができます。</div>
         </div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <a href="index.html#contact" class="gold-btn">お問い合わせ・ご相談予約</a>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <a href="chat.html" class="gold-btn">💬 フェローチャットリンク（個別相談・交流）</a>
+          <a href="index.html#contact" class="back-link">お問い合わせ・ご相談予約</a>
           <button type="button" id="reload-member" class="back-link">最新の内容を取得</button>
           <button type="button" id="member-logout" class="back-link">会員室から退出</button>
         </div>
@@ -238,6 +254,7 @@
       <nav class="sec-nav" aria-label="会員ページ内メニュー">
         <a href="#prompt-library">▼ 現場即戦力・AIプロンプト集へ</a>
         <a href="#tool-warehouse">▼ 会員限定・AI業務ツール倉庫へ</a>
+        <a href="chat.html">▶ 💬 フェローチャットリンク（個別相談・交流）へ</a>
       </nav>
 
       <section id="prompt-library">
@@ -254,7 +271,7 @@
     </div>
 
     <footer>
-      © 2026 AIGON.LAB（表示版：tenjiCorp-r2-20261121 / 会員閲覧専用）
+      © 2026 AIGON.LAB（表示版：tenjiCorp-r2-20261123-fcl / 会員閲覧専用）
     </footer>
   </main>
 
@@ -290,10 +307,13 @@
       if (!apiPromise) {
         apiPromise = limit(Promise.all([
           import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
-          import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
-        ])).then(([app, fs]) => {
+          import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js'),
+          import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js')
+        ])).then(async ([app, fs, au]) => {
           const instance = app.getApps().find(a => a.name === '[DEFAULT]') || app.initializeApp(CONFIG);
-          return { ...fs, db: fs.getFirestore(instance) };
+          const auth = au.getAuth(instance);
+          await auth.authStateReady();
+          return { ...fs, ...au, db: fs.getFirestore(instance), auth };
         }).catch(e => { apiPromise = null; throw e; });
       }
       return apiPromise;
@@ -334,9 +354,9 @@
     function forget(key) { try { localStorage.removeItem(key); } catch {} }
 
     const KEY = 'aigon_member_ok';
-    const MEMBER_PASS = 'aigon2026';
+    const MEMBER_EMAIL = 'aigon-member@toretamoo.com';
+    const ADMIN_EMAIL = 'aigon-admin@toretamoo.com';
     let version = 0;
-
 
     function afterLeave() {
       version++;
@@ -449,16 +469,32 @@
       }
     }
 
+    async function verifySession() {
+      try {
+        const f = await api();
+        if (!f.auth.currentUser) {
+          forget(KEY);
+          syncGate();
+          afterLeave();
+        }
+      } catch (e) { console.error(e); }
+    }
+
     function syncGate() {
       const ok = saved(KEY);
       $('member-login').hidden = ok;
       $('member-room').hidden = !ok;
+      if (ok) verifySession();
       return ok;
     }
 
-    $('member-login').addEventListener('submit', e => {
+    $('member-login').addEventListener('submit', async e => {
       e.preventDefault();
-      if ($('member-password').value !== MEMBER_PASS) {
+      try {
+        const f = await api();
+        await limit(f.signInWithEmailAndPassword(f.auth, MEMBER_EMAIL, $('member-password').value));
+      } catch (err) {
+        console.error(err);
         message('login-status', '合言葉が一致しません。');
         return;
       }
@@ -472,8 +508,10 @@
       afterEnter();
     });
 
-    $('member-logout').addEventListener('click', () => {
+    $('member-logout').addEventListener('click', async () => {
+      try { const f = await api(); await f.signOut(f.auth); } catch (err) { console.error(err); }
       forget(KEY);
+      forget('aigon_super_admin_ok');
       syncGate();
       afterLeave();
     });

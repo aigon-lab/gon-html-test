@@ -459,42 +459,119 @@
       opacity: 1 !important;
     }
 
-    /* 活動日誌リアルタイム枠 */
+    /* 活動日誌リアルタイム枠（高さ固定スライダー＋タイルグリッド＋3行抜粋開閉式） */
+    #blog .section-head h2 {
+      font-size: clamp(1.35rem, 2.4vw, 1.95rem) !important;
+      line-height: 1.35 !important;
+    }
     .firebase-feed-slot {
-      margin-top: 22px;
-      padding: 18px 20px;
+      margin-top: 24px;
+      padding: 20px;
       background: #ffffff;
       border: 1px solid #8c6d2e;
       border-radius: 10px;
     }
-    .journal-entry-card {
-      border-top: 1px solid rgba(25, 27, 31, 0.12);
-      padding: 12px 0;
+    .journals-scroll-box {
+      max-height: 360px;
+      overflow-y: scroll;
+      padding: 6px 12px 6px 2px;
+      margin-top: 10px;
+      border-top: 1px dashed rgba(140, 109, 46, 0.35);
+      border-bottom: 1px dashed rgba(140, 109, 46, 0.35);
+      scrollbar-width: thin;
+      scrollbar-color: #8c6d2e #efeae0;
     }
-    .journal-entry-card:first-child {
-      border-top: none;
-      padding-top: 4px;
+    .journals-scroll-box::-webkit-scrollbar {
+      width: 10px;
+    }
+    .journals-scroll-box::-webkit-scrollbar-track {
+      background: #efeae0;
+      border-radius: 6px;
+    }
+    .journals-scroll-box::-webkit-scrollbar-thumb {
+      background: #8c6d2e;
+      border-radius: 6px;
+      border: 2px solid #efeae0;
+    }
+    .journals-scroll-box::-webkit-scrollbar-thumb:hover {
+      background: #6e531f;
+    }
+    .journals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 14px;
+      align-items: start;
+    }
+    .journal-entry-card {
+      background: #faf8f3;
+      border: 1px solid rgba(140, 109, 46, 0.32);
+      border-top: 3px solid #8c6d2e;
+      border-radius: 8px;
+      padding: 15px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
     }
     .journal-entry-card h4 {
-      margin: 0 0 4px 0;
-      font-size: 0.98rem;
+      margin: 0 0 6px 0;
+      font-size: 0.96rem;
+      line-height: 1.45;
       color: #191b1f;
     }
     .journal-entry-card time {
       display: block;
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       color: #8c6d2e;
-      margin-bottom: 4px;
+      font-weight: 700;
+      margin-bottom: 8px;
     }
-    .journal-entry-card p {
+    .journal-entry-card p.journal-body {
       margin: 0;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
+      line-height: 1.65;
       color: #333;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .journal-entry-card.is-open p.journal-body {
+      display: block;
+      -webkit-line-clamp: unset;
+      overflow: visible;
+    }
+    .journal-toggle-btn {
+      margin-top: 10px;
+      align-self: flex-start;
+      background: transparent;
+      color: #8c6d2e;
+      border: 1px solid #8c6d2e;
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .journal-toggle-btn:hover {
+      background: #8c6d2e;
+      color: #ffffff;
     }
 
-    /* お問い合わせ・会員室 */
+    /* お問い合わせ・会員室（見出し1行固定＆会員室ボックス） */
+    #contact h2 {
+      font-size: clamp(1.35rem, 2.3vw, 1.95rem) !important;
+      white-space: nowrap !important;
+      line-height: 1.3 !important;
+    }
+    @media (max-width: 360px) {
+      #contact h2 {
+        font-size: 1.2rem !important;
+      }
+    }
     .tel-box {
       margin-top: 18px;
       padding-top: 18px;
@@ -563,6 +640,25 @@
       background: transparent;
       border: 1px solid #f3d28b;
       color: #f3d28b !important;
+    }
+    .member-room-btn.fcl-featured {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, #f3d06b, #c89d28);
+      color: #090d16 !important;
+      border: 1px solid #f3d28b;
+      font-weight: 900;
+      padding: 12px 14px;
+    }
+    .mr-fallback-area {
+      width: 100%;
+      min-height: 76px;
+      margin-top: 8px;
+      background: #020617;
+      color: #f8fafc;
+      border: 1px solid #f3d28b;
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 0.78rem;
     }
   </style>
 <style id="r2-small-fixes">button:disabled{opacity:.55;cursor:wait}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #f3d28b;outline-offset:3px} .card-grid>*{min-width:0} @media(max-width:420px){.card-grid{grid-template-columns:1fr}}</style>
@@ -984,7 +1080,7 @@
         <div class="section-head">
           <div>
             <p class="eyebrow">ACTIVITY LOG</p>
-            <h2>活動日誌・ブログ・実務アプリ倉庫</h2>
+            <h2><span class="nw">活動日誌・ブログ・</span><span class="nw">実務アプリ倉庫</span></h2>
           </div>
           <p>現場でのAI活用事例や「選ばれるお店のコツ」、開発した実務Webアプリを随時公開しています。</p>
         </div>
@@ -1035,13 +1131,15 @@
         </div>
 
         <div class="firebase-feed-slot" id="firebase-post-area">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
-            <strong style="font-size:1rem; color:#191b1f;">📝 現場のひとこと活動日誌（最新5件）</strong>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:6px;">
+            <strong style="font-size:1.02rem; color:#191b1f;">📝 現場のひとこと活動日誌（枠内スクロールで閲覧できます）</strong>
             <button type="button" id="reload-journals" class="work-btn" style="width:auto; padding:6px 14px; font-size:0.8rem;">最新の内容を取得</button>
           </div>
-          <p id="journals-status" style="margin:0 0 8px 0; font-size:0.85rem; color:#8c6d2e;" role="status"></p>
-          <div id="journals-list">
-            <p style="margin:0; font-size:0.88rem; color:#333;">日々の相談現場やAI検証メモを随時更新・公開しています。</p>
+          <p id="journals-status" style="margin:0 0 6px 0; font-size:0.84rem; color:#8c6d2e;" role="status"></p>
+          <div class="journals-scroll-box">
+            <div id="journals-list" class="journals-grid">
+              <p style="margin:0; font-size:0.88rem; color:#333;">日々の相談現場やAI検証メモを随時更新・公開しています。</p>
+            </div>
           </div>
         </div>
       </div>
@@ -1053,13 +1151,13 @@
         <div>
           <p class="eyebrow">CONTACT &amp; MEMBER ROOM</p>
           <h2>お問い合わせ・会員室</h2>
-          <p><strong>ご相談は予約制で承ります。</strong><br>制作のご依頼、AI活用講座のご相談、会員様専用ルーム（AIプロンプト集・AI業務ツール倉庫）はこちらからアクセスいただけます。</p>
+          <p><strong>ご相談は予約制で承ります。</strong><br>制作のご依頼、AI活用講座のご相談、会員様専用ルーム（AIプロンプト集・AI業務ツール倉庫・フェローチャットリンク）はこちらからアクセスいただけます。</p>
 
           <!-- ▼ 会員専用ルーム（会員専用パスワード認証・閲覧＆コピー専用） ▼ -->
           <div class="member-room-box" id="member-room-slot">
             <div id="mr-lock-view">
               <h3>🔒 メンバーシップ会員様専用ルーム</h3>
-              <p>ご登録時にお送りした「会員の合言葉」を入力すると、現場でそのまま使える厳選AIプロンプト集・AI業務ツール倉庫をご利用いただけます。</p>
+              <p>ご登録時にお送りした「会員の合言葉」を入力すると、現場でそのまま使える厳選AIプロンプト集・AI業務ツール倉庫・会員交流チャットをご利用いただけます。</p>
               <form id="mr-login-form" style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
                 <input type="password" id="mr-pass-input" placeholder="会員の合言葉を入力" autocomplete="current-password" required style="flex:1 1 160px; padding:10px 12px; border-radius:6px; border:1px solid #8c6d2e; background:#ffffff; color:#191b1f; font-size:0.95rem;">
                 <button type="submit" id="mr-unlock-btn" class="member-room-btn" style="border:none; cursor:pointer; padding:10px 18px;">会員室に入る</button>
@@ -1068,17 +1166,21 @@
             </div>
 
             <div id="mr-unlocked-view" style="display:none;">
-              <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:12px; border-bottom:1px solid rgba(243,210,139,0.3); padding-bottom:10px;">
-                <h3 style="margin:0;">🔓 会員入室済み｜AIGON.LAB 実践ルーム</h3>
-                <button type="button" id="mr-lock-btn" style="background:transparent; color:#cbd5e1; border:1px solid #64748b; border-radius:4px; padding:4px 10px; font-size:0.76rem; cursor:pointer;">会員室から退出</button>
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px; border-bottom:1px solid rgba(243,210,139,0.3); padding-bottom:10px;">
+                <h3 style="margin:0; font-size:0.96rem; line-height:1.4; color:#f3d28b;">🔓 会員入室済み｜AIGON.LAB 実践ルーム</h3>
+                <button type="button" id="mr-lock-btn" style="background:transparent; color:#cbd5e1; border:1px solid #64748b; border-radius:4px; padding:5px 10px; font-size:0.76rem; white-space:nowrap; flex-shrink:0; cursor:pointer;">会員室から退出</button>
               </div>
 
               <div class="member-room-links" style="margin-bottom:12px;">
-                <a class="member-room-btn" href="member.html">📂 会員専用ページ（全プロンプト一覧）</a>
-                <a class="member-room-btn outline" href="member.html#tool-warehouse">🧰 AI業務ツール倉庫</a>
+                <a class="member-room-btn" href="member.html" style="display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1.35; padding:10px 8px;">
+                  <span>📂 会員専用ページ</span>
+                  <span style="font-size:0.74rem; font-weight:500; opacity:0.95;">（全プロンプト一覧）</span>
+                </a>
+                <a class="member-room-btn outline" href="member.html#tool-warehouse" style="display:flex; align-items:center; justify-content:center; line-height:1.35; padding:10px 8px;">🧰 AI業務ツール倉庫</a>
+                <a class="member-room-btn fcl-featured" href="chat.html">💬 フェローチャットリンク（個別相談・交流）</a>
               </div>
 
-              <p style="font-size:0.82rem;color:#cbd5e1;">管理者が登録したプロンプト・ツールは、上の会員専用ページでご利用いただけます。</p>
+              <p style="font-size:0.82rem;color:#cbd5e1;">管理者が登録したプロンプト・ツールや、会員同士の交流チャットは上のボタンからご利用いただけます。</p>
 
               <div style="font-size:0.86rem; font-weight:bold; color:#f3d28b; margin-bottom:8px;">📋 体験サンプルプロンプト（押すとコピーできます）</div>
 
@@ -1097,10 +1199,6 @@
 【一番伝えたい強み】〇〇</pre>
                 <button type="button" class="mr-copy-btn member-room-btn outline" data-target="mr-p2" style="width:100%; cursor:pointer; font-size:0.8rem; padding:7px;">プロンプトをコピー</button>
               </div>
-            </div>
-            <div class="admin-entry-r2" style="margin-top:20px;padding-top:14px;border-top:1px solid rgba(243,210,139,.3);">
-              <p style="margin:0 0 8px;font-size:.82rem;color:#cbd5e1;">運営者の方はこちら（会員用とは別の入口です）</p>
-              <a class="member-room-btn outline" href="post.html">管理者専用・登録／削除画面へ</a>
             </div>
           </div>
         </div>
@@ -1135,9 +1233,10 @@
       </nav>
     </div>
     <div class="container footer-bottom">
-      <span>© 2026 AIGON.LAB（表示版：tenjiCorp-r2-20261121）</span>
+      <span><span id="secret-admin-trigger" style="cursor:default; user-select:none; -webkit-user-select:none;">© 2026 AIGON.LAB</span>（表示版：tenjiCorp-r2-20261123-fcl）</span>
       <span>サイト制作：エスプリ・アルティザン</span>
     </div>
+    <div id="secret-admin-door" class="container" style="display:none; padding-top:12px; padding-bottom:8px; text-align:center;"></div>
   </footer>
 
   <script src="script.js"></script>
@@ -1170,9 +1269,10 @@
         });
       }
 
-      // 3. 会員専用ルーム認証（会員用合言葉：aigon2026 / キー：aigon_member_ok）
-      var MEMBER_PASS = 'aigon2026';
+      // 3. 会員専用ルーム認証（Firebase Authentication・合言葉はサーバー側で確認）
+      var MEMBER_EMAIL = "aigon-member@toretamoo.com";
       var KEY = 'aigon_member_ok';
+      var FB_CONFIG = { apiKey: "AIzaSyAcGs-cwFjSO2B5UOJAwUCKu_varuBcJo0", authDomain: "aigon-lab.firebaseapp.com", projectId: "aigon-lab", storageBucket: "aigon-lab.firebasestorage.app", messagingSenderId: "783745519408", appId: "1:783745519408:web:283454bf6a50398b5fc2f5" };
       var lockView = document.getElementById('mr-lock-view');
       var unlockView = document.getElementById('mr-unlocked-view');
       var passInput = document.getElementById('mr-pass-input');
@@ -1184,29 +1284,48 @@
       function remember(k) { try { localStorage.setItem(k, '1'); return true; } catch (e) { return false; } }
       function forget(k) { try { localStorage.removeItem(k); } catch (e) {} }
 
+      function showErr(t) {
+        if (errMsg) { errMsg.textContent = t; errMsg.style.display = 'block'; }
+      }
+
+      async function getAuthApi() {
+        var app = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+        var au = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
+        var inst = app.getApps().find(function (a) { return a.name === '[DEFAULT]'; }) || app.initializeApp(FB_CONFIG);
+        var auth = au.getAuth(inst);
+        await auth.authStateReady();
+        return { au: au, auth: auth };
+      }
+
+      async function verifySession() {
+        try {
+          var a = await getAuthApi();
+          if (!a.auth.currentUser) { forget(KEY); syncGate(); }
+        } catch (e) { console.error(e); }
+      }
+
       function syncGate() {
         var ok = saved(KEY);
         if (lockView) lockView.style.display = ok ? 'none' : 'block';
         if (unlockView) unlockView.style.display = ok ? 'block' : 'none';
         if (ok && errMsg) errMsg.style.display = 'none';
+        if (ok) verifySession();
         return ok;
       }
 
       if (loginForm) {
-        loginForm.addEventListener('submit', function (e) {
+        loginForm.addEventListener('submit', async function (e) {
           e.preventDefault();
-          if (!passInput || passInput.value !== MEMBER_PASS) {
-            if (errMsg) {
-              errMsg.textContent = '合言葉が一致しません。最新の合言葉をご確認ください。';
-              errMsg.style.display = 'block';
-            }
+          try {
+            var a = await getAuthApi();
+            await a.au.signInWithEmailAndPassword(a.auth, MEMBER_EMAIL, passInput ? passInput.value : '');
+          } catch (err) {
+            console.error(err);
+            showErr('合言葉が一致しません。最新の合言葉をご確認ください。');
             return;
           }
           if (!remember(KEY)) {
-            if (errMsg) {
-              errMsg.textContent = 'ブラウザの保存機能を有効にしてください。';
-              errMsg.style.display = 'block';
-            }
+            showErr('ブラウザの保存機能を有効にしてください。');
             return;
           }
           passInput.value = '';
@@ -1215,8 +1334,10 @@
       }
 
       if (lockBtn) {
-        lockBtn.addEventListener('click', function () {
+        lockBtn.addEventListener('click', async function () {
+          try { var a = await getAuthApi(); await a.au.signOut(a.auth); } catch (err) { console.error(err); }
           forget(KEY);
+          forget('aigon_super_admin_ok');
           if (passInput) passInput.value = '';
           syncGate();
         });
@@ -1228,7 +1349,23 @@
       window.addEventListener('pageshow', syncGate);
       syncGate();
 
-      // 4. サンプルプロンプトのワンクリックコピー（フォールバック付き）
+      // 4. サンプルプロンプトのワンクリックコピー（テキスト選択フォールバック付き）
+      function showFallbackBox(btnEl, text) {
+        var parent = btnEl.parentElement;
+        if (!parent) return;
+        var area = parent.querySelector('.mr-fallback-area');
+        if (!area) {
+          area = document.createElement('textarea');
+          area.className = 'mr-fallback-area';
+          area.readOnly = true;
+          parent.appendChild(area);
+        }
+        area.value = text;
+        area.focus();
+        area.select();
+        btnEl.textContent = '下の枠内を長押し・またはCtrl+Cでコピー';
+      }
+
       document.querySelectorAll('.mr-copy-btn').forEach(function (b) {
         b.addEventListener('click', function () {
           var el = document.getElementById(b.getAttribute('data-target'));
@@ -1240,13 +1377,40 @@
               b.textContent = 'コピーしました！';
               setTimeout(function () { b.textContent = old; }, 1800);
             }).catch(function () {
-              b.textContent = '上の枠内の文章を長押し・またはCtrl+Cでコピーしてください';
+              showFallbackBox(b, text);
             });
           } else {
-            b.textContent = '上の枠内の文章を長押し・またはCtrl+Cでコピーしてください';
+            showFallbackBox(b, text);
           }
         });
       });
+
+      // 5. フッター「© 2026 AIGON.LAB」3回連続クリック（タップ）で出現する管理者隠し扉
+      var secretTrigger = document.getElementById('secret-admin-trigger');
+      var secretDoor = document.getElementById('secret-admin-door');
+      if (secretTrigger && secretDoor) {
+        var tapCount = 0;
+        var tapTimer = null;
+        secretTrigger.addEventListener('click', function () {
+          tapCount++;
+          clearTimeout(tapTimer);
+          if (tapCount >= 3) {
+            tapCount = 0;
+            secretDoor.innerHTML = '';
+            var adminLink = document.createElement('a');
+            adminLink.href = 'post' + '.html';
+            adminLink.textContent = '🔐 管理者専用・更新画面へ入る';
+            adminLink.style.cssText = 'display:inline-block; padding:9px 20px; background:#191b1f; color:#f3d28b; border:1px solid #8c6d2e; border-radius:6px; font-size:0.85rem; font-weight:700; text-decoration:none;';
+            secretDoor.appendChild(adminLink);
+            secretDoor.style.display = 'block';
+            secretDoor.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          } else {
+            tapTimer = setTimeout(function () {
+              tapCount = 0;
+            }, 1500);
+          }
+        });
+      }
     })();
   </script>
 
@@ -1313,14 +1477,29 @@
 
     function journalCard(row) {
       const e = node('article', undefined, 'journal-entry-card');
-      e.append(node('h4', row.title || '現場メモ'));
+      const top = node('div');
+      top.append(node('h4', row.title || '現場メモ'));
       const n = timestamp(row.createdAtMs), d = new Date(n);
       if (n > 0 && !Number.isNaN(d.getTime())) {
         const t = node('time', d.toLocaleString('ja-JP'));
         t.dateTime = d.toISOString();
-        e.append(t);
+        top.append(t);
       }
-      e.append(node('p', row.body || ''));
+      const bodyText = String(row.body || '');
+      top.append(node('p', bodyText, 'journal-body'));
+      e.append(top);
+
+      if (bodyText.length > 75 || bodyText.includes('\n')) {
+        const toggleBtn = node('button', '続きを読む ▼', 'journal-toggle-btn');
+        toggleBtn.type = 'button';
+        toggleBtn.setAttribute('aria-expanded', 'false');
+        toggleBtn.addEventListener('click', () => {
+          const opened = e.classList.toggle('is-open');
+          toggleBtn.textContent = opened ? '閉じる ▲' : '続きを読む ▼';
+          toggleBtn.setAttribute('aria-expanded', opened ? 'true' : 'false');
+        });
+        e.append(toggleBtn);
+      }
       return e;
     }
 
@@ -1336,8 +1515,8 @@
       try {
         const rows = await readAll('journals');
         if (v !== version) return;
-        listEl.replaceChildren(...rows.slice(0, 5).map(journalCard));
-        message('journals-status', rows.length ? fetchedMessage(rows.length) + '（最新5件まで表示）' : '取得完了：0件。活動日誌はまだ登録されていません。');
+        listEl.replaceChildren(...rows.map(journalCard));
+        message('journals-status', rows.length ? fetchedMessage(rows.length) + '（枠内のスライダーで全件ご覧いただけます）' : '取得完了：0件。活動日誌はまだ登録されていません。');
       } catch (e) {
         if (v === version) { listEl.replaceChildren(); message('journals-status', errorText(e)); }
       } finally {

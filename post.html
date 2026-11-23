@@ -259,10 +259,13 @@
       if (!apiPromise) {
         apiPromise = limit(Promise.all([
           import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
-          import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
-        ])).then(([app, fs]) => {
+          import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js'),
+          import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js')
+        ])).then(async ([app, fs, au]) => {
           const instance = app.getApps().find(a => a.name === '[DEFAULT]') || app.initializeApp(CONFIG);
-          return { ...fs, db: fs.getFirestore(instance) };
+          const auth = au.getAuth(instance);
+          await auth.authStateReady();
+          return { ...fs, ...au, db: fs.getFirestore(instance), auth };
         }).catch(e => { apiPromise = null; throw e; });
       }
       return apiPromise;
@@ -329,13 +332,25 @@
     function forget(key) { try { localStorage.removeItem(key); } catch {} }
 
     const KEY = 'aigon_super_admin_ok';
-    const ADMIN_PASS = 'aigon-admin-9970';
+    const MEMBER_EMAIL = 'aigon-member@toretamoo.com';
+    const ADMIN_EMAIL = 'aigon-admin@toretamoo.com';
     const names = ['journals', 'prompts', 'tools'];
     const versions = { journals: 0, prompts: 0, tools: 0 };
     const busy = new Set();
 
+    async function verifySession() {
+      try {
+        const f = await api();
+        if (!f.auth.currentUser) {
+          forget(KEY);
+          syncAdmin();
+        }
+      } catch (e) { console.error(e); }
+    }
+
     function syncAdmin() {
       const ok = saved(KEY);
+      if (ok) verifySession();
       $('admin-login').hidden = ok;
       $('admin-room').hidden = !ok;
       if (!ok) {
@@ -438,12 +453,17 @@
       $(name + '-reload').addEventListener('click', () => load(name));
     }
 
-    $('admin-login').addEventListener('submit', e => {
+    $('admin-login').addEventListener('submit', async e => {
       e.preventDefault();
-      if ($('admin-password').value !== ADMIN_PASS) {
+      try {
+        const f = await api();
+        await limit(f.signInWithEmailAndPassword(f.auth, ADMIN_EMAIL, $('admin-password').value));
+      } catch (err) {
+        console.error(err);
         message('admin-login-status', '管理者パスワードが違います。');
         return;
       }
+      remember('aigon_member_ok');
       if (!remember(KEY)) {
         message('admin-login-status', 'ブラウザの保存機能を有効にしてください。');
         return;
@@ -454,9 +474,11 @@
       all();
     });
 
-    $('admin-logout').addEventListener('click', () => {
+    $('admin-logout').addEventListener('click', async () => {
       if (busy.size && !confirm('送信確認中です。退出しても送信は取り消されません。退出しますか？')) return;
+      try { const f = await api(); await f.signOut(f.auth); } catch (err) { console.error(err); }
       forget(KEY);
+      forget('aigon_member_ok');
       syncAdmin();
     });
 

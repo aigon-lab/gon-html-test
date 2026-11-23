@@ -1,0 +1,1984 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>FellowChatLink｜AIGON.LAB 会員交流・個別相談ボード</title>
+  <link rel="icon" href="AIGON_LAB_favicon_gold.png" type="image/png">
+  <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    html.text-large { font-size: 115%; }
+    body {
+      margin: 0;
+      padding: 0;
+      background: #060913;
+      color: #f8fafc;
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      line-height: 1.7;
+    }
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(6, 9, 19, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.45);
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand {
+      font-weight: 900;
+      color: #f3d28b;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      font-size: 1.05rem;
+    }
+    .brand-sub {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      background: rgba(243, 210, 139, 0.12);
+      border: 1px solid rgba(243, 210, 139, 0.3);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      color: #e2e8f0;
+      text-decoration: none;
+      font-size: 0.82rem;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 6px 12px;
+      border-radius: 6px;
+      background: rgba(15, 23, 42, 0.8);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .nav-btn:hover {
+      border-color: #f3d28b;
+      color: #f3d28b;
+    }
+    .nav-btn:disabled {
+      opacity: 0.55;
+      cursor: wait;
+    }
+    .nav-btn.active {
+      background: #8c6d2e;
+      border-color: #f3d28b;
+      color: #ffffff;
+    }
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px 16px 64px 16px;
+    }
+
+    /* 入室ゲート */
+    .lock-panel {
+      max-width: 480px;
+      margin: 56px auto;
+      background: #0f172a;
+      border: 1px solid rgba(212, 175, 55, 0.55);
+      border-radius: 14px;
+      padding: 30px 24px;
+      text-align: center;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    }
+    .lock-panel input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid #8c6d2e;
+      background: #ffffff;
+      color: #0f172a;
+      font-size: 1rem;
+      margin: 14px 0;
+    }
+    .gold-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 11px 20px;
+      background: linear-gradient(135deg, #f3d06b, #c89d28);
+      color: #090d16;
+      font-weight: 900;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 0.92rem;
+      white-space: nowrap;
+      transition: opacity 0.2s ease;
+    }
+    .gold-btn:hover { opacity: 0.9; }
+    .gold-btn:disabled { opacity: 0.55; cursor: wait; }
+
+    /* 上部ステータスバー */
+    .top-banner {
+      background: linear-gradient(135deg, rgba(29, 78, 216, 0.22), rgba(212, 175, 55, 0.16));
+      border: 1px solid rgba(212, 175, 55, 0.45);
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(22, 163, 74, 0.22);
+      border: 1px solid #4ade80;
+      color: #86efac;
+      font-size: 0.76rem;
+      font-weight: bold;
+      padding: 2px 10px;
+      border-radius: 999px;
+      margin-bottom: 4px;
+    }
+    .admin-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(220, 38, 38, 0.25);
+      border: 1px solid #f87171;
+      color: #fca5a5;
+      font-size: 0.76rem;
+      font-weight: bold;
+      padding: 2px 10px;
+      border-radius: 999px;
+      margin-left: 6px;
+      margin-bottom: 4px;
+    }
+
+    /* 初心者・会員さん向け安心ガイド枠 */
+    .welcome-guide {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(243, 210, 139, 0.35);
+      border-left: 4px solid #f3d28b;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      font-size: 0.88rem;
+      color: #e2e8f0;
+      line-height: 1.75;
+    }
+    .welcome-guide strong {
+      color: #f3d28b;
+    }
+    .welcome-guide ul {
+      margin: 6px 0 0 0;
+      padding-left: 20px;
+      color: #cbd5e1;
+      font-size: 0.84rem;
+    }
+    .welcome-guide li {
+      margin-bottom: 3px;
+    }
+
+    /* 投稿作成ボックス */
+    .composer-card {
+      background: #0f172a;
+      border: 1px solid rgba(212, 175, 55, 0.45);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 22px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+    .composer-title {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #f3d28b;
+      margin: 0 0 12px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .composer-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 600px) {
+      .composer-row { grid-template-columns: 1fr; }
+    }
+    .field-label {
+      display: block;
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      margin-bottom: 4px;
+      font-weight: bold;
+    }
+    .field-hint {
+      font-size: 0.76rem;
+      color: #94a3b8;
+      margin: 4px 0 0 0;
+    }
+    .fcl-input, .fcl-select, .fcl-textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #475569;
+      background: #1e293b;
+      color: #ffffff;
+      font-size: 0.94rem;
+      font-family: inherit;
+    }
+    .fcl-input:read-only {
+      background: #0b1120;
+      color: #f3d28b;
+      border-color: rgba(212, 175, 55, 0.45);
+      cursor: not-allowed;
+      font-weight: bold;
+    }
+    .fcl-input:focus, .fcl-select:focus, .fcl-textarea:focus {
+      outline: 2px solid #f3d28b;
+      border-color: #f3d28b;
+    }
+    .fcl-textarea {
+      min-height: 86px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    /* 分かりやすいカスタム写真選択ボタン */
+    .image-upload-wrap {
+      margin-top: 12px;
+      padding: 12px;
+      background: rgba(2, 6, 23, 0.5);
+      border: 1px dashed rgba(212, 175, 55, 0.45);
+      border-radius: 8px;
+    }
+    .fcl-file-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      overflow: hidden;
+    }
+    .custom-photo-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: rgba(212, 175, 55, 0.16);
+      border: 1px solid #f3d28b;
+      border-radius: 8px;
+      color: #f3d28b;
+      font-weight: bold;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .custom-photo-btn:hover {
+      background: rgba(212, 175, 55, 0.28);
+      color: #ffffff;
+    }
+    .selected-file-label {
+      display: inline-block;
+      margin-left: 10px;
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      vertical-align: middle;
+    }
+    .preview-box {
+      position: relative;
+      display: block;
+      margin-top: 10px;
+      max-width: 200px;
+    }
+    .preview-box img {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #f3d28b;
+      display: block;
+    }
+    .preview-clear-btn {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid #ffffff;
+      background: rgba(15, 23, 42, 0.85);
+      color: #ffffff;
+      font-size: 0.8rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .preview-clear-btn:hover {
+      background: #dc2626;
+    }
+
+    .composer-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    /* フィルター・検索バー */
+    .filter-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .cat-tabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .cat-tab {
+      background: #0f172a;
+      color: #cbd5e1;
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      border-radius: 999px;
+      padding: 5px 13px;
+      font-size: 0.82rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .cat-tab.active {
+      background: #8c6d2e;
+      color: #ffffff;
+      border-color: #f3d28b;
+    }
+    .search-box {
+      flex: 1 1 200px;
+      max-width: 260px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      color: #ffffff;
+      font-size: 0.84rem;
+    }
+
+    /* タイル3列グリッド */
+    .feed-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+    @media (max-width: 980px) {
+      .feed-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 640px) {
+      .feed-list { grid-template-columns: 1fr; }
+    }
+
+    .post-card {
+      background: #0f172a;
+      border: 1px solid rgba(212, 175, 55, 0.38);
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .author-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .avatar-circle {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #8c6d2e, #d4af37);
+      color: #090d16;
+      font-weight: 900;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .author-name {
+      font-weight: bold;
+      color: #ffffff;
+      font-size: 0.9rem;
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .post-meta {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .cat-badge {
+      background: rgba(212, 175, 55, 0.16);
+      color: #f3d28b;
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      padding: 0px 6px;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: bold;
+    }
+    .post-date-quiet {
+      font-size: 0.7rem;
+      color: #64748b;
+      white-space: nowrap;
+    }
+
+    /* 本文エリア */
+    .post-body {
+      font-size: 0.88rem;
+      color: #f1f5f9;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      margin: 6px 0 6px 0;
+      line-height: 1.65;
+      max-height: 145px;
+      overflow-y: auto;
+      padding: 8px 10px;
+      background: rgba(2, 6, 23, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 8px;
+      transition: max-height 0.25s ease;
+    }
+    .post-body.expanded {
+      max-height: none;
+      overflow-y: visible;
+    }
+    .post-body::-webkit-scrollbar {
+      width: 5px;
+    }
+    .post-body::-webkit-scrollbar-thumb {
+      background: rgba(212, 175, 55, 0.45);
+      border-radius: 999px;
+    }
+    .expand-body-btn {
+      align-self: flex-end;
+      background: transparent;
+      border: none;
+      color: #f3d28b;
+      font-size: 0.76rem;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 2px 4px;
+      margin-bottom: 8px;
+      text-decoration: underline;
+    }
+    .expand-body-btn:hover {
+      color: #ffffff;
+    }
+
+    /* コンパクトサムネイル表示 */
+    .post-image-wrap {
+      margin: 4px 0 10px 0;
+    }
+    .post-thumb-box {
+      position: relative;
+      display: block;
+      width: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(212, 175, 55, 0.55);
+      cursor: zoom-in;
+      background: #020617;
+      text-align: center;
+    }
+    .post-image {
+      width: 100%;
+      max-height: 150px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .post-thumb-box:hover .post-image {
+      transform: scale(1.02);
+      opacity: 0.92;
+    }
+    .thumb-hint {
+      background: rgba(6, 9, 19, 0.88);
+      color: #f3d28b;
+      font-size: 0.7rem;
+      padding: 3px 6px;
+      text-align: center;
+      border-top: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .ref-link-box {
+      display: block;
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(147, 197, 253, 0.4);
+      color: #93c5fd;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      text-decoration: none;
+      margin-bottom: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* リアクション・アクションボタン */
+    .post-actions {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: auto;
+    }
+    .react-btn {
+      background: rgba(255, 255, 255, 0.05);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 0.73rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      transition: all 0.15s ease;
+    }
+    .react-btn:hover {
+      border-color: #f3d28b;
+      color: #f3d28b;
+    }
+    .react-btn.liked {
+      background: rgba(212, 175, 55, 0.24);
+      border-color: #f3d28b;
+      color: #f3d28b;
+    }
+    .share-btn {
+      background: rgba(37, 99, 235, 0.22);
+      color: #93c5fd;
+      border: 1px solid rgba(147, 197, 253, 0.45);
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: 0.73rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      transition: all 0.15s ease;
+    }
+    .share-btn:hover {
+      background: rgba(37, 99, 235, 0.4);
+      color: #ffffff;
+    }
+    .del-btn {
+      margin-left: auto;
+      background: #991b1b;
+      color: #ffffff;
+      border: none;
+      border-radius: 5px;
+      padding: 4px 8px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* 返信（コメント）エリア */
+    .replies-wrap {
+      margin-top: 10px;
+      padding-left: 10px;
+      border-left: 2px solid rgba(212, 175, 55, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .reply-item {
+      background: rgba(2, 6, 23, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 7px;
+      padding: 7px 9px;
+      font-size: 0.8rem;
+    }
+    .reply-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 2px;
+      font-size: 0.72rem;
+      color: #f3d28b;
+      font-weight: bold;
+    }
+    .reply-head time {
+      color: #64748b;
+      font-weight: normal;
+      font-size: 0.68rem;
+    }
+    .reply-text {
+      color: #e2e8f0;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      margin: 0;
+    }
+    .reply-form {
+      margin-top: 6px;
+      display: flex;
+      gap: 6px;
+      background: rgba(2, 6, 23, 0.5);
+      padding: 7px;
+      border-radius: 7px;
+    }
+    .reply-form input {
+      flex: 1 1 auto;
+      min-width: 0;
+      padding: 6px 8px;
+      border-radius: 5px;
+      border: 1px solid #475569;
+      background: #1e293b;
+      color: #ffffff;
+      font-size: 0.8rem;
+    }
+    .reply-form button {
+      padding: 6px 10px;
+      background: #8c6d2e;
+      color: #ffffff;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      font-size: 0.76rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* 画像拡大＆保存ポップアップモーダル */
+    .img-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(2, 6, 23, 0.92);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .img-modal img {
+      max-width: 95vw;
+      max-height: 76vh;
+      border-radius: 10px;
+      border: 2px solid #f3d28b;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.75);
+      object-fit: contain;
+    }
+    .img-modal-bar {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* SNS宣伝エージェントモーダル */
+    .share-dialog {
+      background: #0f172a;
+      border: 2px solid #f3d28b;
+      border-radius: 14px;
+      max-width: 520px;
+      width: 100%;
+      padding: 20px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85);
+      text-align: left;
+      max-height: 92vh;
+      overflow-y: auto;
+    }
+    .share-dialog-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .share-dialog h3 {
+      margin: 0;
+      color: #f3d28b;
+      font-size: 1.04rem;
+    }
+    .regen-btn {
+      background: rgba(212, 175, 55, 0.18);
+      color: #f3d28b;
+      border: 1px solid #f3d28b;
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 0.78rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .regen-btn:hover {
+      background: #8c6d2e;
+      color: #ffffff;
+    }
+    .share-box-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.76rem;
+      color: #cbd5e1;
+      font-weight: bold;
+      margin: 10px 0 4px 0;
+    }
+    .x-count-badge {
+      font-size: 0.74rem;
+      padding: 1px 8px;
+      border-radius: 999px;
+      background: rgba(22, 163, 74, 0.22);
+      color: #86efac;
+      border: 1px solid #4ade80;
+    }
+    .x-count-badge.over {
+      background: rgba(220, 38, 38, 0.25);
+      color: #fca5a5;
+      border-color: #f87171;
+    }
+    .share-preview-text {
+      width: 100%;
+      background: #020617;
+      color: #f8fafc;
+      border: 1px solid #475569;
+      border-radius: 8px;
+      padding: 9px 10px;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      font-family: inherit;
+      resize: vertical;
+    }
+    .share-sns-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    @media (max-width: 440px) {
+      .share-sns-grid { grid-template-columns: 1fr; }
+    }
+    .sns-link-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 0.84rem;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      color: #ffffff;
+      text-align: center;
+    }
+    .sns-x { background: #1e293b; border: 1px solid #94a3b8; }
+    .sns-ig { background: linear-gradient(135deg, #d62976, #962fbf); color: #ffffff; }
+    .sns-line { background: #06c755; color: #ffffff; }
+    .sns-fb { background: #1877f2; color: #ffffff; }
+
+    footer {
+      margin-top: 48px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 0.8rem;
+      color: #94a3b8;
+      text-align: center;
+    }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="brand-wrap">
+      <a href="index.html" class="brand" id="app-brand-title">FellowChatLink</a>
+      <span class="brand-sub">コミュニティ＆個別相談</span>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="nav-btn" id="font-toggle">文字：標準</button>
+      <a href="member.html" class="nav-btn">📂 会員専用ページ</a>
+      <a href="index.html" class="nav-btn">← トップへ</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- 会員入室ゲート -->
+    <form id="fcl-login" class="lock-panel">
+      <div style="font-size:0.78rem; color:#f3d28b; font-weight:bold; letter-spacing:0.08em;">FELLOW CHAT LINK</div>
+      <h1 style="font-size:1.3rem; margin:8px 0;">会員交流・個別相談ボード 入室</h1>
+      <p style="font-size:0.86rem; color:#cbd5e1;">ご登録時にお送りした「会員の合言葉」を入力すると、メンバー同士の交流・相談スレッドに参加できます。</p>
+      <input type="password" id="fcl-password" placeholder="会員の合言葉を入力" autocomplete="current-password" required>
+      <button type="submit" class="gold-btn" style="width:100%;">チャットルームに入る</button>
+      <p id="fcl-login-status" role="status" style="color:#f87171; font-size:0.84rem; margin:10px 0 0 0;"></p>
+    </form>
+
+    <!-- チャットルーム本体 -->
+    <div id="fcl-room" hidden>
+      <div class="top-banner">
+        <div>
+          <span class="status-pill">🔓 会員入室中・高速表示モード</span>
+          <span id="admin-badge" class="admin-pill" hidden>🛡️ 管理者モード有効（名前変更可）</span>
+          <div style="font-weight:bold; font-size:1.05rem; color:#ffffff;" id="app-room-heading">FellowChatLink｜会員交流・個別相談ボード</div>
+          <div style="font-size:0.84rem; color:#cbd5e1;" id="app-room-desc">現場の質問・AI活用の工夫・業務報告などを気軽に投稿・返信できます。</div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" id="fcl-reload" class="nav-btn">🔄 最新に更新</button>
+          <button type="button" id="fcl-logout" class="nav-btn">会員室から退出</button>
+        </div>
+      </div>
+
+      <!-- 初心者・会員さん向け安心ガイド -->
+      <div class="welcome-guide">
+        <strong>🔰 はじめての方へ：ここは会員だけの安心な場所です（恥ずかしいことは何もありません！）</strong>
+        <ul>
+          <li><strong>分からないことを聞くための会です：</strong>「これってどうやるの？」「こんな初歩的なこと聞いていいのかな？」という質問こそ大歓迎です。</li>
+          <li><strong>文字だけの投稿で十分です：</strong>写真やリンクがなくても全く問題ありません。思いついた一言や近況だけでも気軽に書いてみてください。</li>
+          <li><strong>ご自身のSNSへの宣伝もワンタップ：</strong>投稿の「📤 SNSで宣伝」ボタンを押すと、あなたのSNSアカウント名義のままそのまま投稿できる宣伝文（Xの140文字枠ピタリ調整済み）を自動作成します。</li>
+        </ul>
+      </div>
+
+      <!-- 新規投稿フォーム -->
+      <section class="composer-card" aria-label="新規投稿フォーム">
+        <div class="composer-title">
+          <span>✍️ 新しい投稿・相談を書く</span>
+          <span id="author-lock-note" style="font-size:0.76rem; color:#94a3b8; font-weight:normal;">※最初に入力したお名前が1つだけ固定登録されます</span>
+        </div>
+        <form id="fcl-post-form">
+          <div class="composer-row">
+            <div>
+              <label class="field-label" for="fcl-author">① お名前・店舗名（初回登録後に固定されます）</label>
+              <input type="text" id="fcl-author" class="fcl-input" maxlength="40" placeholder="例：小田原・〇〇食堂 / 山田" required>
+            </div>
+            <div>
+              <label class="field-label" for="fcl-category">② 話題の種類（カテゴリー）</label>
+              <select id="fcl-category" class="fcl-select"></select>
+            </div>
+          </div>
+          <div style="margin-bottom:10px;">
+            <label class="field-label" for="fcl-body">③ メッセージ・相談内容（文字だけでOKです）</label>
+            <textarea id="fcl-body" class="fcl-textarea" maxlength="3000" placeholder="例：〇〇のやり方が分からず困っています／今日こんな便利な使い方を試してみました！など、普段の言葉で自由に書いてください。" required></textarea>
+          </div>
+          <div>
+            <label class="field-label" for="fcl-url">④ 参考URL（自分のお店のHPやYouTube・インスタがある時だけ・空欄でOK）</label>
+            <input type="url" id="fcl-url" class="fcl-input" maxlength="1000" placeholder="https://...（なければ空欄のまま）">
+          </div>
+
+          <!-- 分かりやすい写真・GIF添付欄 -->
+          <div class="image-upload-wrap">
+            <label class="field-label" for="fcl-image">⑤ 写真を載せたい時だけ（空欄のまま投稿できます）</label>
+            <input type="file" id="fcl-image" class="fcl-file-hidden" accept="image/*">
+            <div>
+              <label for="fcl-image" class="custom-photo-btn">📷 スマホ・パソコンの写真を選ぶ</label>
+              <span id="fcl-file-name" class="selected-file-label">今は選ばれていません（写真なしでも投稿できます）</span>
+            </div>
+            <p class="field-hint">※写真を選ぶと、ちょうどいい大きさに自動で縮みます（動くGIFは700KBまで対応）。</p>
+            <div id="fcl-preview-wrap" class="preview-box" hidden>
+              <img id="fcl-preview-img" src="" alt="添付画像のプレビュー">
+              <button type="button" id="fcl-clear-image" class="preview-clear-btn" title="写真を取り消す">✕</button>
+            </div>
+          </div>
+
+          <div class="composer-footer">
+            <span id="fcl-post-status" role="status" style="font-size:0.84rem; color:#4ade80; font-weight:bold;"></span>
+            <button type="submit" id="fcl-submit-btn" class="gold-btn">📨 この内容で投稿する</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- カテゴリー絞り込み＆検索 -->
+      <div class="filter-bar">
+        <div class="cat-tabs" id="fcl-cat-tabs"></div>
+        <input type="search" id="fcl-search" class="search-box" placeholder="🔍 キーワード・投稿者で検索">
+      </div>
+
+      <p id="fcl-feed-status" role="status" style="font-size:0.84rem; color:#f3d28b; margin:0 0 12px 0;"></p>
+
+      <!-- 投稿一覧タイムライン（タイル3列） -->
+      <div id="fcl-feed-list" class="feed-list"></div>
+    </div>
+
+    <!-- 画像拡大＆保存モーダル -->
+    <div id="fcl-img-modal" class="img-modal" hidden>
+      <img id="fcl-modal-img" src="" alt="拡大画像">
+      <div class="img-modal-bar">
+        <a id="fcl-modal-download" class="gold-btn" href="" download="fcl_image.jpg">📥 この画像を保存する</a>
+        <button type="button" id="fcl-modal-close" class="nav-btn" style="padding:11px 20px; font-size:0.92rem;">✕ 閉じる</button>
+      </div>
+    </div>
+
+    <!-- SNS宣伝エージェントモーダル（投稿者名を入れず、各自のSNSアカウント名義のまま発信できる仕様） -->
+    <div id="fcl-share-modal" class="img-modal" hidden>
+      <div class="share-dialog">
+        <div class="share-dialog-head">
+          <h3>🤖 SNS宣伝文自動生成エージェント</h3>
+          <button type="button" id="fcl-share-regen" class="regen-btn">🔄 別の切り口で書き直す</button>
+        </div>
+        <p style="font-size:0.78rem; color:#cbd5e1; margin:0;">
+          各自のSNSアカウント名義でそのまま自然に投稿できるよう、<strong>掲示板内のニックネームは入れず</strong>に内容とURLだけを綺麗に整えます。
+        </p>
+
+        <div class="share-box-label">
+          <span>𝕏（旧Twitter）用：140文字ピタリ自動調整版</span>
+          <span id="fcl-x-counter" class="x-count-badge">140文字以内OK</span>
+        </div>
+        <textarea id="fcl-share-x-text" class="share-preview-text" style="min-height:95px;"></textarea>
+
+        <div class="share-box-label">
+          <span>📸 Instagram・LINE・Facebook・ブログ用：しっかり紹介版</span>
+        </div>
+        <textarea id="fcl-share-full-text" class="share-preview-text" style="min-height:115px;"></textarea>
+
+        <div class="share-sns-grid">
+          <a id="fcl-share-x" class="sns-link-btn sns-x" href="#" target="_blank" rel="noopener noreferrer">𝕏 に140文字で投稿</a>
+          <a id="fcl-share-ig" class="sns-link-btn sns-ig" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">📸 コピーしてInstagramへ</a>
+          <a id="fcl-share-line" class="sns-link-btn sns-line" href="#" target="_blank" rel="noopener noreferrer">💬 コピーしてLINEへ</a>
+          <a id="fcl-share-fb" class="sns-link-btn sns-fb" href="#" target="_blank" rel="noopener noreferrer">📘 コピーしてFacebookへ</a>
+        </div>
+        <p id="fcl-share-status" style="font-size:0.8rem; color:#4ade80; font-weight:bold; margin:0 0 8px 0;"></p>
+        <div style="text-align:right;">
+          <button type="button" id="fcl-share-close" class="nav-btn">✕ 閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <span id="fcl-secret-admin" style="cursor:default; user-select:none;">© 2026 AIGON.LAB｜FellowChatLink</span>（SNS宣伝エージェント内蔵モジュール）
+    </footer>
+  </main>
+
+  <script type="module">
+    /* =====================================================================
+       【独立販売・他コミュニティ展開用 設定ブロック】
+       ===================================================================== */
+    const APP_SETTINGS = {
+      appName: "FellowChatLink｜AIGON.LAB",
+      roomHeading: "FellowChatLink｜会員交流・個別相談ボード",
+      roomDesc: "会員同士の交流・AI活用の情報交換・個別相談を気軽にやり取りできる専用ボードです。",
+      publicSiteUrl: "https://toretamoo.com/tenjiCorp/",
+      hashTag: "#AIGONLAB #地域のお店応援",
+      collectionName: "fcl_posts",
+      memberKey: "aigon_member_ok",
+      memberEmail: "aigon-member@toretamoo.com",
+      adminKey: "aigon_super_admin_ok",
+      adminEmail: "aigon-admin@toretamoo.com",
+      categories: [
+        "💬 交流・雑談",
+        "🙋‍♂️ 個別相談・質問",
+        "💡 AI・商売の知恵",
+        "📢 お知らせ・共有"
+      ]
+    };
+
+    const FIREBASE_CONFIG = {
+      apiKey: "AIzaSyAcGs-cwFjSO2B5UOJAwUCKu_varuBcJo0",
+      authDomain: "aigon-lab.firebaseapp.com",
+      projectId: "aigon-lab",
+      storageBucket: "aigon-lab.firebasestorage.app",
+      messagingSenderId: "783745519408",
+      appId: "1:783745519408:web:283454bf6a50398b5fc2f5"
+    };
+
+    const $ = id => document.getElementById(id);
+    function setMsg(id, text, isErr = false) {
+      const el = $(id);
+      if (!el) return;
+      el.textContent = text;
+      if (isErr) el.style.color = "#f87171";
+      else el.style.color = "#4ade80";
+    }
+
+    function limit(p, ms = 15000) {
+      let timer;
+      return Promise.race([p, new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error("15秒以内に応答がありません。通信を確認して『最新に更新』を押してください。")), ms);
+      })]).finally(() => clearTimeout(timer));
+    }
+
+    function saved(k) { try { return localStorage.getItem(k) === "1"; } catch { return false; } }
+    function remember(k) { try { localStorage.setItem(k, "1"); return true; } catch { return false; } }
+    function forget(k) { try { localStorage.removeItem(k); } catch {} }
+
+    $("app-brand-title").textContent = APP_SETTINGS.appName;
+    $("app-room-heading").textContent = APP_SETTINGS.roomHeading;
+    $("app-room-desc").textContent = APP_SETTINGS.roomDesc;
+
+    const catSelect = $("fcl-category");
+    APP_SETTINGS.categories.forEach(c => {
+      const opt = document.createElement("option");
+      opt.value = c;
+      opt.textContent = c;
+      catSelect.appendChild(opt);
+    });
+
+    // 一般会員は初回登録した1個の名前で固定、管理者モード中はいつでも自由にお名前変更可能
+    function syncAuthorLock() {
+      const isAdmin = saved(APP_SETTINGS.adminKey);
+      let fixedName = "";
+      try { fixedName = localStorage.getItem("fcl_fixed_author") || localStorage.getItem("fcl_saved_author") || ""; } catch {}
+      const authorInput = $("fcl-author");
+      const lockNote = $("author-lock-note");
+
+      if (isAdmin) {
+        authorInput.readOnly = false;
+        lockNote.textContent = "🛡️ 管理者モード中（その都度いつでもお名前を変更できます）";
+        lockNote.style.color = "#fca5a5";
+      } else if (fixedName) {
+        authorInput.value = fixedName;
+        authorInput.readOnly = true;
+        lockNote.textContent = "🔒 登録済みニックネーム固定中（変更不可）";
+        lockNote.style.color = "#f3d28b";
+      } else {
+        authorInput.readOnly = false;
+        lockNote.textContent = "※最初に入力したお名前が1つだけ固定登録されます";
+        lockNote.style.color = "#94a3b8";
+      }
+    }
+
+    function getLockedOrInputAuthor() {
+      const isAdmin = saved(APP_SETTINGS.adminKey);
+      if (isAdmin) {
+        return $("fcl-author").value.trim();
+      }
+      let fixedName = "";
+      try { fixedName = localStorage.getItem("fcl_fixed_author") || ""; } catch {}
+      if (fixedName) return fixedName;
+      return $("fcl-author").value.trim();
+    }
+
+    function lockAuthorName(name) {
+      if (!name) return;
+      try {
+        localStorage.setItem("fcl_fixed_author", name);
+        localStorage.setItem("fcl_saved_author", name);
+      } catch {}
+      syncAuthorLock();
+    }
+
+    function formatCompactDate(ms) {
+      const n = Number(ms);
+      if (!Number.isFinite(n) || n <= 0) return "";
+      const d = new Date(n);
+      const m = d.getMonth() + 1;
+      const day = d.getDate();
+      const hh = String(d.getHours()).padStart(2, "0");
+      const mm = String(d.getMinutes()).padStart(2, "0");
+      return `${m}/${day} ${hh}:${mm}`;
+    }
+
+    $("font-toggle").addEventListener("click", function () {
+      const big = document.documentElement.classList.toggle("text-large");
+      this.textContent = big ? "文字：拡大中" : "文字：標準";
+      this.classList.toggle("active", big);
+    });
+
+    function openImageModal(srcData) {
+      $("fcl-modal-img").src = srcData;
+      const dlLink = $("fcl-modal-download");
+      dlLink.href = srcData;
+      const isGif = srcData.startsWith("data:image/gif;");
+      dlLink.download = "fcl_photo_" + Date.now() + (isGif ? ".gif" : ".jpg");
+      $("fcl-img-modal").hidden = false;
+    }
+    $("fcl-modal-close").addEventListener("click", () => {
+      $("fcl-img-modal").hidden = true;
+      $("fcl-modal-img").src = "";
+    });
+    $("fcl-img-modal").addEventListener("click", e => {
+      if (e.target === $("fcl-img-modal")) {
+        $("fcl-img-modal").hidden = true;
+        $("fcl-modal-img").src = "";
+      }
+    });
+
+    /* =====================================================================
+       【内蔵SNS宣伝文自動生成エージェント】
+       ・各自の表のSNSアカウント名で自然に投稿できるよう、投稿者名は一切入れない
+       ・X（旧Twitter）の140文字（URL=11.5文字換算）にピタッと収まるよう精密計算
+       ===================================================================== */
+    let currentSharePost = null;
+    let shareAngleIndex = 0;
+
+    function calcXWeightedLength(str) {
+      const urlRegex = /https?:\/\/[^\s]+/g;
+      let urlCount = 0;
+      const withoutUrls = str.replace(urlRegex, () => {
+        urlCount++;
+        return "";
+      });
+      let weight = urlCount * 11.5;
+      for (const ch of withoutUrls) {
+        const code = ch.charCodeAt(0);
+        weight += (code <= 0x007f || (code >= 0xff61 && code <= 0xff9f)) ? 0.5 : 1.0;
+      }
+      return Math.ceil(weight);
+    }
+
+    function extractKeySentences(rawBody) {
+      const lines = String(rawBody || "")
+        .split(/\r?\n/)
+        .map(s => s.replace(/^[【\[■●◆・\s]+|[】\]\s]+$/g, "").trim())
+        .filter(s => s.length >= 6 && !s.startsWith("http"));
+      if (!lines.length) return ["現場で役立つ工夫を仲間と共有しています！"];
+      return lines;
+    }
+
+    function generateAgentCopy(post, angleIdx) {
+      const cat = String(post.category || "");
+      const shopUrl = safeURL(post.url);
+      const siteUrl = APP_SETTINGS.publicSiteUrl;
+      const tag = APP_SETTINGS.hashTag;
+      const sentences = extractKeySentences(post.body);
+
+      const lead = sentences[0];
+      const second = sentences.length > 1 ? sentences[1] : "";
+
+      const angleTemplates = [
+        {
+          hook: "【現場の実践メモ】",
+          cta: "商売の知恵を仲間と毎日アップデート中👇",
+          fullIntro: `💡 現場からのリアルシェアです！\n「${lead}」\n${second ? second + "\n" : ""}一人では気づけない工夫も、仲間と共有すると毎日の商売がもっと楽しくなります✨`
+        },
+        {
+          hook: "✨今すぐ試したい現場の知恵",
+          cta: "小さな一歩で商売が変わる交流の場👇",
+          fullIntro: `📢 仲間コミュニティからのピックアップ！\n\n${lead}\n${second ? second + "\n" : ""}現場のリアルな知恵と工夫が集まっています。`
+        },
+        {
+          hook: "📣 近況＆お役立ち共有！",
+          cta: "地域のお店・個人事業主が繋がる場所👇",
+          fullIntro: `🤝 現場のメッセージをご紹介！\n「${lead}」\n${second ? second + "\n" : ""}分からないことも気軽に聞き合える、温かい商売人コミュニティです。`
+        },
+        {
+          hook: "🔥 現場のリアルな声",
+          cta: "AIと人の知恵で商売をラクに楽しく👇",
+          fullIntro: `🌱 今日の取り組み・工夫をシェア！\n${lead}\n${second ? second + "\n" : ""}日々の小さな改善が、大きな笑顔と成果に繋がりますね！`
+        }
+      ];
+
+      if (cat.includes("相談") && angleIdx % 2 === 1) {
+        angleTemplates[angleIdx % angleTemplates.length] = {
+          hook: "🙋‍♂️ 現場の疑問をみんなで解決！",
+          cta: "一人で悩まず相談できる仲間がいます👇",
+          fullIntro: `💬 現場からの問いかけ！\n「${lead}」\n知恵を出し合って解決できるコミュニティの輪が広がっています✨`
+        };
+      }
+
+      const tpl = angleTemplates[angleIdx % angleTemplates.length];
+
+      const fixedFooterParts = [];
+      if (shopUrl) fixedFooterParts.push(`詳細はこちら▶ ${shopUrl}`);
+      fixedFooterParts.push(`${tpl.cta} ${siteUrl}`);
+      fixedFooterParts.push(tag);
+      const fixedFooter = fixedFooterParts.join("\n");
+
+      let summaryText = lead;
+      let xFinal = `${tpl.hook}\n${summaryText}\n${fixedFooter}`;
+
+      while (calcXWeightedLength(xFinal) > 138 && summaryText.length > 10) {
+        summaryText = summaryText.slice(0, -1);
+        xFinal = `${tpl.hook}\n${summaryText}…\n${fixedFooter}`;
+      }
+      if (calcXWeightedLength(xFinal) > 139) {
+        const shortFooter = (shopUrl ? `${shopUrl}\n` : "") + siteUrl;
+        xFinal = `${tpl.hook}\n${summaryText.slice(0, 35)}…\n${shortFooter}`;
+      }
+
+      const fullLines = [
+        tpl.fullIntro,
+        ""
+      ];
+      if (shopUrl) {
+        fullLines.push("🔗 詳細・関連ページはこちら：");
+        fullLines.push(shopUrl);
+        fullLines.push("");
+      }
+      fullLines.push(`▼ 仲間と学び合う交流コミュニティ（${APP_SETTINGS.appName}）`);
+      fullLines.push(siteUrl);
+      fullLines.push("");
+      fullLines.push(tag);
+
+      return {
+        xText: xFinal,
+        fullText: fullLines.join("\n")
+      };
+    }
+
+    function updateShareModalUI() {
+      const xVal = $("fcl-share-x-text").value;
+      const fullVal = $("fcl-share-full-text").value;
+      const xLen = calcXWeightedLength(xVal);
+      const badge = $("fcl-x-counter");
+
+      if (xLen <= 140) {
+        badge.textContent = `X換算 ${xLen}/140文字（あと${140 - xLen}文字OK）`;
+        badge.classList.remove("over");
+      } else {
+        badge.textContent = `X換算 ${xLen}/140文字（${xLen - 140}文字オーバー）`;
+        badge.classList.add("over");
+      }
+
+      $("fcl-share-x").href = "https://x.com/intent/post?text=" + encodeURIComponent(xVal);
+      $("fcl-share-line").href = "https://line.me/R/share?text=" + encodeURIComponent(fullVal);
+      $("fcl-share-fb").href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(APP_SETTINGS.publicSiteUrl);
+    }
+
+    function openShareModal(post) {
+      currentSharePost = post;
+      shareAngleIndex = Math.floor(Math.random() * 4);
+      const generated = generateAgentCopy(post, shareAngleIndex);
+      $("fcl-share-x-text").value = generated.xText;
+      $("fcl-share-full-text").value = generated.fullText;
+      $("fcl-share-status").textContent = "✨ 各自のSNSアカウント名義のまま発信できる宣伝文を作成しました！";
+      updateShareModalUI();
+      $("fcl-share-modal").hidden = false;
+    }
+
+    $("fcl-share-regen").addEventListener("click", () => {
+      if (!currentSharePost) return;
+      shareAngleIndex++;
+      const generated = generateAgentCopy(currentSharePost, shareAngleIndex);
+      $("fcl-share-x-text").value = generated.xText;
+      $("fcl-share-full-text").value = generated.fullText;
+      $("fcl-share-status").textContent = "🔄 別の切り口で新しい宣伝文に書き直しました！";
+      updateShareModalUI();
+    });
+
+    $("fcl-share-x-text").addEventListener("input", updateShareModalUI);
+    $("fcl-share-full-text").addEventListener("input", updateShareModalUI);
+
+    async function copyFullTextWithNotice(snsName) {
+      const txt = $("fcl-share-full-text").value;
+      try {
+        await navigator.clipboard.writeText(txt);
+        $("fcl-share-status").textContent = `✅ 宣伝文をコピーしました！開いた${snsName}の投稿欄にそのまま貼り付けてください。`;
+      } catch {
+        $("fcl-share-full-text").focus();
+        $("fcl-share-full-text").select();
+        $("fcl-share-status").textContent = `枠内の文字を選択しました。コピーして${snsName}に貼り付けてください。`;
+      }
+    }
+
+    $("fcl-share-ig").addEventListener("click", () => copyFullTextWithNotice("Instagram"));
+    $("fcl-share-line").addEventListener("click", () => copyFullTextWithNotice("LINE"));
+    $("fcl-share-fb").addEventListener("click", () => copyFullTextWithNotice("Facebook"));
+
+    $("fcl-share-close").addEventListener("click", () => {
+      $("fcl-share-modal").hidden = true;
+    });
+    $("fcl-share-modal").addEventListener("click", e => {
+      if (e.target === $("fcl-share-modal")) {
+        $("fcl-share-modal").hidden = true;
+      }
+    });
+
+    // 画像・動くGIFの読み込み処理
+    let compressedImageBase64 = "";
+
+    function clearSelectedImage() {
+      $("fcl-image").value = "";
+      compressedImageBase64 = "";
+      $("fcl-preview-img").src = "";
+      $("fcl-preview-wrap").hidden = true;
+      $("fcl-file-name").textContent = "今は選ばれていません（写真なしでも投稿できます）";
+    }
+
+    $("fcl-image").addEventListener("change", function (e) {
+      const file = e.target.files[0];
+      if (!file) {
+        clearSelectedImage();
+        return;
+      }
+      if (!file.type.startsWith("image/")) {
+        setMsg("fcl-post-status", "画像ファイルを選択してください。", true);
+        clearSelectedImage();
+        return;
+      }
+
+      $("fcl-file-name").textContent = "選択中：" + file.name;
+
+      if (file.type === "image/gif") {
+        if (file.size > 700 * 1024) {
+          setMsg("fcl-post-status", "GIF画像は700KB以下のファイルを選んでください。", true);
+          clearSelectedImage();
+          return;
+        }
+        setMsg("fcl-post-status", "動くGIFを読み込んでいます...");
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          compressedImageBase64 = event.target.result;
+          $("fcl-preview-img").src = compressedImageBase64;
+          $("fcl-preview-wrap").hidden = false;
+          setMsg("fcl-post-status", "動くGIFの準備ができました。");
+          setTimeout(() => {
+            if ($("fcl-post-status").textContent === "動くGIFの準備ができました。") {
+              setMsg("fcl-post-status", "");
+            }
+          }, 2000);
+        };
+        reader.readAsDataURL(file);
+        return;
+      }
+
+      setMsg("fcl-post-status", "写真をちょうどいい大きさに調整しています...");
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const img = new Image();
+        img.onload = function () {
+          const MAX_WIDTH = 720;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > MAX_WIDTH) {
+            height = Math.round((height * MAX_WIDTH) / width);
+            width = MAX_WIDTH;
+          }
+
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+
+          compressedImageBase64 = canvas.toDataURL("image/jpeg", 0.65);
+          $("fcl-preview-img").src = compressedImageBase64;
+          $("fcl-preview-wrap").hidden = false;
+          setMsg("fcl-post-status", "写真の準備ができました。");
+          setTimeout(() => {
+            if ($("fcl-post-status").textContent === "写真の準備ができました。") {
+              setMsg("fcl-post-status", "");
+            }
+          }, 2000);
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    $("fcl-clear-image").addEventListener("click", clearSelectedImage);
+
+    // Firebase 遅延ロード
+    let apiPromise;
+    function getApi() {
+      if (!apiPromise) {
+        apiPromise = limit(Promise.all([
+          import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"),
+          import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"),
+          import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js")
+        ])).then(async ([app, fs, au]) => {
+          const instance = app.getApps().find(a => a.name === "[DEFAULT]") || app.initializeApp(FIREBASE_CONFIG);
+          const auth = au.getAuth(instance);
+          await auth.authStateReady();
+          return { ...fs, ...au, db: fs.getFirestore(instance), auth };
+        }).catch(e => { apiPromise = null; throw e; });
+      }
+      return apiPromise;
+    }
+
+    function safeURL(val) {
+      try {
+        const u = new URL(String(val || "").trim());
+        return (u.protocol === "https:" || u.protocol === "http:") && !u.username ? u.href : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function safeImageSrc(val) {
+      const s = String(val || "").trim();
+      if (
+        s.startsWith("data:image/jpeg;base64,") ||
+        s.startsWith("data:image/png;base64,") ||
+        s.startsWith("data:image/webp;base64,") ||
+        s.startsWith("data:image/gif;base64,")
+      ) {
+        return s;
+      }
+      return null;
+    }
+
+    let allPosts = [];
+    let activeCategory = "すべて";
+    let searchKeyword = "";
+    let loadVersion = 0;
+    const openReplyForms = new Set();
+    const expandedPosts = new Set();
+
+    function syncAdminBadge() {
+      const isAdmin = saved(APP_SETTINGS.adminKey);
+      $("admin-badge").hidden = !isAdmin;
+      syncAuthorLock();
+      return isAdmin;
+    }
+
+    function renderCategoryTabs() {
+      const wrap = $("fcl-cat-tabs");
+      wrap.replaceChildren();
+      const cats = ["すべて", ...APP_SETTINGS.categories];
+      cats.forEach(cat => {
+        const count = cat === "すべて"
+          ? allPosts.length
+          : allPosts.filter(p => p.category === cat).length;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "cat-tab" + (activeCategory === cat ? " active" : "");
+        btn.textContent = cat + " (" + count + ")";
+        btn.addEventListener("click", () => {
+          activeCategory = cat;
+          renderCategoryTabs();
+          renderFeed();
+        });
+        wrap.appendChild(btn);
+      });
+    }
+
+    function createReactionButton(post, fieldName, storagePrefix, labelText) {
+      const key = storagePrefix + post.id;
+      let isActive = saved(key);
+      let count = Math.max(0, Number(post[fieldName]) || 0);
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "react-btn" + (isActive ? " liked" : "");
+      btn.textContent = labelText + " " + count;
+      btn.title = "タップで応援／もう一度タップで取り消し";
+
+      btn.addEventListener("click", async () => {
+        const delta = isActive ? -1 : 1;
+        isActive = !isActive;
+        count = Math.max(0, count + delta);
+
+        if (isActive) {
+          remember(key);
+          btn.classList.add("liked");
+        } else {
+          forget(key);
+          btn.classList.remove("liked");
+        }
+        btn.textContent = labelText + " " + count;
+
+        try {
+          const f = await getApi();
+          await f.updateDoc(f.doc(f.db, APP_SETTINGS.collectionName, post.id), {
+            [fieldName]: f.increment(delta)
+          });
+        } catch (e) {
+          console.error(e);
+        }
+      });
+
+      return btn;
+    }
+
+    function renderFeed() {
+      const list = $("fcl-feed-list");
+      list.replaceChildren();
+      const isAdmin = syncAdminBadge();
+      const kw = searchKeyword.trim().toLowerCase();
+
+      const filtered = allPosts.filter(p => {
+        const catOk = activeCategory === "すべて" || p.category === activeCategory;
+        if (!catOk) return false;
+        if (!kw) return true;
+        const hay = (String(p.author || "") + " " + String(p.body || "") + " " +
+          (Array.isArray(p.replies) ? p.replies.map(r => r.author + " " + r.text).join(" ") : "")).toLowerCase();
+        return hay.includes(kw);
+      });
+
+      if (!filtered.length) {
+        const empty = document.createElement("div");
+        empty.className = "post-card";
+        empty.style.gridColumn = "1 / -1";
+        empty.style.textAlign = "center";
+        empty.style.color = "#94a3b8";
+        empty.textContent = allPosts.length
+          ? "条件に一致する投稿がありません。"
+          : "まだ投稿がありません。最初のメッセージや相談を投稿してみましょう！";
+        list.appendChild(empty);
+        return;
+      }
+
+      filtered.forEach(post => {
+        const card = document.createElement("article");
+        card.className = "post-card";
+
+        const head = document.createElement("div");
+        head.className = "post-header";
+
+        const authorInfo = document.createElement("div");
+        authorInfo.className = "author-info";
+
+        const avatar = document.createElement("div");
+        avatar.className = "avatar-circle";
+        const authorStr = String(post.author || "会員");
+        avatar.textContent = authorStr.slice(0, 1);
+
+        const nameWrap = document.createElement("div");
+        nameWrap.style.minWidth = "0";
+        const nameEl = document.createElement("span");
+        nameEl.className = "author-name";
+        nameEl.textContent = authorStr;
+
+        const meta = document.createElement("div");
+        meta.className = "post-meta";
+        const catSpan = document.createElement("span");
+        catSpan.className = "cat-badge";
+        catSpan.textContent = post.category || "💬 交流・雑談";
+        meta.appendChild(catSpan);
+
+        const dateStr = formatCompactDate(post.createdAtMs);
+        if (dateStr) {
+          const timeEl = document.createElement("time");
+          timeEl.className = "post-date-quiet";
+          timeEl.textContent = dateStr;
+          timeEl.title = new Date(Number(post.createdAtMs)).toLocaleString("ja-JP");
+          meta.appendChild(timeEl);
+        }
+
+        nameWrap.append(nameEl, meta);
+        authorInfo.append(avatar, nameWrap);
+        head.appendChild(authorInfo);
+        card.appendChild(head);
+
+        const bodyText = String(post.body || "");
+        const bodyEl = document.createElement("div");
+        const isExpanded = expandedPosts.has(post.id);
+        bodyEl.className = "post-body" + (isExpanded ? " expanded" : "");
+        bodyEl.textContent = bodyText;
+        card.appendChild(bodyEl);
+
+        if (bodyText.length > 90 || bodyText.split("\n").length > 4) {
+          const expBtn = document.createElement("button");
+          expBtn.type = "button";
+          expBtn.className = "expand-body-btn";
+          expBtn.textContent = isExpanded ? "▲ 元の高さに戻す" : "📖 全部読む（広げる）";
+          expBtn.addEventListener("click", () => {
+            if (expandedPosts.has(post.id)) {
+              expandedPosts.delete(post.id);
+              bodyEl.classList.remove("expanded");
+              expBtn.textContent = "📖 全部読む（広げる）";
+            } else {
+              expandedPosts.add(post.id);
+              bodyEl.classList.add("expanded");
+              expBtn.textContent = "▲ 元の高さに戻す";
+            }
+          });
+          card.appendChild(expBtn);
+        }
+
+        const validImg = safeImageSrc(post.imageBase64);
+        if (validImg) {
+          const imgWrap = document.createElement("div");
+          imgWrap.className = "post-image-wrap";
+
+          const thumbBox = document.createElement("div");
+          thumbBox.className = "post-thumb-box";
+          thumbBox.title = "クリックで拡大・保存";
+
+          const imgEl = document.createElement("img");
+          imgEl.className = "post-image";
+          imgEl.src = validImg;
+          imgEl.alt = authorStr + "の投稿画像";
+
+          const hint = document.createElement("div");
+          hint.className = "thumb-hint";
+          hint.textContent = "🔍 タップで拡大・保存";
+
+          thumbBox.append(imgEl, hint);
+          thumbBox.addEventListener("click", () => openImageModal(validImg));
+
+          imgWrap.appendChild(thumbBox);
+          card.appendChild(imgWrap);
+        }
+
+        const validUrl = safeURL(post.url);
+        if (validUrl) {
+          const linkA = document.createElement("a");
+          linkA.className = "ref-link-box";
+          linkA.href = validUrl;
+          linkA.target = "_blank";
+          linkA.rel = "noopener noreferrer";
+          linkA.textContent = "🔗 " + validUrl;
+          linkA.title = validUrl;
+          card.appendChild(linkA);
+        }
+
+        const actions = document.createElement("div");
+        actions.className = "post-actions";
+
+        actions.appendChild(createReactionButton(post, "likes", "fcl_liked_", "👏 拍手"));
+        actions.appendChild(createReactionButton(post, "bows", "fcl_bowed_", "🙇‍♂️ 感謝"));
+        actions.appendChild(createReactionButton(post, "laughs", "fcl_laughed_", "😆 笑い"));
+
+        const replies = Array.isArray(post.replies) ? post.replies : [];
+        const replyToggle = document.createElement("button");
+        replyToggle.type = "button";
+        replyToggle.className = "react-btn";
+        replyToggle.textContent = "💬 返信(" + replies.length + ")";
+        actions.appendChild(replyToggle);
+
+        const shareBtn = document.createElement("button");
+        shareBtn.type = "button";
+        shareBtn.className = "share-btn";
+        shareBtn.textContent = "📤 SNSで宣伝";
+        shareBtn.title = "各自のSNSアカウント名義のままX・Instagram・LINE・Facebookへ発信";
+        shareBtn.addEventListener("click", () => openShareModal(post));
+        actions.appendChild(shareBtn);
+
+        if (isAdmin) {
+          const delBtn = document.createElement("button");
+          delBtn.type = "button";
+          delBtn.className = "del-btn";
+          delBtn.textContent = "🗑️ 削除";
+          delBtn.addEventListener("click", async () => {
+            if (!confirm("「" + authorStr + "」（" + dateStr + "）の投稿を削除しますか？")) return;
+            try {
+              const f = await getApi();
+              await limit(f.deleteDoc(f.doc(f.db, APP_SETTINGS.collectionName, post.id)));
+              loadFeedFast();
+            } catch (e) {
+              alert("削除に失敗しました：" + (e.message || e));
+            }
+          });
+          actions.appendChild(delBtn);
+        }
+
+        card.appendChild(actions);
+
+        const repliesWrap = document.createElement("div");
+        repliesWrap.className = "replies-wrap";
+
+        replies.forEach(r => {
+          const rItem = document.createElement("div");
+          rItem.className = "reply-item";
+          const rHead = document.createElement("div");
+          rHead.className = "reply-head";
+          const rName = document.createElement("span");
+          rName.textContent = "↳ " + String(r.author || "会員");
+          rHead.appendChild(rName);
+          const rDateStr = formatCompactDate(r.createdAtMs);
+          if (rDateStr) {
+            const rt = document.createElement("time");
+            rt.textContent = rDateStr;
+            rHead.appendChild(rt);
+          }
+          const rText = document.createElement("p");
+          rText.className = "reply-text";
+          rText.textContent = String(r.text || "");
+          rItem.append(rHead, rText);
+          repliesWrap.appendChild(rItem);
+        });
+
+        const rForm = document.createElement("form");
+        rForm.className = "reply-form";
+        rForm.hidden = !openReplyForms.has(post.id);
+
+        const rInput = document.createElement("input");
+        rInput.type = "text";
+        rInput.maxLength = 1000;
+        rInput.placeholder = "返信を入力...";
+        rInput.required = true;
+
+        const rSubmit = document.createElement("button");
+        rSubmit.type = "submit";
+        rSubmit.textContent = "送信";
+
+        rForm.append(rInput, rSubmit);
+        rForm.addEventListener("submit", async e => {
+          e.preventDefault();
+          const text = rInput.value.trim();
+          if (!text) return;
+          const replyAuthor = getLockedOrInputAuthor();
+          if (!replyAuthor) {
+            alert("先に上のフォームでお名前（ニックネーム）を入力してください。");
+            $("fcl-author").focus();
+            return;
+          }
+          if (!saved(APP_SETTINGS.adminKey)) {
+            lockAuthorName(replyAuthor);
+          }
+          rSubmit.disabled = true;
+          rSubmit.textContent = "...";
+          try {
+            const f = await getApi();
+            await limit(f.updateDoc(f.doc(f.db, APP_SETTINGS.collectionName, post.id), {
+              replies: f.arrayUnion({
+                author: replyAuthor,
+                text: text,
+                createdAtMs: Date.now()
+              })
+            }));
+            rInput.value = "";
+            openReplyForms.add(post.id);
+            loadFeedFast();
+          } catch (err) {
+            alert("返信の送信に失敗しました：" + (err.message || err));
+          } finally {
+            rSubmit.disabled = false;
+            rSubmit.textContent = "送信";
+          }
+        });
+
+        replyToggle.addEventListener("click", () => {
+          if (rForm.hidden) {
+            rForm.hidden = false;
+            openReplyForms.add(post.id);
+            rInput.focus();
+          } else {
+            rForm.hidden = true;
+            openReplyForms.delete(post.id);
+          }
+        });
+
+        repliesWrap.appendChild(rForm);
+        card.appendChild(repliesWrap);
+
+        list.appendChild(card);
+      });
+    }
+
+    async function loadFeedFast() {
+      const v = ++loadVersion;
+      const reloadBtn = $("fcl-reload");
+      reloadBtn.disabled = true;
+      reloadBtn.textContent = "取得中...";
+      $("fcl-feed-status").textContent = "最新の投稿を取得しています...";
+
+      try {
+        const f = await getApi();
+        const colRef = f.collection(f.db, APP_SETTINGS.collectionName);
+        const q = f.query(colRef, f.orderBy("createdAtMs", "desc"), f.limit(30));
+        const snapshot = await limit(f.getDocs(q));
+        if (v !== loadVersion || !saved(APP_SETTINGS.memberKey)) return;
+
+        allPosts = snapshot.docs.map(d => ({ ...d.data(), id: d.id }));
+        $("fcl-feed-status").textContent =
+          "取得完了（最新" + allPosts.length + "件表示 ／ " + new Date().toLocaleTimeString("ja-JP") + " 更新）";
+        renderCategoryTabs();
+        renderFeed();
+      } catch (e) {
+        if (v === loadVersion && saved(APP_SETTINGS.memberKey)) {
+          $("fcl-feed-status").textContent = "読み込みエラー：" + (e.message || e);
+        }
+      } finally {
+        if (v === loadVersion) {
+          reloadBtn.disabled = false;
+          reloadBtn.textContent = "🔄 最新に更新";
+        }
+      }
+    }
+
+    $("fcl-post-form").addEventListener("submit", async e => {
+      e.preventDefault();
+      if (!saved(APP_SETTINGS.memberKey)) return;
+      const author = getLockedOrInputAuthor();
+      const category = $("fcl-category").value;
+      const body = $("fcl-body").value.trim();
+      const rawUrl = $("fcl-url").value.trim();
+
+      if (!author || !body) {
+        setMsg("fcl-post-status", "お名前とメッセージを入力してください。", true);
+        return;
+      }
+      let validUrl = "";
+      if (rawUrl) {
+        validUrl = safeURL(rawUrl);
+        if (!validUrl) {
+          setMsg("fcl-post-status", "URLは https:// から正しく入力してください。", true);
+          return;
+        }
+      }
+
+      if (!saved(APP_SETTINGS.adminKey)) {
+        lockAuthorName(author);
+      }
+
+      const btn = $("fcl-submit-btn");
+      btn.disabled = true;
+      btn.textContent = "送信中...";
+      setMsg("fcl-post-status", "投稿を送信しています...");
+
+      try {
+        const f = await getApi();
+        await limit(f.addDoc(f.collection(f.db, APP_SETTINGS.collectionName), {
+          author,
+          category,
+          body,
+          url: validUrl,
+          imageBase64: compressedImageBase64 || "",
+          likes: 0,
+          bows: 0,
+          laughs: 0,
+          replies: [],
+          createdAtMs: Date.now()
+        }));
+        $("fcl-body").value = "";
+        $("fcl-url").value = "";
+        clearSelectedImage();
+        setMsg("fcl-post-status", "✅ 投稿しました！");
+        setTimeout(() => { setMsg("fcl-post-status", ""); }, 3000);
+        loadFeedFast();
+      } catch (err) {
+        setMsg("fcl-post-status", "送信エラー：" + (err.message || err), true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "📨 この内容で投稿する";
+      }
+    });
+
+    $("fcl-search").addEventListener("input", function () {
+      searchKeyword = this.value;
+      renderFeed();
+    });
+
+    async function verifySession() {
+      try {
+        const f = await getApi();
+        if (!f.auth.currentUser) {
+          forget(APP_SETTINGS.memberKey);
+          forget(APP_SETTINGS.adminKey);
+          syncGate();
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    function syncGate() {
+      const ok = saved(APP_SETTINGS.memberKey);
+      $("fcl-login").hidden = ok;
+      $("fcl-room").hidden = !ok;
+      if (ok) {
+        syncAdminBadge();
+        verifySession();
+        loadFeedFast();
+      } else {
+        loadVersion++;
+        allPosts = [];
+        $("fcl-feed-list").replaceChildren();
+      }
+      return ok;
+    }
+
+    $("fcl-login").addEventListener("submit", async e => {
+      e.preventDefault();
+      try {
+        const f = await getApi();
+        await limit(f.signInWithEmailAndPassword(f.auth, APP_SETTINGS.memberEmail, $("fcl-password").value));
+      } catch (err) {
+        console.error(err);
+        setMsg("fcl-login-status", "合言葉が一致しません。", true);
+        return;
+      }
+      if (!remember(APP_SETTINGS.memberKey)) {
+        setMsg("fcl-login-status", "ブラウザの保存機能を有効にしてください。", true);
+        return;
+      }
+      $("fcl-password").value = "";
+      setMsg("fcl-login-status", "");
+      syncGate();
+    });
+
+    $("fcl-logout").addEventListener("click", async () => {
+      try { const f = await getApi(); await f.signOut(f.auth); } catch (err) { console.error(err); }
+      forget(APP_SETTINGS.memberKey);
+      forget(APP_SETTINGS.adminKey);
+      syncGate();
+    });
+
+    $("fcl-reload").addEventListener("click", () => {
+      if (syncGate()) loadFeedFast();
+    });
+
+    let adminTap = 0;
+    let adminTimer = null;
+    $("fcl-secret-admin").addEventListener("click", async () => {
+      adminTap++;
+      clearTimeout(adminTimer);
+      if (adminTap >= 3) {
+        adminTap = 0;
+        if (saved(APP_SETTINGS.adminKey)) {
+          if (confirm("管理者モードを解除しますか？")) {
+            try { const f = await getApi(); await f.signOut(f.auth); } catch (err) { console.error(err); }
+            forget(APP_SETTINGS.adminKey);
+            forget(APP_SETTINGS.memberKey);
+            syncGate();
+          }
+        } else {
+          const pw = prompt("管理者パスワードを入力してください");
+          if (pw === null) return;
+          try {
+            const f = await getApi();
+            await limit(f.signInWithEmailAndPassword(f.auth, APP_SETTINGS.adminEmail, pw));
+            remember(APP_SETTINGS.adminKey);
+            remember(APP_SETTINGS.memberKey);
+            syncGate();
+            renderFeed();
+            alert("管理者モードを有効にしました。削除ボタンと名前変更が可能になります。");
+          } catch (err) {
+            console.error(err);
+            alert("パスワードが違います。");
+          }
+        }
+      } else {
+        adminTimer = setTimeout(() => { adminTap = 0; }, 1500);
+      }
+    });
+
+    window.addEventListener("storage", e => {
+      if (e.key === APP_SETTINGS.memberKey || e.key === APP_SETTINGS.adminKey || e.key === null) {
+        syncGate();
+      }
+    });
+    window.addEventListener("pageshow", syncGate);
+    syncGate();
+  </script>
+</body>
+</html>

@@ -53,11 +53,11 @@
       position: sticky;
       top: 0;
       z-index: 1000;
-      background: rgba(255, 253, 251, 0.92);
+      background: rgba(255, 253, 251, 0.94);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid rgba(234, 220, 215, 0.7);
       color: var(--text-main);
-      padding: 12px 24px;
+      padding: 12px 20px;
     }
 
     .header-inner {
@@ -66,7 +66,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .logo-area {
@@ -104,12 +105,13 @@
       border: none;
       background: transparent;
       color: var(--text-muted);
-      padding: 6px 15px;
+      padding: 6px 14px;
       border-radius: 999px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-family: var(--font-sans);
       cursor: pointer;
       transition: all 0.25s;
+      white-space: nowrap;
     }
 
     .mode-btn.active {
@@ -122,7 +124,27 @@
     .header-right {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+    }
+
+    .back-mother-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #191b1f;
+      color: #f3d28b;
+      border: 1px solid #8c6d2e;
+      text-decoration: none;
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+
+    .back-mother-btn:hover {
+      opacity: 0.88;
     }
 
     .header-tel-btn {
@@ -132,7 +154,7 @@
       background: #fff;
       color: var(--rose-deep);
       text-decoration: none;
-      padding: 7px 15px;
+      padding: 7px 14px;
       border-radius: 999px;
       font-size: 0.8rem;
       font-weight: 600;
@@ -143,6 +165,12 @@
 
     .header-tel-btn:hover {
       background: var(--bg-blush);
+    }
+
+    @media (max-width: 680px) {
+      .header-tel-btn {
+        display: none;
+      }
     }
 
     .hamburger-btn {
@@ -158,6 +186,7 @@
       align-items: center;
       gap: 5px;
       transition: background 0.2s;
+      flex-shrink: 0;
     }
 
     .hamburger-btn:hover {
@@ -427,7 +456,6 @@
       background: #fff;
     }
 
-    /* 囲いなし（フレームレス）：背景にそのまま溶け込む艶髪GIFビジュアル */
     .model-frameless {
       position: relative;
       width: 100%;
@@ -820,6 +848,25 @@
       text-align: center;
     }
 
+    .return-bar {
+      background: #191b1f;
+      color: #e5e2dc;
+      text-align: center;
+      padding: 26px 20px;
+      font-size: 0.84rem;
+    }
+
+    .return-bar a {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 10px 22px;
+      background: #8c6d2e;
+      color: #ffffff;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
     .mobile-fixed-bar {
       display: none;
       position: fixed;
@@ -906,7 +953,7 @@
     }
 
     @media print {
-      .site-header, .editor-bar, .nav-drawer, .mobile-fixed-bar, .no-print {
+      .site-header, .editor-bar, .nav-drawer, .mobile-fixed-bar, .return-bar, .no-print {
         display: none !important;
       }
       .view-panel {
@@ -947,6 +994,7 @@
       </div>
 
       <div class="header-right">
+        <a href="https://toretamoo.com/tenjiCorp/" class="back-mother-btn">← AIGON.LABへ戻る</a>
         <a href="tel:03-1234-5678" class="header-tel-btn" id="headerTelLink">
           <span>📞</span><span data-bind="phone">03-1234-5678</span>
         </a>
@@ -962,6 +1010,7 @@
   <!-- ハンバーガー展開ドロワーメニュー -->
   <nav class="nav-drawer" id="navDrawer" aria-label="サイト内ナビゲーション">
     <ul class="drawer-list">
+      <li><a href="https://toretamoo.com/tenjiCorp/" style="color:var(--rose-deep); font-weight:700;">← AIGON.LAB 元のサイトへ戻る <span class="en">BACK</span></a></li>
       <li><a href="#top" onclick="navigateSection('panel-hp', '#top')">トップ・艶髪ビジュアル <span class="en">TOP</span></a></li>
       <li><a href="#features" onclick="navigateSection('panel-hp', '#features')">当サロンのこだわり <span class="en">CONCEPT</span></a></li>
       <li><a href="#menu" onclick="navigateSection('panel-hp', '#menu')">妖艶パーマ・料金メニュー <span class="en">MENU</span></a></li>
@@ -1015,7 +1064,7 @@
       </div>
       <div class="field-item">
         <label>予約・公式URL（QRコード連動）</label>
-        <input type="url" id="inUrl" value="https://toretamoo.com/tenjiCorp/">
+        <input type="url" id="inUrl" value="https://aigon-lab.github.io/gon-html-test/samples/utsukushii-kami.html">
       </div>
     </div>
   </div>
@@ -1045,7 +1094,6 @@
           </div>
         </div>
 
-        <!-- Gemini_Generated_Gif_wbjohkwbjohkwbjo.gif をフレームレス配置 -->
         <div style="position:relative;">
           <div class="model-frameless">
             <img
@@ -1290,7 +1338,7 @@
         <div style="display:inline-block; background:var(--bg-blush); border:1px solid var(--border); padding:24px; border-radius:16px; margin:22px 0;">
           <div id="qrStandalone"></div>
           <div style="margin-top:10px; font-family:var(--font-serif); font-weight:600; color:var(--rose-deep);" data-bind="salonName">美しい髪</div>
-          <div style="font-size:0.78rem; color:var(--text-muted);" data-bind="url">https://toretamoo.com/tenjiCorp/</div>
+          <div style="font-size:0.78rem; color:var(--text-muted);" data-bind="url">https://aigon-lab.github.io/gon-html-test/samples/utsukushii-kami.html</div>
         </div>
 
         <div>
@@ -1300,15 +1348,18 @@
     </div>
   </section>
 
+  <div class="return-bar no-print">
+    <div><a href="https://toretamoo.com/tenjiCorp/">← AIGON.LAB ホームページへ戻る</a></div>
+    <div>業種別1枚サイト・名刺・QRコード制作見本｜AIGON.LAB</div>
+  </div>
+
   <div class="mobile-fixed-bar no-print">
     <a href="tel:03-1234-5678" id="mobileTelLink" class="btn-white-outline" style="padding:10px; font-size:0.84rem;">📞 電話で予約する</a>
     <a href="#contact" onclick="navigateSection('panel-hp', '#contact')" class="btn-rose" style="padding:10px; font-size:0.84rem;">✨ WEB予約・相談</a>
   </div>
 
   <script>
-    // =========================================
     // 1. GIF / 画像ローカル差替機能
-    // =========================================
     document.getElementById('modelPhotoInput').addEventListener('change', function (e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -1357,9 +1408,7 @@
     }
     drawAmbient();
 
-    // =========================================
     // 2. 妖艶な美容院メニューデータ＆カテゴリ切替
-    // =========================================
     const salonMenus = [
       {
         cat: 'perm',
@@ -1438,9 +1487,7 @@
       });
     });
 
-    // =========================================
     // 3. ハンバーガーメニュー＆画面切替
-    // =========================================
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const navDrawer = document.getElementById('navDrawer');
 
@@ -1484,9 +1531,7 @@
       editorFields.classList.toggle('open');
     });
 
-    // =========================================
     // 4. 店舗情報・Googleマップ・電話・QRコード一括連動
-    // =========================================
     const inputs = {
       salonName: document.getElementById('inSalonName'),
       tagline: document.getElementById('inTagline'),
@@ -1501,7 +1546,7 @@
       const box = document.getElementById(targetId);
       box.innerHTML = '';
       new QRCode(box, {
-        text: text || 'https://toretamoo.com/tenjiCorp/',
+        text: text || 'https://aigon-lab.github.io/gon-html-test/samples/utsukushii-kami.html',
         width: size,
         height: size,
         colorDark: '#9e4b59',

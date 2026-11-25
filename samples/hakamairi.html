@@ -37,11 +37,14 @@
     .logo-en { font-size: 9px; letter-spacing: .15em; text-transform: uppercase; color: rgba(255,255,255,.55); transition: color .35s; line-height: 1; }
     .hdr.scrolled .logo-ja { color: var(--text); }
     .hdr.scrolled .logo-en { color: var(--sub); }
-    .nav { display: flex; align-items: center; gap: 24px; }
-    .nav a { font-size: 13px; color: rgba(255,255,255,.8); letter-spacing: .04em; transition: color .2s; }
+    .nav { display: flex; align-items: center; gap: 20px; }
+    .nav a { font-size: 13px; color: rgba(255,255,255,.8); letter-spacing: .04em; transition: color .2s; white-space: nowrap; }
     .nav a:hover, .nav a.current { color: #fff; }
     .hdr.scrolled .nav a { color: var(--sub); }
     .hdr.scrolled .nav a:hover, .hdr.scrolled .nav a.current { color: var(--accent); }
+    .hdr-actions { display: flex; align-items: center; gap: 8px; }
+    .hdr-back { background: #191b1f; color: #f3d28b; border: 1px solid #8c6d2e; padding: 8px 14px; font-size: 12px; font-weight: 700; letter-spacing: .04em; border-radius: 2px; transition: opacity .2s; white-space: nowrap; }
+    .hdr-back:hover { opacity: .88; }
     .hdr-cta { background: var(--accent); color: #fff; padding: 8px 18px; font-size: 12px; font-weight: 700; letter-spacing: .08em; border-radius: 2px; transition: background .2s; white-space: nowrap; }
     .hdr-cta:hover { background: var(--accent2); }
     .hamburger { display: none; width: 36px; height: 36px; flex-direction: column; justify-content: center; align-items: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
@@ -50,10 +53,11 @@
     .hamburger.active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
     .hamburger.active span:nth-child(2) { opacity: 0; }
     .hamburger.active span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-    .drawer { display: none; position: fixed; inset: 0; top: var(--hh); z-index: 190; background: rgba(244,242,238,.97); backdrop-filter: blur(10px); flex-direction: column; align-items: center; justify-content: center; gap: 36px; }
+    .drawer { display: none; position: fixed; inset: 0; top: var(--hh); z-index: 190; background: rgba(244,242,238,.97); backdrop-filter: blur(10px); flex-direction: column; align-items: center; justify-content: center; gap: 28px; padding: 20px; overflow-y: auto; }
     .drawer.open { display: flex; }
-    .drawer a { font-family: var(--ff-serif); font-size: 1.4rem; font-weight: 700; color: var(--text); letter-spacing: .1em; }
+    .drawer a { font-family: var(--ff-serif); font-size: 1.3rem; font-weight: 700; color: var(--text); letter-spacing: .08em; }
     .drawer a:hover { color: var(--accent); }
+    .drawer .drawer-back { background: #191b1f; color: #f3d28b; border: 1px solid #8c6d2e; padding: 12px 28px; font-size: 14px; border-radius: 2px; }
     .drawer .drawer-cta { background: var(--accent); color: #fff; padding: 14px 40px; font-size: 14px; border-radius: 2px; }
     .hero { position: relative; min-height: 100vh; display: flex; align-items: center; overflow: hidden; background: #0C1410; }
     .hero-bg { position: absolute; inset: 0; background-image: url('hakamairi-imgs/hero.jpg'); background-size: cover; background-position: center; opacity: .55; transition: opacity .3s; }
@@ -173,6 +177,7 @@
       .nav { display: none; }
       .hamburger { display: flex; }
       .hdr-cta { display: none; }
+      .hdr-back { padding: 7px 10px; font-size: 11px; }
       .hero-c { padding: calc(var(--hh) + 48px) 20px 60px; }
       .sec { padding: 56px 0; }
       .sec-head { flex-direction: column; gap: 12px; }
@@ -217,7 +222,10 @@
         <a href="../../tokusho.html">特定商取引法</a>
         <a href="../../privacy.html">プライバシーポリシー</a>
       </nav>
-      <a class="hdr-cta" href="#cta">お問い合わせ</a>
+      <div class="hdr-actions">
+        <a class="hdr-back" href="https://toretamoo.com/tenjiCorp/">← AIGON.LABへ戻る</a>
+        <a class="hdr-cta" href="#cta">お問い合わせ</a>
+      </div>
       <button class="hamburger" id="hamburger" aria-label="メニューを開閉" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -225,6 +233,7 @@
   </header>
 
   <nav class="drawer" id="drawer">
+    <a class="drawer-back" href="https://toretamoo.com/tenjiCorp/" data-close>← AIGON.LABへ戻る</a>
     <a href="#top" data-close>ホーム</a>
     <a href="#gallery" data-close>ギャラリー</a>
     <a href="#profile" data-close>プロフィール</a>
@@ -474,6 +483,7 @@
 
   <footer class="footer">
     <p>© 2026 縁一寸木 お墓参り代行サービス &nbsp;|&nbsp;
+      <a href="https://toretamoo.com/tenjiCorp/" style="color:#f3d28b;text-decoration:underline">AIGON.LABへ戻る</a> &nbsp;|&nbsp;
       <a href="../../tokusho.html" style="color:rgba(255,255,255,.45);text-decoration:underline">特定商取引法</a> &nbsp;|&nbsp;
       <a href="../../privacy.html" style="color:rgba(255,255,255,.45);text-decoration:underline">プライバシーポリシー</a>
     </p>

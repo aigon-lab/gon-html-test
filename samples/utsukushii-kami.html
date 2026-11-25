@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>美しい髪 | 大人の艶髪パーマ専門美容室・名刺・QRコード</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400;1,600&family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    :root {
+      --bg-pearl: #fffdfb;
+      --bg-blush: #fbf4f1;
+      --bg-silk: #f6ede8;
+      --bg-card: #ffffff;
+      --text-main: #33292a;
+      --text-muted: #766668;
+      --rose-accent: #c46d7b;
+      --rose-deep: #9e4b59;
+      --rose-soft: #f5dfe3;
+      --gold: #c69c63;
+      --gold-light: #e7cfa8;
+      --border: #eadcd7;
+      --shadow-salon: 0 14px 36px rgba(158, 75, 89, 0.07);
+      --font-serif: 'Shippori Mincho', serif;
+      --font-sans: 'Noto Sans JP', sans-serif;
+      --font-en: 'Cormorant Garamond', serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-pearl);
+      color: var(--text-main);
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
+
+    /* =========================================
+       上部統合ヘッダー＆ハンバーガーメニュー
+    ========================================= */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 253, 251, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(234, 220, 215, 0.7);
+      color: var(--text-main);
+      padding: 12px 24px;
+    }
+
+    .header-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .logo-title {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      color: var(--rose-deep);
+    }
+
+    .logo-sub {
+      font-family: var(--font-en);
+      font-size: 0.82rem;
+      letter-spacing: 0.24em;
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .mode-switcher {
+      display: flex;
+      background: var(--bg-blush);
+      padding: 4px;
+      border-radius: 999px;
+    }
+
+    .mode-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      padding: 6px 15px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .mode-btn.active {
+      background: linear-gradient(135deg, var(--rose-accent) 0%, var(--rose-deep) 100%);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(158, 75, 89, 0.2);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-tel-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff;
+      color: var(--rose-deep);
+      text-decoration: none;
+      padding: 7px 15px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      box-shadow: 0 4px 14px rgba(158, 75, 89, 0.08);
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .header-tel-btn:hover {
+      background: var(--bg-blush);
+    }
+
+    .hamburger-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: none;
+      background: var(--bg-blush);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.2s;
+    }
+
+    .hamburger-btn:hover {
+      background: var(--rose-soft);
+    }
+
+    .hamburger-btn span {
+      display: block;
+      width: 18px;
+      height: 1.8px;
+      background: var(--rose-deep);
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    .hamburger-btn.open span:nth-child(1) {
+      transform: translateY(6.8px) rotate(45deg);
+    }
+    .hamburger-btn.open span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger-btn.open span:nth-child(3) {
+      transform: translateY(-6.8px) rotate(-45deg);
+    }
+
+    .nav-drawer {
+      position: fixed;
+      top: 66px;
+      right: -100%;
+      width: min(340px, 88vw);
+      height: calc(100vh - 66px);
+      background: rgba(255, 253, 251, 0.97);
+      backdrop-filter: blur(16px);
+      box-shadow: -12px 0 36px rgba(51, 41, 42, 0.08);
+      padding: 28px 24px;
+      z-index: 999;
+      transition: right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      overflow-y: auto;
+      color: var(--text-main);
+    }
+
+    .nav-drawer.open {
+      right: 0;
+    }
+
+    .drawer-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+
+    .drawer-list a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px;
+      color: var(--text-main);
+      text-decoration: none;
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      border-bottom: 1px solid rgba(234, 220, 215, 0.6);
+      transition: color 0.2s, padding-left 0.2s;
+    }
+
+    .drawer-list a:hover {
+      color: var(--rose-deep);
+      padding-left: 20px;
+    }
+
+    .drawer-list a span.en {
+      font-family: var(--font-en);
+      font-size: 0.8rem;
+      color: var(--gold);
+      font-weight: 600;
+      letter-spacing: 0.14em;
+    }
+
+    .editor-bar {
+      background: rgba(251, 244, 241, 0.75);
+      border-bottom: 1px solid rgba(234, 220, 215, 0.6);
+      padding: 10px 24px;
+    }
+
+    .editor-bar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .editor-fields {
+      display: none;
+      max-width: 1180px;
+      margin: 14px auto 0;
+      padding-top: 14px;
+      border-top: 1px dashed var(--border);
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .editor-fields.open {
+      display: grid;
+    }
+
+    .field-item label {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+
+    .field-item input {
+      width: 100%;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.84rem;
+      background: #fff;
+    }
+
+    .view-panel {
+      display: none;
+    }
+    .view-panel.active {
+      display: block;
+    }
+
+    /* =========================================
+       1. 現代風フレームレス・ヒーローセクション（囲い・窓枠ゼロ）
+    ========================================= */
+    .hero-section {
+      position: relative;
+      background: linear-gradient(120deg, #fffdfb 0%, #fbf0ec 52%, #f6e4de 100%);
+      color: var(--text-main);
+      overflow: hidden;
+      padding: 28px 24px 0;
+    }
+
+    #ambientParticles {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero-container {
+      position: relative;
+      z-index: 2;
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      align-items: center;
+      gap: 24px;
+      min-height: 540px;
+      padding-bottom: 24px;
+    }
+
+    @media (max-width: 860px) {
+      .hero-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding-top: 20px;
+      }
+    }
+
+    .hero-copy-area {
+      position: relative;
+      z-index: 3;
+      padding: 24px 0 36px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-family: var(--font-en);
+      letter-spacing: 0.28em;
+      font-size: 0.82rem;
+      color: var(--rose-deep);
+      padding: 4px 0;
+      border-bottom: 1px solid var(--gold);
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .hero-heading {
+      font-family: var(--font-serif);
+      font-size: clamp(2.15rem, 4.6vw, 3.5rem);
+      font-weight: 600;
+      line-height: 1.35;
+      letter-spacing: 0.08em;
+      margin-bottom: 20px;
+      color: var(--text-main);
+    }
+
+    .hero-heading em {
+      font-style: normal;
+      color: var(--rose-deep);
+      background: linear-gradient(transparent 68%, rgba(231, 207, 168, 0.5) 68%);
+    }
+
+    .hero-lead {
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      font-weight: 400;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    @media (max-width: 860px) {
+      .hero-cta-row {
+        justify-content: center;
+      }
+    }
+
+    .btn-rose {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--rose-accent) 0%, var(--rose-deep) 100%);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 14px 30px;
+      border-radius: 999px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(158, 75, 89, 0.22);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-rose:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px rgba(158, 75, 89, 0.32);
+    }
+
+    .btn-white-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.85);
+      color: var(--rose-deep);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 14px 26px;
+      border-radius: 999px;
+      text-decoration: none;
+      border: 1px solid rgba(196, 109, 123, 0.4);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-white-outline:hover {
+      background: #fff;
+    }
+
+    /* 囲いなし（フレームレス）：背景にそのまま溶け込む艶髪GIFビジュアル */
+    .model-frameless {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      -webkit-mask-image: radial-gradient(ellipse 88% 88% at 50% 50%, #000 68%, transparent 98%);
+      mask-image: radial-gradient(ellipse 88% 88% at 50% 50%, #000 68%, transparent 98%);
+    }
+
+    .hero-gif-img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+      border-radius: 28px;
+    }
+
+    .floating-photo-action {
+      position: absolute;
+      bottom: 14px;
+      right: 18px;
+      z-index: 5;
+    }
+
+    .photo-upload-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255, 253, 251, 0.86);
+      backdrop-filter: blur(8px);
+      color: var(--rose-deep);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(51, 41, 42, 0.1);
+      transition: all 0.2s;
+    }
+
+    .photo-upload-chip:hover {
+      background: var(--rose-accent);
+      color: #fff;
+    }
+
+    .ribbon-marquee {
+      position: relative;
+      z-index: 3;
+      background: rgba(255, 253, 251, 0.85);
+      border-top: 1px solid rgba(234, 220, 215, 0.7);
+      border-bottom: 1px solid rgba(234, 220, 215, 0.7);
+      padding: 13px 0;
+      overflow: hidden;
+    }
+
+    .ribbon-track {
+      display: flex;
+      width: max-content;
+      animation: marqueeLoop 28s linear infinite;
+    }
+
+    @keyframes marqueeLoop {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .ribbon-item {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding-right: 36px;
+      font-family: var(--font-serif);
+      font-size: 0.88rem;
+      letter-spacing: 0.14em;
+      color: var(--rose-deep);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* =========================================
+       共通セクション・妖艶な料金メニュー
+    ========================================= */
+    .section-block {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 76px 24px;
+    }
+
+    .sec-head {
+      text-align: center;
+      margin-bottom: 46px;
+    }
+
+    .sec-head .en {
+      display: block;
+      font-family: var(--font-en);
+      font-size: 1rem;
+      letter-spacing: 0.28em;
+      color: var(--rose-accent);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .sec-head h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.6rem, 3vw, 2.15rem);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--text-main);
+    }
+
+    .sec-head p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 34px 28px;
+      box-shadow: var(--shadow-salon);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--rose-accent), var(--gold));
+    }
+
+    .feature-num {
+      font-family: var(--font-en);
+      font-style: italic;
+      font-size: 1.8rem;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .feature-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      color: var(--rose-deep);
+    }
+
+    .feature-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .alluring-menu-band {
+      background: linear-gradient(180deg, #fbf3f0 0%, #f5e7e3 50%, #fbf3f0 100%);
+      padding: 76px 24px;
+      position: relative;
+    }
+
+    .menu-category-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 36px;
+    }
+
+    .cat-pill {
+      background: #fff;
+      border: 1px solid rgba(234, 220, 215, 0.8);
+      color: var(--text-main);
+      padding: 8px 20px;
+      border-radius: 999px;
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .cat-pill.active, .cat-pill:hover {
+      background: linear-gradient(135deg, var(--rose-accent) 0%, var(--rose-deep) 100%);
+      color: #fff;
+      border-color: transparent;
+      font-weight: 600;
+      box-shadow: 0 6px 16px rgba(158, 75, 89, 0.2);
+    }
+
+    .menu-cards-grid {
+      max-width: 1040px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 22px;
+    }
+
+    .sensual-menu-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 28px 24px;
+      box-shadow: var(--shadow-salon);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .sensual-menu-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 42px rgba(158, 75, 89, 0.13);
+    }
+
+    .menu-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: var(--rose-deep);
+      background: var(--rose-soft);
+      padding: 3px 11px;
+      border-radius: 999px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      width: fit-content;
+    }
+
+    .sensual-menu-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.18rem;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      line-height: 1.45;
+    }
+
+    .sensual-copy {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      line-height: 1.75;
+    }
+
+    .menu-price-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-top: 14px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .menu-time {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .menu-yen {
+      font-family: var(--font-en);
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--rose-deep);
+    }
+
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .flow-step {
+      background: #fff;
+      border-radius: 16px;
+      padding: 26px 20px;
+      text-align: center;
+      box-shadow: var(--shadow-salon);
+    }
+
+    .step-tag {
+      font-family: var(--font-en);
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      color: var(--rose-accent);
+      font-weight: 700;
+    }
+
+    .flow-step h4 {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      margin: 6px 0 8px;
+      color: var(--text-main);
+    }
+
+    .flow-step p {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+    }
+
+    .contact-access-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 840px) {
+      .contact-access-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel-box {
+      background: #fff;
+      border-radius: 18px;
+      padding: 32px 28px;
+      box-shadow: var(--shadow-salon);
+    }
+
+    .tel-call-card {
+      background: linear-gradient(135deg, #fbf1ee 0%, #f5e0dc 100%);
+      color: var(--text-main);
+      border-radius: 14px;
+      padding: 22px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .tel-number-link {
+      display: block;
+      font-family: var(--font-en);
+      font-size: 2.1rem;
+      font-weight: 600;
+      color: var(--rose-deep);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      margin: 4px 0;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: var(--text-main);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      background: var(--bg-pearl);
+    }
+
+    .map-frame-wrap {
+      width: 100%;
+      height: 290px;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 16px 0;
+    }
+
+    .map-frame-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .toast-msg {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #eef9f2;
+      color: #1e6b3b;
+      font-size: 0.86rem;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .mobile-fixed-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 950;
+      background: rgba(255, 253, 251, 0.96);
+      border-top: 1px solid var(--border);
+      padding: 8px 12px;
+      gap: 10px;
+    }
+
+    @media (max-width: 720px) {
+      .mobile-fixed-bar {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+      body {
+        padding-bottom: 64px;
+      }
+    }
+
+    /* =========================================
+       2. 名刺ビュー ＆ 3. QRコードビュー
+    ========================================= */
+    .card-stage {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 32px;
+      justify-items: center;
+      margin-top: 28px;
+    }
+
+    .meishi {
+      width: 100%;
+      max-width: 420px;
+      aspect-ratio: 91 / 55;
+      border-radius: 10px;
+      padding: 24px 28px;
+      box-shadow: 0 18px 42px rgba(158, 75, 89, 0.14);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .meishi-front {
+      background: linear-gradient(135deg, #ffffff 0%, #fbf2ef 100%);
+      border: 1px solid #e7d5cf;
+      color: var(--text-main);
+    }
+
+    .meishi-back {
+      background: linear-gradient(135deg, #fbf3f0 0%, #f3e2dc 100%);
+      color: var(--text-main);
+      border: 1px solid #dfc8c0;
+    }
+
+    .meishi-back-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 100%;
+      gap: 14px;
+    }
+
+    .qr-white-card {
+      background: #fff;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .qr-white-card span {
+      display: block;
+      color: var(--rose-deep);
+      font-size: 0.62rem;
+      font-weight: 700;
+      margin-top: 3px;
+    }
+
+    @media print {
+      .site-header, .editor-bar, .nav-drawer, .mobile-fixed-bar, .no-print {
+        display: none !important;
+      }
+      .view-panel {
+        display: none !important;
+      }
+      #panel-card {
+        display: block !important;
+      }
+      .meishi {
+        width: 91mm !important;
+        height: 55mm !important;
+        max-width: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        border: 0.5pt solid #bbb !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =================================================
+       ヘッダー＆ハンバーガーメニュー
+  ================================================= -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="#top" class="logo-area" onclick="switchMode('panel-hp')">
+        <span class="logo-title" data-bind="salonName">美しい髪</span>
+        <span class="logo-sub">PERM SALON</span>
+      </a>
+
+      <div class="mode-switcher">
+        <button class="mode-btn active" data-target="panel-hp">ホームページ</button>
+        <button class="mode-btn" data-target="panel-card">名刺（表・裏）</button>
+        <button class="mode-btn" data-target="panel-qr">QRコード</button>
+      </div>
+
+      <div class="header-right">
+        <a href="tel:03-1234-5678" class="header-tel-btn" id="headerTelLink">
+          <span>📞</span><span data-bind="phone">03-1234-5678</span>
+        </a>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="メニューを開く">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ハンバーガー展開ドロワーメニュー -->
+  <nav class="nav-drawer" id="navDrawer" aria-label="サイト内ナビゲーション">
+    <ul class="drawer-list">
+      <li><a href="#top" onclick="navigateSection('panel-hp', '#top')">トップ・艶髪ビジュアル <span class="en">TOP</span></a></li>
+      <li><a href="#features" onclick="navigateSection('panel-hp', '#features')">当サロンのこだわり <span class="en">CONCEPT</span></a></li>
+      <li><a href="#menu" onclick="navigateSection('panel-hp', '#menu')">妖艶パーマ・料金メニュー <span class="en">MENU</span></a></li>
+      <li><a href="#flow" onclick="navigateSection('panel-hp', '#flow')">施術の流れ <span class="en">FLOW</span></a></li>
+      <li><a href="#access" onclick="navigateSection('panel-hp', '#access')">Googleマップ・店舗案内 <span class="en">ACCESS</span></a></li>
+      <li><a href="#contact" onclick="navigateSection('panel-hp', '#contact')">電話予約・お問い合わせ <span class="en">RESERVE</span></a></li>
+      <li><a href="#card" onclick="navigateSection('panel-card')">デジタル＆印刷用名刺 <span class="en">CARD</span></a></li>
+      <li><a href="#qr" onclick="navigateSection('panel-qr')">店舗QRコード作成 <span class="en">QR CODE</span></a></li>
+    </ul>
+    <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.7;">
+      <div style="color:var(--rose-deep); font-family:var(--font-serif); font-weight:600; font-size:0.95rem; margin-bottom:4px;" data-bind="salonName">美しい髪</div>
+      <div>営業時間：<span data-bind="hours">10:00〜20:00（火曜定休）</span></div>
+      <div>所在地：<span data-bind="address">東京都渋谷区神宮前 1-2-3 2F</span></div>
+    </div>
+  </nav>
+
+  <!-- 店舗情報リアルタイム編集バー -->
+  <div class="editor-bar no-print">
+    <div class="editor-bar-inner">
+      <span style="font-size:0.82rem; color:var(--text-muted);">
+        ※ 店名・電話番号・住所・予約URLを変更するとHP・名刺・Googleマップ・QRコードに即反映されます
+      </span>
+      <button class="cat-pill" id="toggleFieldsBtn">
+        店舗情報を編集する ▼
+      </button>
+    </div>
+    <div class="editor-fields" id="editorFields">
+      <div class="field-item">
+        <label>美容室名</label>
+        <input type="text" id="inSalonName" value="美しい髪">
+      </div>
+      <div class="field-item">
+        <label>キャッチコピー</label>
+        <input type="text" id="inTagline" value="指先が絡むほどに艶めく、大人の曲線美。">
+      </div>
+      <div class="field-item">
+        <label>オーナースタイリスト名</label>
+        <input type="text" id="inOwner" value="綾瀬 美咲">
+      </div>
+      <div class="field-item">
+        <label>電話番号</label>
+        <input type="text" id="inPhone" value="03-1234-5678">
+      </div>
+      <div class="field-item">
+        <label>住所（Googleマップ連動）</label>
+        <input type="text" id="inAddress" value="東京都渋谷区神宮前1-2-3">
+      </div>
+      <div class="field-item">
+        <label>営業時間・定休日</label>
+        <input type="text" id="inHours" value="10:00〜20:00（火曜定休）">
+      </div>
+      <div class="field-item">
+        <label>予約・公式URL（QRコード連動）</label>
+        <input type="url" id="inUrl" value="https://toretamoo.com/tenjiCorp/">
+      </div>
+    </div>
+  </div>
+
+  <!-- =================================================
+       PANEL 1: ホームページ本体
+  ================================================= -->
+  <main id="panel-hp" class="view-panel active">
+    <section class="hero-section" id="top">
+      <canvas id="ambientParticles"></canvas>
+      <div class="hero-container">
+        <div class="hero-copy-area">
+          <span class="hero-badge">SENSUAL PERM &amp; SILK HAIR SALON</span>
+          <h1 class="hero-heading">
+            風になびくたび、<br>
+            視線を奪う<em>「美しい髪」</em>へ。
+          </h1>
+          <p class="hero-lead" data-bind="tagline">
+            指先が絡むほどに艶めく、大人の曲線美。
+          </p>
+          <p class="hero-lead" style="font-size:0.9rem; margin-top:-16px;">
+            自然光に透ける濡れ艶の低温シルクパーマと、骨格を美しく魅せる似合わせウェーブ専門のプライベート美容室です。
+          </p>
+          <div class="hero-cta-row">
+            <a href="#menu" class="btn-rose">妖艶パーマ料金メニューを見る</a>
+            <a href="#contact" class="btn-white-outline">WEB予約・お問い合わせ</a>
+          </div>
+        </div>
+
+        <!-- Gemini_Generated_Gif_wbjohkwbjohkwbjo.gif をフレームレス配置 -->
+        <div style="position:relative;">
+          <div class="model-frameless">
+            <img
+              id="heroModelGif"
+              class="hero-gif-img"
+              src="Gemini_Generated_Gif_wbjohkwbjohkwbjo.gif"
+              alt="風になびく艶やかな黒髪ウェーブのモデル"
+            />
+          </div>
+          <div class="floating-photo-action">
+            <label class="photo-upload-chip" title="別のGIFや画像ファイルを選択して差し替えできます">
+              🎬 GIF / 画像差替
+              <input type="file" id="modelPhotoInput" accept="image/*" style="display:none;">
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="ribbon-marquee">
+        <div class="ribbon-track">
+          <div class="ribbon-item">
+            <span>SILKY DIGITAL PERM</span><span>✦</span>
+            <span>濡れ艶リッチウェーブ</span><span>✦</span>
+            <span>弱酸性ダメージレス処方</span><span>✦</span>
+            <span>うなじを美しく魅せる色香カール</span><span>✦</span>
+            <span>朝3分で決まる極上の再現性</span><span>✦</span>
+          </div>
+          <div class="ribbon-item" aria-hidden="true">
+            <span>SILKY DIGITAL PERM</span><span>✦</span>
+            <span>濡れ艶リッチウェーブ</span><span>✦</span>
+            <span>弱酸性ダメージレス処方</span><span>✦</span>
+            <span>うなじを美しく魅せる色香カール</span><span>✦</span>
+            <span>朝3分で決まる極上の再現性</span><span>✦</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block" id="features">
+      <div class="sec-head">
+        <span class="en">FEATURES</span>
+        <h2>「美しい髪」3つの贅沢なこだわり</h2>
+        <p>パーマをかけるほどに艶が増す、大人女性のための特別な施術設計</p>
+      </div>
+      <div class="features-grid">
+        <article class="feature-card">
+          <div class="feature-num">01.</div>
+          <h3>とろける手触りの「弱酸性シルク処方」</h3>
+          <p>髪と同じ弱酸性領域の薬剤に高濃度ケラチンとシルクアミノ酸をブレンド。パーマ特有のパサつきを排し、指がすっと通る濡れ艶質感を叶えます。</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-num">02.</div>
+          <h3>横顔とデコルテを彩る「色香ウェーブ設計」</h3>
+          <p>頬にかかる柔らかな毛束と、肩先で揺れる大きめのS字カールをミリ単位で計算。ふとした瞬間に振り返りたくなる上品な色気を演出します。</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-num">03.</div>
+          <h3>光あふれる半個室のマンツーマン空間</h3>
+          <p>カウンセリングからシャンプー、仕上げまで専任スタイリストが最初から最後まで担当。明るい自然光が差し込む空間でゆったりとお過ごしいただけます。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="alluring-menu-band" id="menu">
+      <div class="sec-head">
+        <span class="en">ALLURING MENU &amp; PRICE</span>
+        <h2>魅惑のパーマ＆ヘアケア料金表（税込）</h2>
+        <p>すべてのメニューに丁寧な似合わせカット・スチーム保湿ケアが含まれます</p>
+      </div>
+
+      <div class="menu-category-tabs">
+        <button class="cat-pill active" data-cat="all">すべて表示</button>
+        <button class="cat-pill" data-cat="perm">艶髪パーマ</button>
+        <button class="cat-pill" data-cat="color">艶色カラー・縮毛</button>
+        <button class="cat-pill" data-cat="spa">極上ヘッドスパ・髪質改善</button>
+      </div>
+
+      <div class="menu-cards-grid" id="menuCardsGrid"></div>
+    </section>
+
+    <section class="section-block" id="flow">
+      <div class="sec-head">
+        <span class="en">SALON FLOW</span>
+        <h2>ご来店から仕上げまでの流れ</h2>
+        <p>初めての方でも安心してお任せいただける丁寧な4ステップ</p>
+      </div>
+      <div class="flow-grid">
+        <div class="flow-step">
+          <span class="step-tag">STEP 01</span>
+          <h4>毛髪診断・カウンセリング</h4>
+          <p>現在のダメージ履歴・クセ・骨格を見極め、理想のウェーブ幅と薬剤濃度をご提案します。</p>
+        </div>
+        <div class="flow-step">
+          <span class="step-tag">STEP 02</span>
+          <h4>似合わせベースカット</h4>
+          <p>パーマが最も美しく揺れるよう、毛量調整とレイヤーを繊細にカットします。</p>
+        </div>
+        <div class="flow-step">
+          <span class="step-tag">STEP 03</span>
+          <h4>低温シルクパーマ＆保湿</h4>
+          <p>ナノスチームで水分を補給しながら、柔らかな弾力カールをじっくり記憶させます。</p>
+        </div>
+        <div class="flow-step">
+          <span class="step-tag">STEP 04</span>
+          <h4>艶出し仕上げ・再現レクチャー</h4>
+          <p>ご自宅でも朝3分で同じカールを再現できる乾かし方とオイルの付け方を伝授します。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block" id="access" style="padding-top:10px;">
+      <div class="sec-head">
+        <span class="en">ACCESS &amp; RESERVATION</span>
+        <h2>アクセス（Googleマップ）・ご予約</h2>
+      </div>
+
+      <div class="contact-access-grid" id="contact">
+        <div class="panel-box">
+          <div class="tel-call-card">
+            <div style="font-size:0.8rem; letter-spacing:0.15em; color:var(--rose-deep); font-weight:600;">お電話でのご予約・ご相談</div>
+            <a href="tel:03-1234-5678" class="tel-number-link" id="bodyTelLink" data-bind="phone">03-1234-5678</a>
+            <div style="font-size:0.78rem; color:var(--text-muted);">受付時間：<span data-bind="hours">10:00〜20:00（火曜定休）</span></div>
+          </div>
+
+          <h3 style="font-family:var(--font-serif); font-size:1.2rem; margin-bottom:14px;">WEB予約・お問い合わせフォーム</h3>
+          <form id="contactForm">
+            <div class="form-group">
+              <label>お名前（必須）</label>
+              <input type="text" required placeholder="例：佐藤 美奈子">
+            </div>
+            <div class="form-group">
+              <label>お電話番号またはメールアドレス（必須）</label>
+              <input type="text" required placeholder="例：090-0000-0000">
+            </div>
+            <div class="form-group">
+              <label>ご希望のメニュー</label>
+              <select>
+                <option>濡れ艶・低温シルクデジタルパーマ（¥16,500）</option>
+                <option>色香まとう・ゆるふわリッチウェーブ（¥13,200）</option>
+                <option>顔まわりニュアンス・小悪魔カール（¥7,700）</option>
+                <option>深紅の艶髪・イルミナローズカラー＋カット（¥14,300）</option>
+                <option>極上アロマクリームバス＆髪質改善（¥8,800）</option>
+                <option>まずは髪質相談・メニューおまかせ</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>ご希望日時・髪のお悩み</label>
+              <textarea rows="3" placeholder="例：今週土曜日の14時頃希望。毛先のパサつきを抑えて大きなカールにしたいです。"></textarea>
+            </div>
+            <button type="submit" class="btn-rose" style="width:100%;">この内容で予約・問い合わせを送信</button>
+            <div class="toast-msg" id="formToast">お問い合わせを受け付けました。担当者より折り返しご連絡いたします。</div>
+          </form>
+        </div>
+
+        <div class="panel-box">
+          <h3 style="font-family:var(--font-serif); font-size:1.25rem; margin-bottom:6px; color:var(--rose-deep);" data-bind="salonName">美しい髪</h3>
+          <p style="font-size:0.86rem; color:var(--text-muted);">
+            〒150-0001 <span data-bind="address">東京都渋谷区神宮前1-2-3</span>
+          </p>
+
+          <div class="map-frame-wrap">
+            <iframe
+              id="googleMapFrame"
+              title="サロン所在地 Googleマップ"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              src="https://maps.google.com/maps?q=%E6%9D%B1%E4%BA%AC%E9%83%BD%E6%B8%8B%E8%B0%B7%E5%8C%BA%E7%A5%9E%E5%AE%AE%E5%89%8D1-2-3&t=&z=16&ie=UTF8&iwloc=&output=embed">
+            </iframe>
+          </div>
+
+          <div style="font-size:0.85rem; line-height:1.9; color:var(--text-main);">
+            <div><strong>営業時間：</strong><span data-bind="hours">10:00〜20:00（火曜定休）</span></div>
+            <div><strong>設備・サービス：</strong>半個室セット面3席 / ハーブティーサービス / Wi-Fi完備 / クレジットカード・QR決済対応</div>
+            <div><strong>アクセス：</strong>駅徒歩3分・近隣コインパーキングあり</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =================================================
+       PANEL 2: デジタル＆印刷用名刺
+  ================================================= -->
+  <section id="panel-card" class="view-panel">
+    <div class="section-block">
+      <div class="sec-head no-print">
+        <span class="en">BUSINESS CARD</span>
+        <h2>ショップ名刺（表面・裏面・QR付）</h2>
+        <p>日本標準名刺サイズ（91mm × 55mm）比率。そのまま印刷して使えます。</p>
+        <div style="margin-top:16px;">
+          <button class="btn-rose" onclick="window.print()">名刺を印刷 / PDF保存</button>
+        </div>
+      </div>
+
+      <div class="card-stage">
+        <div>
+          <p class="no-print" style="text-align:center; font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">【表面】FRONT</p>
+          <div class="meishi meishi-front">
+            <div>
+              <div style="font-family:var(--font-en); font-size:0.72rem; letter-spacing:0.24em; color:var(--rose-deep); font-weight:600;">SENSUAL PERM SALON</div>
+              <div style="font-family:var(--font-serif); font-size:1.85rem; font-weight:600; letter-spacing:0.12em; margin-top:4px; color:var(--text-main);" data-bind="salonName">美しい髪</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:0.74rem; color:var(--text-muted);">オーナースタイリスト / 艶髪パーマ専任</div>
+              <div style="font-family:var(--font-serif); font-size:1.25rem; letter-spacing:0.1em; margin-top:2px;" data-bind="owner">綾瀬 美咲</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p class="no-print" style="text-align:center; font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">【裏面】BACK（QRコード付）</p>
+          <div class="meishi meishi-back">
+            <div class="meishi-back-inner">
+              <div style="font-size:0.75rem; line-height:1.75;">
+                <div style="font-family:var(--font-serif); font-size:1.05rem; color:var(--rose-deep); font-weight:600; margin-bottom:4px;" data-bind="salonName">美しい髪</div>
+                <div style="color:var(--text-muted); font-size:0.7rem; margin-bottom:8px;" data-bind="tagline">指先が絡むほどに艶めく、大人の曲線美。</div>
+                <div>TEL：<span data-bind="phone">03-1234-5678</span></div>
+                <div>住所：<span data-bind="address">東京都渋谷区神宮前1-2-3</span></div>
+                <div>営業：<span data-bind="hours">10:00〜20:00（火曜定休）</span></div>
+              </div>
+              <div class="qr-white-card">
+                <div id="qrCard"></div>
+                <span>WEB予約</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================
+       PANEL 3: QRコード生成
+  ================================================= -->
+  <section id="panel-qr" class="view-panel">
+    <div class="section-block" style="max-width:640px; text-align:center;">
+      <div class="panel-box">
+        <span style="font-family:var(--font-en); letter-spacing:0.25em; color:var(--rose-accent); font-weight:600;">QR CODE</span>
+        <h2 style="font-family:var(--font-serif); font-size:1.6rem; margin:6px 0 10px;">店頭POP・チラシ用QRコード</h2>
+        <p style="font-size:0.86rem; color:var(--text-muted);">スマホカメラで読み込むと予約・ホームページへ直接アクセスできます。</p>
+
+        <div style="display:inline-block; background:var(--bg-blush); border:1px solid var(--border); padding:24px; border-radius:16px; margin:22px 0;">
+          <div id="qrStandalone"></div>
+          <div style="margin-top:10px; font-family:var(--font-serif); font-weight:600; color:var(--rose-deep);" data-bind="salonName">美しい髪</div>
+          <div style="font-size:0.78rem; color:var(--text-muted);" data-bind="url">https://toretamoo.com/tenjiCorp/</div>
+        </div>
+
+        <div>
+          <button class="btn-rose" id="downloadQrBtn">QRコード画像（PNG）を保存する</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="mobile-fixed-bar no-print">
+    <a href="tel:03-1234-5678" id="mobileTelLink" class="btn-white-outline" style="padding:10px; font-size:0.84rem;">📞 電話で予約する</a>
+    <a href="#contact" onclick="navigateSection('panel-hp', '#contact')" class="btn-rose" style="padding:10px; font-size:0.84rem;">✨ WEB予約・相談</a>
+  </div>
+
+  <script>
+    // =========================================
+    // 1. GIF / 画像ローカル差替機能
+    // =========================================
+    document.getElementById('modelPhotoInput').addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (ev) {
+        document.getElementById('heroModelGif').src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // ヒーロー背景のやわらかな光の粒子
+    const ambCanvas = document.getElementById('ambientParticles');
+    const aCtx = ambCanvas.getContext('2d');
+    let aw, ah;
+    const dust = Array.from({ length: 24 }, () => ({
+      x: Math.random() * 1400,
+      y: Math.random() * 700,
+      r: Math.random() * 2.8 + 1.2,
+      vx: Math.random() * 0.4 + 0.12,
+      vy: (Math.random() - 0.5) * 0.2,
+      a: Math.random() * 0.55 + 0.2
+    }));
+
+    function resizeAmbient() {
+      const r = ambCanvas.parentElement.getBoundingClientRect();
+      aw = ambCanvas.width = r.width;
+      ah = ambCanvas.height = r.height;
+    }
+    window.addEventListener('resize', resizeAmbient);
+    resizeAmbient();
+
+    function drawAmbient() {
+      aCtx.clearRect(0, 0, aw, ah);
+      dust.forEach(d => {
+        d.x += d.vx;
+        d.y += d.vy;
+        if (d.x > aw + 10) d.x = -10;
+        if (d.y < 0) d.y = ah;
+        if (d.y > ah) d.y = 0;
+        aCtx.beginPath();
+        aCtx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+        aCtx.fillStyle = `rgba(255, 255, 255, ${d.a})`;
+        aCtx.fill();
+      });
+      requestAnimationFrame(drawAmbient);
+    }
+    drawAmbient();
+
+    // =========================================
+    // 2. 妖艶な美容院メニューデータ＆カテゴリ切替
+    // =========================================
+    const salonMenus = [
+      {
+        cat: 'perm',
+        badge: '人気 No.1・SIGNATURE',
+        title: '濡れ艶・低温シルクデジタルパーマ（カット・高濃度補修込）',
+        copy: '指先がすっと吸い込まれるような、しっとり柔らかな曲線美。低温でじっくり記憶させるため、乾かすだけでサロン帰りの色香ウェーブが蘇ります。',
+        time: '所要時間：約150分',
+        price: '¥16,500'
+      },
+      {
+        cat: 'perm',
+        badge: 'SENSUAL WAVE',
+        title: '色香まとう・ゆるふわリッチウェーブ（カット・スチーム付）',
+        copy: '頬のラインで揺れる繊細な毛束と、うなじを美しく見せる立体カール。大人の女性にふさわしい上品な華やぎを纏う定番パーマコースです。',
+        time: '所要時間：約120分',
+        price: '¥13,200'
+      },
+      {
+        cat: 'perm',
+        badge: 'NUANCE CURL',
+        title: '顔まわりニュアンス・小悪魔前髪＆サイドカール',
+        copy: '横顔の印象を一瞬で変える顔まわり専用デザインパーマ。結んだときも後れ毛が優雅に揺れ、大人の余裕と色気を演出します。',
+        time: '所要時間：約60分',
+        price: '¥7,700'
+      },
+      {
+        cat: 'color',
+        badge: 'GLOSS COLOR',
+        title: '深紅の艶髪・イルミナローズカラー ＋ 似合わせカット',
+        copy: 'パーマと同時施術も可能な低ダメージ処方。光が当たるたびにシルクのような透明感と深い艶を放つ上品なカラーリングです。',
+        time: '所要時間：約120分',
+        price: '¥14,300'
+      },
+      {
+        cat: 'color',
+        badge: 'SILK STRAIGHT',
+        title: '毛先カール＆根元シルク縮毛矯正（ストカール）',
+        copy: '根元のうねりはしなやかに整えながら、毛先には柔らかな内巻きカールをプラス。雨の日も乱れない完璧なシルエットを約束します。',
+        time: '所要時間：約180分',
+        price: '¥22,000'
+      },
+      {
+        cat: 'spa',
+        badge: 'HEAD SPA & CARE',
+        title: '極上アロマクリームバス＆濃密ケラチン髪質改善',
+        copy: '芳醇なローズ＆サンダルウッドの香りに包まれながら頭皮のコリを解きほぐし、髪の芯まで潤いを満たす至福のトリートメントコース。',
+        time: '所要時間：約75分',
+        price: '¥8,800'
+      }
+    ];
+
+    const menuGrid = document.getElementById('menuCardsGrid');
+    function renderMenus(filterCat = 'all') {
+      const list = filterCat === 'all' ? salonMenus : salonMenus.filter(m => m.cat === filterCat);
+      menuGrid.innerHTML = list.map(m => `
+        <article class="sensual-menu-card">
+          <div>
+            <span class="menu-badge">${m.badge}</span>
+            <h3>${m.title}</h3>
+            <p class="sensual-copy">${m.copy}</p>
+          </div>
+          <div class="menu-price-footer">
+            <span class="menu-time">${m.time}</span>
+            <span class="menu-yen">${m.price}</span>
+          </div>
+        </article>
+      `).join('');
+    }
+    renderMenus();
+
+    document.querySelectorAll('.cat-pill[data-cat]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.cat-pill[data-cat]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderMenus(btn.dataset.cat);
+      });
+    });
+
+    // =========================================
+    // 3. ハンバーガーメニュー＆画面切替
+    // =========================================
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const navDrawer = document.getElementById('navDrawer');
+
+    hamburgerBtn.addEventListener('click', () => {
+      hamburgerBtn.classList.toggle('open');
+      navDrawer.classList.toggle('open');
+    });
+
+    function switchMode(panelId) {
+      document.querySelectorAll('.mode-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.target === panelId);
+      });
+      document.querySelectorAll('.view-panel').forEach(p => {
+        p.classList.toggle('active', p.id === panelId);
+      });
+    }
+
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        switchMode(btn.dataset.target);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+
+    function navigateSection(panelId, anchor) {
+      switchMode(panelId);
+      hamburgerBtn.classList.remove('open');
+      navDrawer.classList.remove('open');
+      if (anchor) {
+        setTimeout(() => {
+          const el = document.querySelector(anchor);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 60);
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    const editorFields = document.getElementById('editorFields');
+    document.getElementById('toggleFieldsBtn').addEventListener('click', () => {
+      editorFields.classList.toggle('open');
+    });
+
+    // =========================================
+    // 4. 店舗情報・Googleマップ・電話・QRコード一括連動
+    // =========================================
+    const inputs = {
+      salonName: document.getElementById('inSalonName'),
+      tagline: document.getElementById('inTagline'),
+      owner: document.getElementById('inOwner'),
+      phone: document.getElementById('inPhone'),
+      address: document.getElementById('inAddress'),
+      hours: document.getElementById('inHours'),
+      url: document.getElementById('inUrl')
+    };
+
+    function makeQr(targetId, text, size) {
+      const box = document.getElementById(targetId);
+      box.innerHTML = '';
+      new QRCode(box, {
+        text: text || 'https://toretamoo.com/tenjiCorp/',
+        width: size,
+        height: size,
+        colorDark: '#9e4b59',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
+
+    function updateSalonData() {
+      Object.keys(inputs).forEach(key => {
+        const val = inputs[key].value;
+        document.querySelectorAll(`[data-bind="${key}"]`).forEach(el => {
+          el.textContent = val;
+        });
+      });
+
+      const telClean = inputs.phone.value.replace(/[^0-9+]/g, '');
+      ['headerTelLink', 'bodyTelLink', 'mobileTelLink'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.href = `tel:${telClean}`;
+      });
+
+      const addr = encodeURIComponent(inputs.address.value.trim());
+      if (addr) {
+        document.getElementById('googleMapFrame').src =
+          `https://maps.google.com/maps?q=${addr}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
+      }
+
+      const siteUrl = inputs.url.value.trim();
+      makeQr('qrCard', siteUrl, 74);
+      makeQr('qrStandalone', siteUrl, 190);
+    }
+
+    Object.values(inputs).forEach(inp => inp.addEventListener('input', updateSalonData));
+    updateSalonData();
+
+    document.getElementById('downloadQrBtn').addEventListener('click', () => {
+      const c = document.querySelector('#qrStandalone canvas');
+      const img = document.querySelector('#qrStandalone img');
+      const url = c ? c.toDataURL('image/png') : (img ? img.src : '');
+      if (!url) return;
+      const a = document.createElement('a');
+      a.download = `${inputs.salonName.value || 'salon'}_qrcode.png`;
+      a.href = url;
+      a.click();
+    });
+
+    document.getElementById('contactForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      document.getElementById('formToast').style.display = 'block';
+      this.reset();
+    });
+  </script>
+</body>
+</html>

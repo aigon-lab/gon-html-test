@@ -14,7 +14,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#f6f4f1;color:#2a2a2a}
 .header h1{font-family:'Noto Serif JP',serif;font-size:clamp(1.4rem,4vw,2rem);color:#fff;font-weight:700;margin-bottom:8px}
 .header p{font-size:13px;color:rgba(255,255,255,.6)}
 
-.main{max-width:720px;margin:0 auto;padding:48px 20px 80px;display:flex;flex-direction:column;gap:48px}
+.main{max-width:720px;margin:0 auto;padding:48px 20px 64px;display:flex;flex-direction:column;gap:48px}
 
 .sample{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.08)}
 .sample img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
@@ -24,6 +24,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:#f6f4f1;color:#2a2a2a}
 .sample-sub{font-size:13px;color:#888;margin-bottom:24px}
 .btn{display:inline-block;background:#2a2a2a;color:#fff;font-size:14px;font-weight:700;padding:13px 40px;border-radius:8px;text-decoration:none;letter-spacing:.06em;transition:background .2s}
 .btn:hover{background:#555}
+
+/* BACK TO AIGON.LAB */
+.back-bar{padding:0 20px 56px;text-align:center}
+.btn-back-aigon{display:inline-flex;align-items:center;gap:8px;color:#1c1008;background:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.1em;padding:13px 32px;border:1.5px solid #1c1008;border-radius:8px;transition:background .2s,color .2s}
+.btn-back-aigon:hover{background:#1c1008;color:#fff}
 
 footer{background:#1a1a1a;color:#666;font-size:11px;text-align:center;padding:20px;letter-spacing:.08em}
 footer a{color:#888;text-decoration:none}
@@ -43,7 +48,7 @@ footer a{color:#888;text-decoration:none}
     <div class="sample-body">
       <p class="sample-num">SAMPLE 01</p>
       <p class="sample-name">和食・日本料理</p>
-      <p class="sample-sub">黒・金　高級感のある落ち着いたデザイン</p>
+      <p class="sample-sub">黒・金 高級感のある落ち着いたデザイン</p>
       <a class="btn" href="washoku.html" target="_blank">サンプルを見る</a>
     </div>
   </div>
@@ -53,7 +58,7 @@ footer a{color:#888;text-decoration:none}
     <div class="sample-body">
       <p class="sample-num">SAMPLE 02</p>
       <p class="sample-name">カフェ・洋食</p>
-      <p class="sample-sub">白・ベージュ　ナチュラルでおしゃれなデザイン</p>
+      <p class="sample-sub">白・ベージュ ナチュラルでおしゃれなデザイン</p>
       <a class="btn" href="cafe.html" target="_blank">サンプルを見る</a>
     </div>
   </div>
@@ -63,7 +68,7 @@ footer a{color:#888;text-decoration:none}
     <div class="sample-body">
       <p class="sample-num">SAMPLE 03</p>
       <p class="sample-name">居酒屋・ラーメン</p>
-      <p class="sample-sub">赤・黒　力強くインパクトのあるデザイン</p>
+      <p class="sample-sub">赤・黒 力強くインパクトのあるデザイン</p>
       <a class="btn" href="izakaya.html" target="_blank">サンプルを見る</a>
     </div>
   </div>
@@ -73,7 +78,7 @@ footer a{color:#888;text-decoration:none}
     <div class="sample-body">
       <p class="sample-num">SAMPLE 04</p>
       <p class="sample-name">ファミリーレストラン</p>
-      <p class="sample-sub">オレンジ・緑　明るく親しみやすいデザイン</p>
+      <p class="sample-sub">オレンジ・緑 明るく親しみやすいデザイン</p>
       <a class="btn" href="family.html" target="_blank">サンプルを見る</a>
     </div>
   </div>
@@ -83,23 +88,27 @@ footer a{color:#888;text-decoration:none}
     <div class="sample-body">
       <p class="sample-num">SAMPLE 05</p>
       <p class="sample-name">フレンチ・イタリアン</p>
-      <p class="sample-sub">白・深緑　上品で洗練されたデザイン</p>
+      <p class="sample-sub">白・深緑 上品で洗練されたデザイン</p>
       <a class="btn" href="french.html" target="_blank">サンプルを見る</a>
     </div>
-  <div class="card" style="border:2px solid #2a2a2a;position:relative">
+  </div>
+
+  <div class="sample" style="border:2px solid #2a2a2a;position:relative">
     <span style="position:absolute;top:12px;left:12px;background:#2a2a2a;color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.08em">6ページ構成</span>
     <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=70&w=1200&auto=format&fit=crop" alt="プレミアムカフェサイト">
     <div class="sample-body">
       <p class="sample-num">PREMIUM</p>
       <p class="sample-name">KINARI CAFE &amp; TABLE</p>
-      <p class="sample-sub">多ページ構成　15万円版モデル</p>
+      <p class="sample-sub">多ページ構成 15万円版モデル</p>
       <a class="btn" href="kinari/index.html" target="_blank">サンプルを見る</a>
     </div>
   </div>
 
-  </div>
-
 </main>
+
+<div class="back-bar">
+  <a class="btn-back-aigon" href="https://toretamoo.com/tenjiCorp/">← AIGON.LABへ戻る</a>
+</div>
 
 <footer>© 2025 Esprit Artisan — <a href="../index.html">トップへ戻る</a></footer>
 </body>

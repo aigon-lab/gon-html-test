@@ -749,6 +749,35 @@
       font-weight: 600;
     }
 
+    .back-to-aigon {
+      padding: 24px 0;
+      background: var(--surface-strong);
+      border-top: 1px solid var(--line);
+      text-align: center;
+    }
+
+    .btn-back-aigon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 24px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 0.9rem;
+      font-weight: 800;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .btn-back-aigon:hover,
+    .btn-back-aigon:focus-visible {
+      transform: translateY(-2px);
+      border-color: var(--brand);
+      outline: none;
+    }
+
     .footer {
       padding: 34px 0 100px;
       background: var(--brand-strong);
@@ -1231,9 +1260,15 @@
             小さな店でも必要な情報が迷わず届く構成です。
           </p>
         </div>
-        <a class="btn btn-primary" href="../index.html">LINEで予約・相談する</a>
+        <a class="btn btn-primary" id="reserveButton" href="../index.html">LINEで予約・相談する</a>
       </div>
     </section>
+
+    <div class="back-to-aigon">
+      <div class="container">
+        <a class="btn-back-aigon" href="https://toretamoo.com/tenjiCorp/">← AIGON.LABへ戻る</a>
+      </div>
+    </div>
   </main>
 
   <footer class="footer">

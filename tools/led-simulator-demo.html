@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>照度（ルクス）判定＆電気代削減シミュレーター（業種別デモ）</title>
+  <meta name="description" content="工場・倉庫の広さと作業用途から必要なLED台数を自動計算し、年間電気代の削減額と初期費用の回収期間をその場で試算できる集客用シミュレーターの動く見本です。電話前の事前ヒアリング機能も体験できます。">
+  <style>
+    :root {
+      --primary: #0f172a;
+      --accent-orange: #f97316;
+      --gold-frame: #d4af37;
+      --bg-base: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+    }
+    html, body, div, header, section, h1, h2, h3, p, span, a, button, input, select, form, label {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-base);
+      color: #1e293b;
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+    .wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      min-height: 100vh;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+    .top-nav {
+      background: #0f172a;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #cbd5e1;
+      font-size: 11px;
+    }
+    .back-link {
+      color: #f97316;
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    /* クイックアクションバー */
+    .quick-action-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 10px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .quick-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      border-radius: 6px;
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+    }
+    .quick-btn-tel { background: var(--primary); color: #fff; }
+    .quick-btn-contact { background: linear-gradient(135deg, #fafad2, #ff6347); color: #0f172a; border: 1px solid #cbd5e1; }
+    .btn-label { font-size: 13px; font-weight: 800; }
+    .btn-sub { font-size: 11px; margin-top: 2px; }
+
+    /* セクション共通見出し */
+    .section { padding: 16px; border-bottom: 1px solid var(--border); }
+    .sec-title-bar {
+      background: linear-gradient(135deg, #fafad2, #ff6347);
+      color: #0f172a;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 900;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      border-left: 4px solid #ff6347;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    /* 統合シミュレーター（ダークネイビー × ゴールド枠） */
+    .tab-sim-container {
+      background: #0f172a;
+      border: 2px solid var(--gold-frame);
+      border-radius: 12px;
+      overflow: hidden;
+      color: #ffffff;
+      margin: 12px 0;
+    }
+    .tab-sim-nav {
+      display: flex;
+      background: #1e293b;
+      border-bottom: 2px solid #334155;
+    }
+    .tab-sim-btn {
+      flex: 1;
+      padding: 12px 6px;
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .tab-sim-btn.active {
+      background: #0f172a;
+      color: var(--accent-orange);
+      border-bottom: 3px solid var(--accent-orange);
+    }
+    .tab-sim-content { padding: 16px; display: none; }
+    .tab-sim-content.active { display: block; }
+    .sim-form-group { margin-bottom: 12px; }
+    .sim-label { display: block; font-size: 11px; font-weight: bold; margin-bottom: 4px; color: #cbd5e1; }
+    .sim-select, .sim-range { width: 100%; }
+    .sim-select {
+      padding: 8px;
+      border-radius: 6px;
+      background: #0f172a;
+      color: #fff;
+      border: 1px solid #475569;
+      font-size: 12px;
+    }
+    .sim-range { accent-color: var(--accent-orange); }
+    .sim-next-btn {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 900;
+      margin-top: 14px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    /* 電話前ヒアリング モーダルスタイル */
+    .tel-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.75);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+    .tel-modal-box {
+      background: #ffffff;
+      border-radius: 12px;
+      max-width: 450px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      position: relative;
+      border: 2px solid #0f172a;
+    }
+    .tel-modal-close {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      font-size: 22px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #64748b;
+      border: none;
+      background: none;
+      padding: 4px;
+    }
+    .tel-modal-title {
+      font-size: 16px;
+      font-weight: 900;
+      color: #0f172a;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+    .tel-modal-desc {
+      font-size: 11px;
+      color: #475569;
+      margin-bottom: 14px;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .tel-form-group { margin-bottom: 10px; }
+    .tel-form-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: bold;
+      color: #1e293b;
+      margin-bottom: 3px;
+    }
+    .tel-form-group input, .tel-form-group select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 12px;
+      background: #ffffff;
+      color: #0f172a;
+    }
+    .tel-submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      color: #ffffff;
+      border: none;
+      border-radius: 50px;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+      margin-top: 6px;
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+    }
+    .tel-direct-link {
+      display: block;
+      text-align: center;
+      margin-top: 10px;
+      font-size: 11px;
+      color: #64748b;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="top-nav">
+    <span>※集客用診断シミュレーターのサンプル実演画面</span>
+    <a href="/tenjiCorp/member.html#tool-warehouse" class="back-link">← AI業務ツール倉庫へ戻る</a>
+  </div>
+
+  <!-- クイックアクションバー -->
+  <div class="quick-action-bar">
+    <a href="javascript:void(0)" onclick="openTelModal()" class="quick-btn quick-btn-tel">
+      <span class="btn-label">📞 電話で相談（実演）</span>
+      <span class="btn-sub">事前ヒアリング起動</span>
+    </a>
+    
+    <a href="javascript:void(0)" onclick="openTelModalWithSimData()" class="quick-btn quick-btn-contact">
+      <span class="btn-label">✉️ お問い合わせ</span>
+      <span class="btn-sub">図面・照度試算</span>
+    </a>
+  </div>
+
+  <!-- 統合シミュレーターセクション -->
+  <section class="section">
+    <div class="sec-title-bar" onclick="toggleSimSection()">
+      <span>⚡ 照度（ルクス）判定 ＆ 電気代削減シミュレーター</span>
+      <span id="sim-toggle-icon">▲ 閉じる</span>
+    </div>
+
+    <div id="sim-wrapper-box" class="tab-sim-container">
+      <div class="tab-sim-nav">
+        <button type="button" class="tab-sim-btn active" id="tabBtn1" onclick="switchSimTab(1)">
+          STEP 1: ルクス・ルーメン判定
+        </button>
+        <button type="button" class="tab-sim-btn" id="tabBtn2" onclick="switchSimTab(2)">
+          STEP 2: 電気代削減・回収試算
+        </button>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="tab-sim-content active" id="simStep1">
+        <div style="font-size: 11px; color: #94a3b8; margin-bottom: 10px;">
+          現場用途（JIS基準ルクス）と広さから、最適な器具ルーメンと台数を自動選定します。
+        </div>
+
+        <div class="sim-form-group">
+          <label class="sim-label">① 作業用途（手元に必要な明るさ）</label>
+          <select id="tab_preset_lux" class="sim-select" onchange="calcStep1()">
+            <option value="750">精密作業・目視検査（750 lx）</option>
+            <option value="300" selected>一般工場・加工組立（300 lx）</option>
+            <option value="150">倉庫・保管エリア（150 lx）</option>
+            <option value="100">構内通路・資材置き場（100 lx）</option>
+          </select>
+        </div>
+
+        <div class="sim-form-group">
+          <label class="sim-label">
+            ② 工場の広さ：<span id="tab_area_num" style="color: #f97316; font-size: 14px;">300</span> ㎡（約 <span id="tab_tsubo_num">90</span> 坪）
+          </label>
+          <input type="range" id="tab_area" min="50" max="1500" step="10" value="300" class="sim-range" oninput="calcStep1()">
+        </div>
+
+        <div class="sim-form-group">
+          <label class="sim-label">③ 交換対象の水銀灯（推奨LEDルーメン）</label>
+          <select id="tab_mercury_type" class="sim-select" onchange="calcStep1()">
+            <option value="400" selected>水銀灯 400W相当（LED: 15,000 lm）</option>
+            <option value="700">水銀灯 700W相当（LED: 22,500 lm）</option>
+            <option value="1000">水銀灯 1000W相当（LED: 30,000 lm）</option>
+          </select>
+        </div>
+
+        <div style="background: #1e293b; border-radius: 8px; padding: 12px; margin-top: 12px; border: 1px solid #334155; text-align: center;">
+          <div style="font-size: 11px; color: #cbd5e1;">適正配置台数</div>
+          <div style="font-size: 26px; font-weight: 900; color: #f59e0b; margin: 4px 0;">
+            <span id="tab_res_lamps">23</span> 台
+          </div>
+          <div style="font-size: 10px; color: #94a3b8;">
+            手元照度 <span id="tab_res_target_lux">300</span> lx を維持する計算です
+          </div>
+        </div>
+
+        <button type="button" class="sim-next-btn" onclick="switchSimTab(2)">
+          この台数で電気代の削減額を計算する →
+        </button>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="tab-sim-content" id="simStep2">
+        <div style="font-size: 11px; color: #94a3b8; margin-bottom: 10px;">
+          算出された台数をもとに、年間コストの削減見込みを算出します。
+        </div>
+
+        <div class="sim-form-group">
+          <label class="sim-label">
+            対象台数：<span id="tab_lamps_manual_num" style="color: #f97316; font-size: 14px;">23</span> 台
+          </label>
+          <input type="range" id="tab_lamps_slider" min="5" max="150" value="23" class="sim-range" oninput="calcStep2()">
+        </div>
+
+        <div class="sim-form-group">
+          <label class="sim-label">
+            1日の点灯時間：<span id="tab_hours_num" style="color: #f97316; font-size: 14px;">16</span> 時間/日
+          </label>
+          <input type="range" id="tab_hours" min="8" max="24" value="16" class="sim-range" oninput="calcStep2()">
+        </div>
+
+        <div style="background: #0b1329; border: 2px solid var(--gold-frame); border-radius: 8px; padding: 12px; margin-top: 12px;">
+          <div style="font-size: 10px; color: #ef4444; font-weight: bold;">【水銀灯を使い続けた場合の年間出費】</div>
+          <div style="font-size: 15px; font-weight: 900; color: #ffffff; margin-bottom: 6px;">
+            年間 約 <span id="tab_mercury_cost">1,507,000</span> 円
+          </div>
+
+          <div style="font-size: 10px; color: #22c55e; font-weight: bold;">【LED導入後の削減額】</div>
+          <div style="font-size: 20px; font-weight: 900; color: #22c55e; margin-bottom: 6px;">
+            毎年 約 <span id="tab_savings_cost">1,164,000</span> 円 削減
+          </div>
+
+          <div style="font-size: 11px; color: #ffffff; background: #1e293b; padding: 6px; border-radius: 4px; text-align: center;">
+            回収期間目安：約 <span id="tab_payback_months" style="font-weight: 900; color: #f59e0b; font-size: 14px;">9</span> ヶ月
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 14px;">
+          <button type="button" onclick="switchSimTab(1)" style="flex: 1; background: #334155; color: #fff; border: none; padding: 10px; border-radius: 8px; font-size: 12px; cursor: pointer;">
+            ← 戻る
+          </button>
+          <button type="button" onclick="openTelModalWithSimData()" class="sim-next-btn" style="flex: 2; margin-top: 0; padding: 10px; font-size: 12px;">
+            🔒 この結果で電話相談する
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- 電話前ヒアリング モーダル画面本体 -->
+<div id="telModalOverlay" class="tel-modal-overlay">
+  <div class="tel-modal-box">
+    <button type="button" class="tel-modal-close" onclick="closeTelModal()">✕</button>
+    
+    <div class="tel-modal-title">📞 お電話ありがとうございます</div>
+    <div class="tel-modal-desc">
+      スムーズな案内のため、事前に簡単な内容をお知らせください。
+    </div>
+
+    <form id="telPreForm" onsubmit="submitAndMakeCall(event)">
+      <div class="tel-form-group">
+        <label>ご用件</label>
+        <select id="modal_subject" required>
+          <option value="水銀灯のLED交換相談">水銀灯のLED交換相談</option>
+          <option value="無料照度計算の依頼">無料照度計算の依頼</option>
+          <option value="概算見積りの確認">概算見積りの確認</option>
+          <option value="その他">その他のお問い合わせ</option>
+        </select>
+      </div>
+
+      <div class="tel-form-group">
+        <label>現在の台数（大体で構いません）</label>
+        <input type="text" id="modal_lamps" placeholder="例: 約30台">
+      </div>
+
+      <div class="tel-form-group">
+        <label>貴社名・お名前</label>
+        <input type="text" id="modal_name" placeholder="例: 株式会社サンプル 山田">
+      </div>
+
+      <button type="submit" id="modalCallBtn" class="tel-submit-btn">
+        📞 送信して電話をかける（実演）
+      </button>
+
+      <a href="tel:0000000000" class="tel-direct-link" onclick="closeTelModal()">
+        入力せず直接電話をかける場合はこちら（ダミー番号）
+      </a>
+    </form>
+  </div>
+</div>
+
+<!-- 動作制御スクリプト -->
+<script>
+  // 1. 流入元（QR/アフィリID）の自動取得
+  let clientRefId = 'direct';
+  window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('ref')) {
+      clientRefId = params.get('ref');
+      sessionStorage.setItem('client_ref_id', clientRefId);
+    } else if (sessionStorage.getItem('client_ref_id')) {
+      clientRefId = sessionStorage.getItem('client_ref_id');
+    }
+    calcStep1();
+  });
+
+  // 2. モーダルの開閉関数
+  function openTelModal() {
+    const overlay = document.getElementById('telModalOverlay');
+    overlay.style.display = 'flex';
+  }
+  function closeTelModal() {
+    const overlay = document.getElementById('telModalOverlay');
+    overlay.style.display = 'none';
+  }
+
+  // シミュレーター結果を反映させてモーダルを開く
+  function openTelModalWithSimData() {
+    const lamps = document.getElementById('tab_lamps_manual_num').textContent;
+    document.getElementById('modal_lamps').value = lamps + '台';
+    openTelModal();
+  }
+
+  // 送信・電話発信処理（実演）
+  function submitAndMakeCall(event) {
+    event.preventDefault();
+    const btn = document.getElementById('modalCallBtn');
+    btn.disabled = true;
+    btn.textContent = '発信中（実演シミュレーション）...';
+
+    const payload = {
+      type: '電話前ヒアリング',
+      subject: document.getElementById('modal_subject').value,
+      count: document.getElementById('modal_lamps').value,
+      name: document.getElementById('modal_name').value || '匿名',
+      refId: clientRefId
+    };
+
+    console.log('【GAS送信データ（実演ログ）】', payload);
+
+    setTimeout(() => {
+      alert(`【実演成功】\nデータ送信が完了しました！\n\n・お名前: ${payload.name}\n・台数: ${payload.count}\n・用件: ${payload.subject}\n・流入経路: ${payload.refId}\n\nこの後、スマートフォンでは電話（000-000-0000）が自動起動します。`);
+      btn.disabled = false;
+      btn.textContent = '📞 送信して電話をかける（実演）';
+      closeTelModal();
+    }, 800);
+  }
+
+  // 3. シミュレーター制御関数
+  function toggleSimSection() {
+    const box = document.getElementById('sim-wrapper-box');
+    const icon = document.getElementById('sim-toggle-icon');
+    if (box.style.display === 'none') {
+      box.style.display = 'block';
+      icon.textContent = '▲ 閉じる';
+    } else {
+      box.style.display = 'none';
+      icon.textContent = '▼ 開く';
+    }
+  }
+
+  function switchSimTab(step) {
+    const btn1 = document.getElementById('tabBtn1');
+    const btn2 = document.getElementById('tabBtn2');
+    const step1 = document.getElementById('simStep1');
+    const step2 = document.getElementById('simStep2');
+
+    if (step === 1) {
+      btn1.classList.add('active');
+      btn2.classList.remove('active');
+      step1.classList.add('active');
+      step2.classList.remove('active');
+    } else {
+      btn1.classList.remove('active');
+      btn2.classList.add('active');
+      step1.classList.remove('active');
+      step2.classList.add('active');
+      calcStep2();
+    }
+  }
+
+  function calcStep1() {
+    const targetLux = parseInt(document.getElementById('tab_preset_lux').value, 10);
+    const areaM2 = parseInt(document.getElementById('tab_area').value, 10);
+    const mercuryType = parseInt(document.getElementById('tab_mercury_type').value, 10);
+
+    document.getElementById('tab_area_num').textContent = areaM2;
+    document.getElementById('tab_tsubo_num').textContent = Math.round(areaM2 * 0.3025);
+    document.getElementById('tab_res_target_lux').textContent = targetLux;
+
+    let lumens = 15000;
+    if (mercuryType === 700) lumens = 22500;
+    if (mercuryType === 1000) lumens = 30000;
+
+    const lampCount = Math.max(1, Math.ceil((targetLux * areaM2) / (lumens * 0.65 * 0.80)));
+    document.getElementById('tab_res_lamps').textContent = lampCount;
+    document.getElementById('tab_lamps_slider').value = lampCount;
+    document.getElementById('tab_lamps_manual_num').textContent = lampCount;
+    calcStep2();
+  }
+
+  function calcStep2() {
+    const count = parseInt(document.getElementById('tab_lamps_slider').value, 10);
+    const hours = parseInt(document.getElementById('tab_hours').value, 10);
+    const mercuryType = parseInt(document.getElementById('tab_mercury_type').value, 10);
+
+    document.getElementById('tab_lamps_manual_num').textContent = count;
+    document.getElementById('tab_hours_num').textContent = hours;
+
+    let mercuryWatt = 440;
+    let ledWatt = 100;
+    let costPerLamp = 38000;
+    if (mercuryType === 700) { mercuryWatt = 760; ledWatt = 150; costPerLamp = 48000; }
+    if (mercuryType === 1000) { mercuryWatt = 1100; ledWatt = 200; costPerLamp = 58000; }
+
+    const oldCost = Math.round((count * mercuryWatt * hours * 300 / 1000) * 31);
+    const ledCost = Math.round((count * ledWatt * hours * 300 / 1000) * 31);
+    const savings = oldCost - ledCost;
+    const paybackMonths = savings > 0 ? Math.ceil((count * costPerLamp) / (savings / 12)) : 0;
+
+    document.getElementById('tab_mercury_cost').textContent = oldCost.toLocaleString();
+    document.getElementById('tab_savings_cost').textContent = savings.toLocaleString();
+    document.getElementById('tab_payback_months').textContent = paybackMonths;
+  }
+</script>
+</body>
+</html>

@@ -151,7 +151,7 @@
     }
     [hidden] { display: none !important; }
   </style>
-<style id="r2-small-fixes">button:disabled{opacity:.55;cursor:wait}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #f3d28b;outline-offset:3px} .card-grid>*{min-width:0} @media(max-width:420px){.card-grid{grid-template-columns:1fr}}</style>
+  <style id="r2-small-fixes">button:disabled{opacity:.55;cursor:wait}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #f3d28b;outline-offset:3px} .card-grid>*{min-width:0} @media(max-width:420px){.card-grid{grid-template-columns:1fr}}</style>
 </head>
 <body>
   <main>
@@ -212,9 +212,12 @@
         <span class="badge">会員専用ページ「AI業務ツール倉庫」へ登録（閲覧側で最新の内容を取得）</span>
         <h2>③ AI業務ツール倉庫への追加</h2>
         <form id="tools-form">
-          <label>ツール・アプリ名<input name="title" maxlength="200" placeholder="例：メニュー原価・利益率計算ツール" required></label>
-          <label>ツールのURL（https:// から入力）<input name="url" type="url" maxlength="2000" placeholder="https://aigon-lab.github.io/..." required></label>
-          <label>ツールの説明・使い方<textarea name="body" maxlength="100000" placeholder="会員様向けにツールの目的や使い方を入力してください" required></textarea></label>
+          <label>ツールのURL（https:// から入力）
+            <input id="tool-url-input" name="url" type="url" maxlength="2000" placeholder="https://toretamoo.com/tenjiCorp/tools/..." required>
+          </label>
+          <button id="tool-autofill-btn" type="button" class="sub-btn" style="margin-top:0;">URLからタイトル・説明文を自動取得</button>
+          <label>ツール・アプリ名<input id="tool-title-input" name="title" maxlength="200" placeholder="例：メニュー原価・利益率計算ツール" required></label>
+          <label>ツールの説明・使い方<textarea id="tool-body-input" name="body" maxlength="100000" placeholder="会員様向けにツールの目的や使い方を入力してください" required></textarea></label>
           <button id="tools-submit" type="submit">③ AI業務ツールを登録する</button>
           <p id="tools-save-status" class="status" role="status"></p>
         </form>
@@ -410,7 +413,6 @@
         success();
         try { localStorage.setItem('aigon_content_changed', Date.now() + ':' + Math.random()); } catch {}
         message(name + '-save-status', 'サーバーへの反映を確認しました！');
-
       } catch (e) {
         message(name + '-save-status', errorText(e));
       } finally {
@@ -425,6 +427,36 @@
       if (!confirm('「' + String(row.title || '無題') + '」を削除しますか？ この操作は元に戻せません。')) return;
       await write(name, f => f.deleteDoc(f.doc(f.db, name, row.id)), () => {});
     }
+
+    $('tool-autofill-btn').addEventListener('click', async () => {
+      const url = safeURL($('tool-url-input').value.trim());
+      if (!url) {
+        message('tools-save-status', '先に正しいURL（https://...）を入力してください。');
+        return;
+      }
+      const btn = $('tool-autofill-btn');
+      btn.disabled = true;
+      message('tools-save-status', 'ページからタイトルと説明文を取得中...');
+      try {
+        const res = await limit(fetch(url, { cache: 'no-store' }), 10000);
+        if (!res.ok) throw new Error('ページを読み込めませんでした（HTTP ' + res.status + '）');
+        const html = await res.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const title = (doc.querySelector('title')?.textContent || '').trim();
+        const desc = (doc.querySelector('meta[name="description"]')?.getAttribute('content') || '').trim();
+        if (title && !$('tool-title-input').value.trim()) $('tool-title-input').value = title;
+        if (desc && !$('tool-body-input').value.trim()) $('tool-body-input').value = desc;
+        if (title || desc) {
+          message('tools-save-status', '取得しました（空欄だった項目に自動入力しました）。内容を確認して登録してください。');
+        } else {
+          message('tools-save-status', 'HTML内にタイトルや説明文が見つかりませんでした。手入力してください。');
+        }
+      } catch (e) {
+        message('tools-save-status', '自動取得できませんでした（別ドメインの制限など）。手入力で登録してください。');
+      } finally {
+        btn.disabled = false;
+      }
+    });
 
     for (const name of names) {
       const form = $(name + '-form');

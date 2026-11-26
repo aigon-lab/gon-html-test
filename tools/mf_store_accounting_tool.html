@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>店舗向け 現金出納帳・銀行明細・MF連携ツール</title>
+  <meta name="description" content="日々の現金売上・仕入・経費の入力と、銀行通帳CSVの読み込みから、確認用の現金出納帳とマネーフォワード（MFクラウド）にそのまま取り込める複式仕訳CSVを自動作成する小規模店舗・飲食店向け経理サポートツールです。">
+  <style>
+    :root {
+      --bg: #07101f;
+      --panel: #111b33;
+      --panel-2: #172441;
+      --line: #2a3a63;
+      --muted: #93a4bf;
+      --text: #f7fbff;
+      --green: #18c98b;
+      --blue: #58a6ff;
+      --gold: #f6b73c;
+      --red: #ff6b7a;
+      --violet: #a78bfa;
+      --radius: 8px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    }
+
+    html, body, div, header, section, h1, h2, h3, p, span, a, button, table, thead, tbody, tr, th, td, input, select {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.5;
+    }
+
+    .app {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .top-nav {
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      color: #cfe4ff;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .back-link:hover {
+      border-color: var(--blue);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px;
+      background: linear-gradient(135deg, #10203b, #172746);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      margin-bottom: 18px;
+    }
+
+    h1, h2, h3, p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    .sub {
+      color: var(--muted);
+      margin-top: 6px;
+      font-size: 14px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--gold);
+      background: rgba(246, 183, 60, 0.08);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .kpi {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .kpi .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .kpi .value {
+      margin-top: 4px;
+      font-size: 22px;
+      font-weight: 900;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 18px;
+      min-width: 0;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .dropzone {
+      border: 2px dashed #3d82e6;
+      background: rgba(88, 166, 255, 0.08);
+      border-radius: var(--radius);
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 20px;
+    }
+
+    .dropzone.dragover {
+      border-color: var(--gold);
+      background: rgba(246, 183, 60, 0.1);
+    }
+
+    .dropzone strong {
+      color: #cfe4ff;
+      font-size: 16px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: #1b2a4b;
+      color: var(--text);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: var(--font);
+      white-space: nowrap;
+    }
+
+    button.primary {
+      border-color: #2dcf92;
+      background: #0d6b4b;
+      color: #eafff6;
+    }
+
+    button.blue {
+      border-color: #3d82e6;
+      color: #cfe4ff;
+    }
+
+    button.danger {
+      border-color: #7f2d3a;
+      color: #ffdce1;
+    }
+
+    button:focus-visible,
+    input:focus,
+    select:focus {
+      outline: 2px solid var(--blue);
+      outline-offset: 1px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #081123;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      border-bottom: 1px solid rgba(42, 58, 99, 0.75);
+      padding: 10px 11px;
+      text-align: left;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #101a32;
+      color: #bcd0ea;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    td.num {
+      text-align: right;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+
+    input, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #081123;
+      color: var(--text);
+      border-radius: 6px;
+      padding: 8px 9px;
+      font: inherit;
+    }
+
+    .date-input {
+      width: 115px;
+      min-width: 115px;
+    }
+
+    .account-cell {
+      display: grid;
+      grid-template-columns: 165px 135px;
+      gap: 6px;
+      min-width: 306px;
+    }
+
+    .desc-input {
+      min-width: 240px;
+    }
+
+    .amount-input {
+      width: 120px;
+      min-width: 120px;
+      text-align: right;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+
+    .tag {
+      display: inline-flex;
+      padding: 3px 8px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid var(--line);
+    }
+
+    .tag.sales { color: var(--green); border-color: #087b59; background: rgba(24, 201, 139, 0.08); }
+    .tag.purchase { color: var(--gold); border-color: #a26b06; background: rgba(246, 183, 60, 0.08); }
+    .tag.expense { color: var(--blue); border-color: #2f63a9; background: rgba(88, 166, 255, 0.08); }
+    .tag.other { color: var(--violet); border-color: #684ab4; background: rgba(167, 139, 250, 0.08); }
+
+    .status {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 8px;
+      min-height: 20px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      background: #10203b;
+      border: 1px solid var(--line);
+      color: var(--text);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: 0.2s ease;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+      z-index: 20;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 980px) {
+      .app {
+        padding: 12px;
+      }
+      .summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .split {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      header {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="top-nav">
+      <a href="/tenjiCorp/member.html#tool-warehouse" class="back-link">← AI業務ツール倉庫へ戻る</a>
+    </div>
+    <header>
+      <div>
+        <h1>現金出納帳・銀行明細・マネーフォワード連携ツール</h1>
+        <p class="sub">現金は補助簿、銀行は普通預金明細、最終出力はマネーフォワードに渡しやすい複式仕訳CSVです。</p>
+      </div>
+      <span class="badge">飲食店・小規模店舗向け</span>
+    </header>
+
+    <section class="summary">
+      <div class="kpi"><div class="label">現金売上</div><div id="kpiCashSales" class="value">¥0</div></div>
+      <div class="kpi"><div class="label">現金仕入</div><div id="kpiCashPurchases" class="value">¥0</div></div>
+      <div class="kpi"><div class="label">現金経費</div><div id="kpiCashExpenses" class="value">¥0</div></div>
+      <div class="kpi"><div class="label">現金残高</div><div id="kpiCashBalance" class="value">¥0</div></div>
+      <div class="kpi"><div class="label">複式仕訳</div><div id="kpiJournalCount" class="value">0件</div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2 class="panel-title">1. 現金出納帳入力</h2>
+        <span class="badge">補助簿</span>
+      </div>
+      <p class="note">現金売上、現金仕入、現金経費だけを入力します。日付は <strong>20260406</strong> のような8桁入力に対応。Enterで次の欄へ進み、最後の金額欄では新しい行を追加します。</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>日付</th>
+              <th>科目</th>
+              <th>摘要</th>
+              <th>金額</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="cashInputBody"></tbody>
+        </table>
+      </div>
+      <div class="controls">
+        <button id="addCashRowBtn" class="blue" type="button">＋ 現金出納帳の行を追加</button>
+        <button id="sampleCashBtn" type="button">サンプル現金取引</button>
+        <button id="clearCashBtn" class="danger" type="button">現金入力をクリア</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2 class="panel-title">2. 銀行CSV取り込み</h2>
+        <span class="badge">普通預金明細</span>
+      </div>
+      <p class="note">銀行CSV / 通帳明細ファイルだけを読み込みます。銀行明細は現金出納帳には混ぜず、普通預金の複式仕訳に変換します。</p>
+      <div id="bankDropzone" class="dropzone">
+        <strong>銀行CSV / 通帳明細ファイルをここにドロップ</strong>
+        <span>クリックしてファイル選択もできます。Shift-JIS / UTF-8を自動判定します。</span>
+      </div>
+      <input id="bankFileInput" type="file" accept=".csv,.txt,text/csv,text/plain" hidden>
+      <div class="controls">
+        <button id="sampleBankBtn" type="button">サンプル銀行明細</button>
+        <button id="clearBankBtn" class="danger" type="button">銀行明細をクリア</button>
+      </div>
+      <div id="bankStatus" class="status">銀行明細は未読込です。</div>
+    </section>
+
+    <section class="split">
+      <div class="panel">
+        <div class="panel-head">
+          <h2 class="panel-title">3. 確認用 現金出納帳</h2>
+          <button id="downloadCashbookBtn" class="blue" type="button">確認用CSV</button>
+        </div>
+        <p class="note">売上を「入金」と二重表示しません。売上、仕入、経費、その他出金、残高だけを表示します。</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>日付</th>
+                <th>区分</th>
+                <th>摘要</th>
+                <th>売上</th>
+                <th>仕入</th>
+                <th>経費</th>
+                <th>その他出金</th>
+                <th>出金合計</th>
+                <th>残高</th>
+              </tr>
+            </thead>
+            <tbody id="cashbookBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2 class="panel-title">4. 確認用 銀行明細</h2>
+          <span id="bankCountBadge" class="badge">0件</span>
+        </div>
+        <p class="note">普通預金の明細として確認します。現金出納帳とは別管理です。</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>日付</th>
+                <th>区分</th>
+                <th>摘要</th>
+                <th>入金</th>
+                <th>出金</th>
+                <th>推定科目</th>
+              </tr>
+            </thead>
+            <tbody id="bankTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2 class="panel-title">5. 会計ソフト・申告用 複式仕訳</h2>
+        <div class="controls" style="margin:0">
+          <button id="downloadMfJournalBtn" class="primary" type="button">MF仕訳帳CSV</button>
+          <button id="downloadMfCashbookBtn" class="blue" type="button">MF現金出納帳テンプレート用CSV</button>
+        </div>
+      </div>
+      <p class="note">マネーフォワードの本命出力は「MF仕訳帳CSV」です。現金出納帳インポートは公式テンプレートExcel前提のため、右のCSVはテンプレート転記・確認用です。</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>取引日</th>
+              <th>元帳</th>
+              <th>区分</th>
+              <th>借方勘定</th>
+              <th>借方金額</th>
+              <th>貸方勘定</th>
+              <th>貸方金額</th>
+              <th>税区分</th>
+              <th>摘要</th>
+            </tr>
+          </thead>
+          <tbody id="journalBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const accountOptions = [
+      '現金売上',
+      '飲食料品仕入 8%',
+      '酒類等仕入 10%',
+      '消耗品費',
+      '水道光熱費',
+      '地代家賃',
+      '給料手当',
+      '販売促進費',
+      '通信費',
+      '旅費交通費',
+      '修繕費',
+      '衛生管理費',
+      '支払手数料',
+      '会議費',
+      '雑費',
+      '事業主貸'
+    ];
+
+    let bankRows = [];
+    let toastTimer = null;
+
+    const yen = value => `¥${Number(value || 0).toLocaleString()}`;
+    const plainNumber = value => String(Number(value || 0));
+    const esc = value => String(value ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    function normalizeDate(input) {
+      const yearNow = String(new Date().getFullYear());
+      let raw = String(input || '').trim().normalize('NFKC');
+      if (!raw) return `${yearNow}/01/01`;
+      raw = raw.replace(/年|月/g, '/').replace(/日/g, '').replace(/-/g, '/').replace(/\./g, '/').replace(/\s+/g, '');
+
+      let y = yearNow, m = '', d = '';
+      const compact8 = raw.match(/^(\d{4})(\d{2})(\d{2})$/);
+      const compact4 = raw.match(/^(\d{2})(\d{2})$/);
+      const full = raw.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/);
+      const short = raw.match(/^(\d{1,2})\/(\d{1,2})$/);
+
+      if (compact8) {
+        [, y, m, d] = compact8;
+      } else if (compact4) {
+        [, m, d] = compact4;
+      } else if (full) {
+        [, y, m, d] = full;
+      } else if (short) {
+        [, m, d] = short;
+      } else {
+        return raw;
+      }
+
+      const month = parseInt(m, 10);
+      const day = parseInt(d, 10);
+      if (!month || !day || month < 1 || month > 12 || day < 1 || day > 31) return raw;
+      return `${y}/${String(month).padStart(2, '0')}/${String(day).padStart(2, '0')}`;
+    }
+
+    function extractDate(text) {
+      const normalized = String(text || '').normalize('NFKC');
+      const found = normalized.match(/(\d{8}|\d{4}[-/年.]\d{1,2}[-/月.]\d{1,2}(?:日)?|\d{1,2}[-/月.]\d{1,2}(?:日)?)/);
+      return found ? normalizeDate(found[0]) : `${new Date().getFullYear()}/01/01`;
+    }
+
+    function buildAccountSelect(selected = '現金売上') {
+      return `<select class="cash-account-select">${accountOptions.map(option => `<option value="${esc(option)}"${option === selected ? ' selected' : ''}>${esc(option)}</option>`).join('')}</select>`;
+    }
+
+    function addCashRow(values = {}, focus = false) {
+      const body = document.getElementById('cashInputBody');
+      const account = values.account || '現金売上';
+      const selected = accountOptions.includes(account) ? account : '雑費';
+      const custom = accountOptions.includes(account) ? '' : account;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><input class="date-input cash-date" type="text" placeholder="20260406" value="${esc(values.date || '')}"></td>
+        <td>
+          <div class="account-cell">
+            ${buildAccountSelect(selected)}
+            <input class="cash-account-custom" type="text" placeholder="手入力科目" value="${esc(custom)}">
+          </div>
+        </td>
+        <td><input class="desc-input cash-desc" type="text" placeholder="例：ランチ現金売上 / 八百屋 野菜仕入" value="${esc(values.description || '')}"></td>
+        <td><input class="amount-input cash-amount" type="number" placeholder="45000" value="${values.amount || ''}"></td>
+        <td><button class="danger remove-cash-row" type="button">削除</button></td>
+      `;
+      body.appendChild(tr);
+      if (focus) tr.querySelector('input, select').focus();
+    }
+
+    function resolveAccount(rawAccount) {
+      const raw = String(rawAccount || '現金売上').trim() || '現金売上';
+      const n = raw.normalize('NFKC').toUpperCase();
+
+      if (/売上|現金売上|レジ|入金/.test(n)) return { group: 'sales', label: '売上', debit: '現金', credit: '売上高', tax: '課税売上 10%' };
+      if (/飲食料品|軽減|8%|野菜|肉|魚|米|食材|食品|仕入/.test(n) && !/酒|ビール|ワイン|日本酒|焼酎|10%/.test(n)) return { group: 'purchase', label: '仕入(8%)', debit: '仕入高 (飲食料品)', credit: '現金', tax: '軽減税率仕入 8%' };
+      if (/酒|ビール|ワイン|日本酒|焼酎|酒類|アルコール|10%/.test(n)) return { group: 'purchase', label: '仕入(10%)', debit: '仕入高 (酒類等)', credit: '現金', tax: '課税仕入 10%' };
+      if (/事業主貸|私用|生活費/.test(n)) return { group: 'other', label: '事業主貸', debit: '事業主貸', credit: '現金', tax: '対象外' };
+      if (/給料|給与|人件費|アルバイト|バイト/.test(n)) return { group: 'expense', label: '給料手当', debit: '給料手当', credit: '現金', tax: '対象外 (不課税)' };
+
+      const known = ['消耗品費', '水道光熱費', '地代家賃', '販売促進費', '通信費', '旅費交通費', '修繕費', '衛生管理費', '支払手数料', '会議費', '雑費'];
+      const matched = known.find(k => n.includes(k.normalize('NFKC').toUpperCase()));
+      const account = matched || raw;
+      return { group: 'expense', label: account, debit: account, credit: '現金', tax: '課税仕入 10%' };
+    }
+
+    function collectCashRows() {
+      const rows = [...document.querySelectorAll('#cashInputBody tr')];
+      return rows.map((row, index) => {
+        const dateEl = row.querySelector('.cash-date');
+        const amount = Math.abs(parseInt(row.querySelector('.cash-amount').value, 10) || 0);
+        const description = row.querySelector('.cash-desc').value.trim();
+        const custom = row.querySelector('.cash-account-custom').value.trim();
+        const selected = row.querySelector('.cash-account-select').value;
+        if (!amount && !description) return null;
+        if (!amount) return null;
+
+        const date = normalizeDate(dateEl.value);
+        dateEl.value = date;
+        const resolved = resolveAccount(custom || selected);
+
+        return {
+          id: `cash-${index + 1}`,
+          source: '現金',
+          date,
+          description: description || '現金出納帳入力',
+          amount,
+          group: resolved.group,
+          label: resolved.label,
+          debit: resolved.debit,
+          credit: resolved.credit,
+          tax: resolved.tax
+        };
+      }).filter(Boolean);
+    }
+
+    function parseCsvLine(line) {
+      const cells = [];
+      let current = '';
+      let quoted = false;
+      for (let i = 0; i < line.length; i++) {
+        const c = line[i];
+        if (c === '"' && line[i + 1] === '"') {
+          current += '"';
+          i++;
+        } else if (c === '"') {
+          quoted = !quoted;
+        } else if ((c === ',' || c === '\t') && !quoted) {
+          cells.push(current.trim());
+          current = '';
+        } else {
+          current += c;
+        }
+      }
+      cells.push(current.trim());
+      return cells;
+    }
+
+    function parseBankText(text) {
+      return String(text || '').split(/\r?\n/).map((line, index) => {
+        const original = line.trim();
+        if (!original) return null;
+        const normalized = original.normalize('NFKC');
+        if (index === 0 && /(日付|取引日|摘要|残高|お引出し|お預り)/.test(normalized)) return null;
+
+        const cells = normalized.includes(',') || normalized.includes('\t') ? parseCsvLine(normalized) : [];
+        const numbers = normalized.match(/-?[\d,]{2,}/g) || [];
+        let amount = 0;
+        let signed = 0;
+
+        if (cells.length >= 3) {
+          const numericCells = cells.map(cell => cell.replace(/[¥￥円,\s]/g, '')).filter(cell => /^-?\d+$/.test(cell)).map(Number).filter(Boolean);
+          signed = numericCells.find(n => n < 0) || numericCells[numericCells.length - 1] || 0;
+          amount = Math.abs(signed);
+        } else if (numbers.length) {
+          for (let i = numbers.length - 1; i >= 0; i--) {
+            const n = parseInt(numbers[i].replace(/,/g, ''), 10);
+            if (Math.abs(n) > 0 && ![2024, 2025, 2026, 2027].includes(Math.abs(n))) {
+              signed = n;
+              amount = Math.abs(n);
+              break;
+            }
+          }
+        }
+        if (!amount) return null;
+
+        const date = extractDate(normalized);
+        const hasIncomeWord = /(入金|預入|売上|振込入金|受取|\+)/.test(normalized);
+        const hasOutWord = /(出金|引落|振替|振込出金|支払|マイナス|-)/.test(normalized);
+        const isIncome = signed > 0 ? (hasOutWord ? false : true) : (signed < 0 ? false : hasIncomeWord && !hasOutWord);
+        const account = inferBankAccount(normalized, isIncome);
+
+        return {
+          id: `bank-${index + 1}`,
+          source: '普通預金',
+          date,
+          description: normalized.replace(/\s+/g, ' '),
+          amount,
+          isIncome,
+          group: account.group,
+          label: account.label,
+          debit: isIncome ? '普通預金' : account.account,
+          credit: isIncome ? account.account : '普通預金',
+          tax: account.tax
+        };
+      }).filter(Boolean);
+    }
+
+    function inferBankAccount(text, isIncome) {
+      const n = text.normalize('NFKC').toUpperCase();
+      if (isIncome) return { group: 'sales', label: '売上', account: '売上高', tax: '課税売上 10%' };
+      if (/飲食料品|八百屋|青果|精肉|鮮魚|野菜|肉|魚|米|食材|食品|仕入/.test(n) && !/酒|ビール|ワイン|日本酒|焼酎/.test(n)) return { group: 'purchase', label: '仕入(8%)', account: '仕入高 (飲食料品)', tax: '軽減税率仕入 8%' };
+      if (/酒|ビール|ワイン|日本酒|焼酎|酒類|アルコール/.test(n)) return { group: 'purchase', label: '仕入(10%)', account: '仕入高 (酒類等)', tax: '課税仕入 10%' };
+      if (/家賃|テナント|賃料/.test(n)) return { group: 'expense', label: '地代家賃', account: '地代家賃', tax: '課税仕入 10%' };
+      if (/ガス|電気|水道|電力|東京ガス|TEPCO/.test(n)) return { group: 'expense', label: '水道光熱費', account: '水道光熱費', tax: '課税仕入 10%' };
+      if (/給与|給料|アルバイト|バイト/.test(n)) return { group: 'expense', label: '給料手当', account: '給料手当', tax: '対象外 (不課税)' };
+      if (/消耗品|容器|備品|文具|レジロール|アスクル|ASKUL/.test(n)) return { group: 'expense', label: '消耗品費', account: '消耗品費', tax: '課税仕入 10%' };
+      if (/広告|販売促進|食べログ|ぐるなび|ホットペッパー|手数料/.test(n)) return { group: 'expense', label: '販売促進費', account: '販売促進費', tax: '課税仕入 10%' };
+      if (/私用|生活費|温泉|ゴルフ|事業主貸/.test(n)) return { group: 'other', label: '事業主貸', account: '事業主貸', tax: '対象外' };
+      return { group: 'expense', label: '雑費', account: '雑費', tax: '課税仕入 10%' };
+    }
+
+    function getJournalRows() {
+      return [...collectCashRows(), ...bankRows].map((row, i) => ({
+        no: i + 1,
+        date: row.date,
+        source: row.source,
+        label: row.label,
+        group: row.group,
+        debit: row.debit,
+        debitAmount: row.amount,
+        credit: row.credit,
+        creditAmount: row.amount,
+        tax: row.tax,
+        description: row.description
+      }));
+    }
+
+    function tagHtml(group, label) {
+      const cls = group === 'sales' ? 'sales' : group === 'purchase' ? 'purchase' : group === 'expense' ? 'expense' : 'other';
+      return `<span class="tag ${cls}">${esc(label)}</span>`;
+    }
+
+    function renderAll() {
+      renderCashbook();
+      renderBankTable();
+      renderJournal();
+      renderKpis();
+    }
+
+    function renderCashbook() {
+      const body = document.getElementById('cashbookBody');
+      const rows = collectCashRows();
+      let balance = 0;
+      if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:24px">現金出納帳の入力がまだありません。</td></tr>`;
+        return;
+      }
+
+      body.innerHTML = rows.map(row => {
+        const sales = row.group === 'sales' ? row.amount : 0;
+        const purchase = row.group === 'purchase' ? row.amount : 0;
+        const expense = row.group === 'expense' ? row.amount : 0;
+        const other = row.group === 'other' ? row.amount : 0;
+        const out = purchase + expense + other;
+        balance += sales - out;
+        return `<tr>
+          <td>${esc(row.date)}</td>
+          <td>${tagHtml(row.group, row.label)}</td>
+          <td>${esc(row.description)}</td>
+          <td class="num">${sales ? yen(sales) : '-'}</td>
+          <td class="num">${purchase ? yen(purchase) : '-'}</td>
+          <td class="num">${expense ? yen(expense) : '-'}</td>
+          <td class="num">${other ? yen(other) : '-'}</td>
+          <td class="num">${out ? yen(out) : '-'}</td>
+          <td class="num">${yen(balance)}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    function renderBankTable() {
+      const body = document.getElementById('bankTableBody');
+      document.getElementById('bankCountBadge').textContent = `${bankRows.length}件`;
+      if (!bankRows.length) {
+        body.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:24px">銀行明細は未読込です。</td></tr>`;
+        return;
+      }
+      body.innerHTML = bankRows.map(row => `<tr>
+        <td>${esc(row.date)}</td>
+        <td>${tagHtml(row.group, row.label)}</td>
+        <td>${esc(row.description)}</td>
+        <td class="num">${row.isIncome ? yen(row.amount) : '-'}</td>
+        <td class="num">${!row.isIncome ? yen(row.amount) : '-'}</td>
+        <td>${esc(row.isIncome ? row.credit : row.debit)}</td>
+      </tr>`).join('');
+    }
+
+    function renderJournal() {
+      const body = document.getElementById('journalBody');
+      const rows = getJournalRows();
+      if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:24px">複式仕訳はまだありません。</td></tr>`;
+        return;
+      }
+      body.innerHTML = rows.map(row => `<tr>
+        <td>${esc(row.date)}</td>
+        <td>${esc(row.source)}</td>
+        <td>${tagHtml(row.group, row.label)}</td>
+        <td>${esc(row.debit)}</td>
+        <td class="num">${yen(row.debitAmount)}</td>
+        <td>${esc(row.credit)}</td>
+        <td class="num">${yen(row.creditAmount)}</td>
+        <td>${esc(row.tax)}</td>
+        <td>${esc(row.description)}</td>
+      </tr>`).join('');
+    }
+
+    function renderKpis() {
+      const cash = collectCashRows();
+      const sales = cash.filter(r => r.group === 'sales').reduce((sum, r) => sum + r.amount, 0);
+      const purchases = cash.filter(r => r.group === 'purchase').reduce((sum, r) => sum + r.amount, 0);
+      const expenses = cash.filter(r => r.group === 'expense').reduce((sum, r) => sum + r.amount, 0);
+      const other = cash.filter(r => r.group === 'other').reduce((sum, r) => sum + r.amount, 0);
+      document.getElementById('kpiCashSales').textContent = yen(sales);
+      document.getElementById('kpiCashPurchases').textContent = yen(purchases);
+      document.getElementById('kpiCashExpenses').textContent = yen(expenses);
+      document.getElementById('kpiCashBalance').textContent = yen(sales - purchases - expenses - other);
+      document.getElementById('kpiJournalCount').textContent = `${getJournalRows().length}件`;
+    }
+
+    function toCsv(rows) {
+      return rows.map(row => row.map(cell => {
+        const text = String(cell ?? '');
+        return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+      }).join(',')).join('\r\n');
+    }
+
+    function downloadCsv(filename, rows) {
+      const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+      const blob = new Blob([bom, toCsv(rows)], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function todayString() {
+      return new Date().toISOString().slice(0, 10);
+    }
+
+    function downloadCashbook() {
+      const rows = collectCashRows();
+      let balance = 0;
+      const out = [['日付', '区分', '摘要', '売上', '仕入', '経費', 'その他出金', '出金合計', '残高']];
+      rows.forEach(row => {
+        const sales = row.group === 'sales' ? row.amount : 0;
+        const purchase = row.group === 'purchase' ? row.amount : 0;
+        const expense = row.group === 'expense' ? row.amount : 0;
+        const other = row.group === 'other' ? row.amount : 0;
+        const totalOut = purchase + expense + other;
+        balance += sales - totalOut;
+        out.push([row.date, row.label, row.description, sales, purchase, expense, other, totalOut, balance]);
+      });
+      downloadCsv(`確認用_現金出納帳_${todayString()}.csv`, out);
+      showToast('確認用の現金出納帳CSVを出力しました。');
+    }
+
+    function downloadMfCashbookTemplateCsv() {
+      const rows = collectCashRows();
+      const out = [['日付', '相手勘定科目', '摘要', '入金', '出金', '相手税区分', '相手インボイス']];
+      rows.forEach(row => {
+        const isSales = row.group === 'sales';
+        out.push([row.date, isSales ? '売上高' : row.debit, row.description, isSales ? row.amount : '', isSales ? '' : row.amount, row.tax, row.tax.includes('仕入') ? '適格' : '']);
+      });
+      downloadCsv(`MF現金出納帳テンプレート転記用_${todayString()}.csv`, out);
+      showToast('MF現金出納帳テンプレート転記用CSVを出力しました。');
+    }
+
+    function downloadMfJournal() {
+      const rows = getJournalRows();
+      const out = [[
+        '取引No', '取引日', '借方勘定科目', '借方補助科目', '借方部門', '借方取引先', '借方税区分', '借方インボイス', '借方金額(円)', '借方税額',
+        '貸方勘定科目', '貸方補助科目', '貸方部門', '貸方取引先', '貸方税区分', '貸方インボイス', '貸方金額(円)', '貸方税額',
+        '摘要', '仕訳メモ', 'タグ', 'MF仕訳タイプ', '決算整理仕訳', '作成日時', '作成者', '最終更新日時', '最終更新者'
+      ]];
+      rows.forEach(row => {
+        const debitTax = row.debit === '現金' || row.debit === '普通預金' ? '対象外' : row.tax;
+        const creditTax = row.credit === '売上高' ? row.tax : '対象外';
+        out.push([
+          row.no, row.date, row.debit, '', '', '', debitTax, debitTax.includes('仕入') ? '適格' : '', row.debitAmount, '',
+          row.credit, '', '', '', creditTax, '', row.creditAmount, '',
+          row.description, row.source, '', 'インポート', '', '', '', '', ''
+        ]);
+      });
+      downloadCsv(`MF仕訳帳インポート用_${todayString()}.csv`, out);
+      showToast('MF仕訳帳CSVを出力しました。');
+    }
+
+    async function readFile(file) {
+      const buffer = await file.arrayBuffer();
+      try {
+        return new TextDecoder('utf-8', { fatal: true }).decode(buffer);
+      } catch (_) {
+        return new TextDecoder('shift-jis').decode(buffer);
+      }
+    }
+
+    async function handleBankFile(file) {
+      const text = await readFile(file);
+      bankRows = parseBankText(text);
+      document.getElementById('bankStatus').textContent = `${file.name} から ${bankRows.length}件の銀行明細を読み込みました。`;
+      renderAll();
+      showToast('銀行明細を読み込みました。');
+    }
+
+    function setupEvents() {
+      document.getElementById('addCashRowBtn').addEventListener('click', () => addCashRow({}, true));
+      document.getElementById('sampleCashBtn').addEventListener('click', () => {
+        document.getElementById('cashInputBody').innerHTML = '';
+        addCashRow({ date: '20260401', account: '現金売上', description: 'ランチ現金売上', amount: 45200 });
+        addCashRow({ date: '20260402', account: '飲食料品仕入 8%', description: '八百屋 野菜仕入', amount: 18500 });
+        addCashRow({ date: '20260403', account: '消耗品費', description: '文具・レジロール購入', amount: 4200 });
+        renderAll();
+        showToast('サンプル現金取引を入れました。');
+      });
+      document.getElementById('clearCashBtn').addEventListener('click', () => {
+        document.getElementById('cashInputBody').innerHTML = '';
+        addCashRow();
+        renderAll();
+      });
+
+      document.getElementById('cashInputBody').addEventListener('input', renderAll);
+      document.getElementById('cashInputBody').addEventListener('click', e => {
+        if (!e.target.classList.contains('remove-cash-row')) return;
+        const body = document.getElementById('cashInputBody');
+        const row = e.target.closest('tr');
+        if (body.children.length <= 1) {
+          row.querySelectorAll('input').forEach(input => input.value = '');
+          row.querySelector('select').value = '現金売上';
+        } else {
+          row.remove();
+        }
+        renderAll();
+      });
+      document.getElementById('cashInputBody').addEventListener('keydown', e => {
+        if (e.key !== 'Enter' || !e.target.matches('input, select')) return;
+        e.preventDefault();
+        if (e.target.classList.contains('cash-date')) e.target.value = normalizeDate(e.target.value);
+        const row = e.target.closest('tr');
+        const fields = [...row.querySelectorAll('input, select')];
+        const index = fields.indexOf(e.target);
+        const next = fields[index + 1];
+        if (next) {
+          next.focus();
+          if (next.select) next.select();
+        } else {
+          addCashRow({}, true);
+        }
+        renderAll();
+      });
+      document.getElementById('cashInputBody').addEventListener('blur', e => {
+        if (e.target.classList.contains('cash-date')) {
+          e.target.value = normalizeDate(e.target.value);
+          renderAll();
+        }
+      }, true);
+
+      const drop = document.getElementById('bankDropzone');
+      const fileInput = document.getElementById('bankFileInput');
+      drop.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', e => {
+        if (e.target.files[0]) handleBankFile(e.target.files[0]);
+      });
+      ['dragenter', 'dragover'].forEach(name => drop.addEventListener(name, e => {
+        e.preventDefault();
+        drop.classList.add('dragover');
+      }));
+      ['dragleave', 'drop'].forEach(name => drop.addEventListener(name, e => {
+        e.preventDefault();
+        drop.classList.remove('dragover');
+      }));
+      drop.addEventListener('drop', e => {
+        const file = e.dataTransfer.files[0];
+        if (file) handleBankFile(file);
+      });
+
+      document.getElementById('sampleBankBtn').addEventListener('click', () => {
+        bankRows = parseBankText(`2026/04/01 PayPay売上入金 198,400 振込入金
+2026/04/03 東京ガス 厨房ガス代 -21,450 口座引落
+2026/04/04 やまや ビール仕入 -68,400 振込出金
+2026/04/07 店舗テナント家賃 -250,000 口座振替`);
+        document.getElementById('bankStatus').textContent = `サンプル銀行明細 ${bankRows.length}件を読み込みました。`;
+        renderAll();
+      });
+      document.getElementById('clearBankBtn').addEventListener('click', () => {
+        bankRows = [];
+        document.getElementById('bankStatus').textContent = '銀行明細は未読込です。';
+        renderAll();
+      });
+
+      document.getElementById('downloadCashbookBtn').addEventListener('click', downloadCashbook);
+      document.getElementById('downloadMfCashbookBtn').addEventListener('click', downloadMfCashbookTemplateCsv);
+      document.getElementById('downloadMfJournalBtn').addEventListener('click', downloadMfJournal);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      addCashRow();
+      setupEvents();
+      renderAll();
+    });
+  </script>
+</body>
+</html>

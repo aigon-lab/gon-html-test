@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>工具×ワーク材質 適正チェッカー＆切削条件計算機</title>
+  <style>
+    :root {
+      --bg-main: #121820;
+      --bg-card: #1c2430;
+      --bg-input: #0d1218;
+      --border: #324154;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+
+      /* 判定カラー */
+      --status-safe: #22c55e;       /* 推奨：緑 */
+      --status-safe-bg: #052e16;
+      --status-caution: #eab308;    /* 使用可能・注意：黄 */
+      --status-caution-bg: #422006;
+      --status-danger: #ef4444;     /* 危険・非推奨：赤 */
+      --status-danger-bg: #450a0a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text);
+      padding: 12px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header {
+      background: var(--bg-card);
+      padding: 16px 20px;
+      border-radius: 12px;
+      border-left: 6px solid var(--accent);
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sub-title {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--accent);
+    }
+
+    .badge-num {
+      background: var(--accent);
+      color: #000;
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+
+    /* 押しやすいボタングリッド */
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+    }
+
+    .btn-select {
+      background: var(--bg-input);
+      color: var(--text);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+      min-height: 58px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-select span.desc {
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .btn-select.active {
+      border-color: var(--accent);
+      background: #033a56;
+      color: #fff;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+    }
+
+    /* 適正判定エリア */
+    .status-panel {
+      border-radius: 10px;
+      padding: 18px;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .status-panel.推奨 {
+      background: var(--status-safe-bg);
+      border: 2px solid var(--status-safe);
+    }
+    .status-panel.使用可能 {
+      background: var(--status-caution-bg);
+      border: 2px solid var(--status-caution);
+    }
+    .status-panel.危険・非推奨 {
+      background: var(--status-danger-bg);
+      border: 2px solid var(--status-danger);
+    }
+
+    .status-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .status-pill {
+      font-size: 1.25rem;
+      font-weight: 900;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-panel.推奨 .status-pill {
+      background: var(--status-safe);
+      color: #000;
+    }
+    .status-panel.使用可能 .status-pill {
+      background: var(--status-caution);
+      color: #000;
+    }
+    .status-panel.危険・非推奨 .status-pill {
+      background: var(--status-danger);
+      color: #fff;
+    }
+
+    .status-title-tag {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .status-reason {
+      font-size: 0.95rem;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 12px;
+      border-radius: 8px;
+      border-left: 4px solid #fff;
+    }
+
+    .status-panel.推奨 .status-reason { border-left-color: var(--status-safe); }
+    .status-panel.使用可能 .status-reason { border-left-color: var(--status-caution); }
+    .status-panel.危険・非推奨 .status-reason { border-left-color: var(--status-danger); }
+
+    /* 切削条件計算エリア */
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .input-group label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 2px solid var(--border);
+      color: #fff;
+      font-size: 1.25rem;
+      font-weight: 700;
+      padding: 10px 42px 10px 12px;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .input-wrapper input:focus {
+      border-color: var(--accent);
+    }
+
+    .input-unit {
+      position: absolute;
+      right: 12px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      pointer-events: none;
+    }
+
+    /* 計算結果カード */
+    .calc-results {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .result-box {
+      background: #000;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .result-box.highlight {
+      border-color: var(--accent);
+      background: #071e2e;
+    }
+
+    .result-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .result-val {
+      font-size: 1.9rem;
+      font-weight: 900;
+      color: #38bdf8;
+      margin: 4px 0;
+      letter-spacing: -0.5px;
+    }
+
+    .result-box.warn .result-val {
+      color: var(--status-caution);
+    }
+
+    .result-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .formula-note {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 10px;
+      text-align: right;
+    }
+
+    @media (max-width: 500px) {
+      .calc-results {
+        grid-template-columns: 1fr;
+      }
+      .result-val {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- ヘッダー -->
+  <header>
+    <h1>切削加工ツールチェッカー</h1>
+    <div class="sub-title">被削材×工具 相性判定 & 適正回転数・送り速度自動計算</div>
+  </header>
+
+  <!-- STEP 1: 被削材選択 -->
+  <div class="card">
+    <div class="card-title"><span class="badge-num">1</span> ワーク材質（被削材）を選択</div>
+    <div class="btn-grid" id="material-grid"></div>
+  </div>
+
+  <!-- STEP 2: 工具選択 -->
+  <div class="card">
+    <div class="card-title"><span class="badge-num">2</span> 使用工具を選択</div>
+    <div class="btn-grid" id="tool-grid"></div>
+  </div>
+
+  <!-- STEP 3: 適正判定 -->
+  <div class="card">
+    <div class="card-title"><span class="badge-num">3</span> 相性判定＆注意事項</div>
+    <div id="status-panel" class="status-panel">
+      <div class="status-header">
+        <span id="status-pill" class="status-pill">--</span>
+        <span id="status-pair" class="status-title-tag">選択してください</span>
+      </div>
+      <div id="status-reason" class="status-reason"></div>
+    </div>
+  </div>
+
+  <!-- STEP 4: 切削条件計算 -->
+  <div class="card">
+    <div class="card-title"><span class="badge-num">4</span> 切削条件パラメータ計算</div>
+    
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="tool-dia">工具刃径 (D)</label>
+        <div class="input-wrapper">
+          <input type="number" id="tool-dia" value="10" min="0.1" step="0.5" inputmode="decimal">
+          <span class="input-unit">mm</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="tool-flutes">刃数 (Z)</label>
+        <div class="input-wrapper">
+          <input type="number" id="tool-flutes" value="4" min="1" max="12" step="1" inputmode="numeric">
+          <span class="input-unit">枚刃</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="vc-input">切削速度 (Vc)</label>
+        <div class="input-wrapper">
+          <input type="number" id="vc-input" value="100" min="1" step="5" inputmode="decimal">
+          <span class="input-unit">m/min</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="fz-input">1刃送り量 (fz)</label>
+        <div class="input-wrapper">
+          <input type="number" id="fz-input" value="0.05" min="0.001" step="0.01" inputmode="decimal">
+          <span class="input-unit">mm/t</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 計算結果 -->
+    <div class="calc-results">
+      <div class="result-box highlight">
+        <div class="result-label">主軸回転数 (S)</div>
+        <div class="result-val" id="res-rpm">0</div>
+        <div class="result-sub">min⁻¹ (rpm)</div>
+      </div>
+
+      <div class="result-box highlight">
+        <div class="result-label">テーブル送り速度 (F)</div>
+        <div class="result-val" id="res-feed">0</div>
+        <div class="result-sub">mm/min</div>
+      </div>
+    </div>
+    
+    <div class="formula-note">
+      計算式：S = (1000 × Vc) ÷ (π × D) ｜ F = S × Z × fz
+    </div>
+  </div>
+</div>
+
+<script>
+/**
+ * データベース定義
+ */
+const MATERIALS = [
+  { id: 's45c', name: '炭素鋼 S45C', sub: '機械構造用鋼' },
+  { id: 'sus304', name: 'SUS304', sub: 'オーステナイト系' },
+  { id: 'a5052', name: 'アルミ A5052', sub: '非鉄・軽合金' },
+  { id: 'ti6al4v', name: 'チタン合金', sub: '難削材 Ti-6Al-4V' },
+  { id: 'c3604', name: '真鍮 (黄銅)', sub: '快削黄銅 C3604' }
+];
+
+const TOOLS = [
+  { id: 'hss', name: 'ハイス (HSS)', sub: '汎用高速度鋼' },
+  { id: 'carbide', name: '超硬 (ノンコート)', sub: 'K種・超微粒子' },
+  { id: 'carbide_coat', name: 'コーティング超硬', sub: 'TiAlN / AlTiN系' },
+  { id: 'dlc', name: 'DLC超硬', sub: 'ダイヤモンドライク' },
+  { id: 'pcd', name: 'PCD (焼結ダイヤ)', sub: '超高硬度ダイヤ' }
+];
+
+/**
+ * 組み合わせ判定マトリクス
+ * status: '推奨' | '使用可能' | '危険・非推奨'
+ * vc: 標準推奨切削速度 [m/min]
+ * fz: 刃径10mm基準の標準1刃送り量 [mm/t]
+ */
+const MATRIX = {
+  // --- 炭素鋼 S45C ---
+  's45c': {
+    'hss': {
+      status: '使用可能',
+      vc: 30, fz: 0.04,
+      reason: '低速で切削液を十分にかければ加工可能。ただし寿命が短く、高能率加工には不向きです。'
+    },
+    'carbide': {
+      status: '使用可能',
+      vc: 80, fz: 0.05,
+      reason: '切削可能ですが、クレーター摩耗が進みやすいためコーティング超硬の使用を強く推奨します。'
+    },
+    'carbide_coat': {
+      status: '推奨',
+      vc: 140, fz: 0.06,
+      reason: '【ベスト選択】耐熱・耐摩耗性に優れたTiAlN/AlTiN被覆により、高能率かつ安定した加工が可能です。'
+    },
+    'dlc': {
+      status: '危険・非推奨',
+      vc: 60, fz: 0.03,
+      reason: '【摩耗リスク】DLC膜は鉄系材料と高温下で親和・反応摩耗を起こし、急速に膜が剥離・損耗します。'
+    },
+    'pcd': {
+      status: '危険・非推奨',
+      vc: 50, fz: 0.02,
+      reason: '【厳禁・破損リスク】ダイヤモンド中の炭素が鉄中に拡散（化学摩耗）し、刃先が急速に消失・チッピングします。'
+    }
+  },
+
+  // --- ステンレス SUS304 ---
+  'sus304': {
+    'hss': {
+      status: '危険・非推奨',
+      vc: 18, fz: 0.025,
+      reason: '【摩耗・加工硬化】熱伝導が悪く刃先に熱が集中。加工硬化によりハイスでは瞬時に刃先が焼損・摩耗します。'
+    },
+    'carbide': {
+      status: '危険・非推奨',
+      vc: 45, fz: 0.03,
+      reason: '【溶着チッピング】親和性が高く刃先境界部に激しいチッピングや構成刃先が発生しやすいです。'
+    },
+    'carbide_coat': {
+      status: '推奨',
+      vc: 85, fz: 0.04,
+      reason: '【ベスト選択】耐熱AlTiN/Cr系コーティングで溶着を抑制。すくい角のポジ切れ刃タイプが必須です。'
+    },
+    'dlc': {
+      status: '危険・非推奨',
+      vc: 40, fz: 0.03,
+      reason: '【耐熱不足】ステンレスの切削熱によりDLCの耐熱限界を超えやすく、短寿命に終わります。'
+    },
+    'pcd': {
+      status: '危険・非推奨',
+      vc: 40, fz: 0.02,
+      reason: '【厳禁・化学摩耗】主成分の鉄・ニッケルと反応して激しく摩耗するため絶対に使用しないでください。'
+    }
+  },
+
+  // --- アルミ A5052 ---
+  'a5052': {
+    'hss': {
+      status: '危険・非推奨',
+      vc: 50, fz: 0.04,
+      reason: '【溶着リスク極大】刃先やフルートにアルミが激しく溶着し、即座に工具破損（折損）に至る危険があります。'
+    },
+    'carbide': {
+      status: '推奨',
+      vc: 250, fz: 0.08,
+      reason: '【推奨】ノンコート超硬の鏡面仕上げ（アルミ用・2枚刃など）は切れ味が鋭く、良好に排出されます。'
+    },
+    'carbide_coat': {
+      status: '使用可能',
+      vc: 180, fz: 0.06,
+      reason: '【要注意】TiAlNコーティングは皮膜内のAlがワークと親和して溶着を誘発します。アルミ専用コート（DLCやZrN）を選定してください。'
+    },
+    'dlc': {
+      status: '推奨',
+      vc: 350, fz: 0.10,
+      reason: '【ベスト選択】摩擦係数が極めて低く溶着ゼロ。ドライ・MQL加工や鏡面・超高速加工に最適です。'
+    },
+    'pcd': {
+      status: '推奨',
+      vc: 600, fz: 0.12,
+      reason: '【超長寿命・鏡面】アルミとの親和性がなく超高速切削が可能。量産ラインや鏡面仕上げに最適です。'
+    }
+  },
+
+  // --- チタン合金 Ti-6Al-4V ---
+  'ti6al4v': {
+    'hss': {
+      status: '危険・非推奨',
+      vc: 12, fz: 0.02,
+      reason: '【焼損リスク】極めて低い熱伝導率と高強度により刃先温度が急上昇し、ハイスでは一瞬で鈍化・破損します。'
+    },
+    'carbide': {
+      status: '使用可能',
+      vc: 35, fz: 0.03,
+      reason: '微粒子超硬で低速・大送り・高圧クーラント供給下であれば加工可能ですが、摩耗進行が早いです。'
+    },
+    'carbide_coat': {
+      status: '推奨',
+      vc: 55, fz: 0.045,
+      reason: '【ベスト選択】耐酸化性の高い特殊コーティング超硬＋高圧スルークーラントでの加工が現場標準です。'
+    },
+    'dlc': {
+      status: '危険・非推奨',
+      vc: 30, fz: 0.03,
+      reason: '【耐熱破壊】チタン加工特有の800℃以上の切削点温度により、DLC皮膜が黒鉛化して脱落します。'
+    },
+    'pcd': {
+      status: '危険・非推奨',
+      vc: 40, fz: 0.03,
+      reason: '【反応摩耗】超硬よりも熱伝導は良いものの、高温下でチタンと炭素が化学反応して急速摩耗します。'
+    }
+  },
+
+  // --- 真鍮 C3604 ---
+  'c3604': {
+    'hss': {
+      status: '推奨',
+      vc: 80, fz: 0.05,
+      reason: '【適正】快削材のためハイスでも良好に削れます。すくい角を小さく（またはネガ気味に）して喰い込みを防ぎます。'
+    },
+    'carbide': {
+      status: '推奨',
+      vc: 180, fz: 0.08,
+      reason: '【ベスト選択】ノンコートの鋭い切れ刃で高回転・高送り加工が可能です。'
+    },
+    'carbide_coat': {
+      status: '使用可能',
+      vc: 180, fz: 0.08,
+      reason: '加工可能ですが、コーティングによる切れ刃の丸みでビビりやすくなる場合があるため鋭利刃が理想です。'
+    },
+    'dlc': {
+      status: '推奨',
+      vc: 250, fz: 0.09,
+      reason: '【良好】低摩擦ですくい面の滑りが良く、バリの抑制や長寿命化が期待できます。'
+    },
+    'pcd': {
+      status: '推奨',
+      vc: 400, fz: 0.10,
+      reason: '【超長寿命】非鉄金属のため相性抜群。公差維持や連続量産加工において圧倒的な寿命を発揮します。'
+    }
+  }
+};
+
+// 選択状態
+let state = {
+  material: 's45c',
+  tool: 'carbide_coat'
+};
+
+// DOM初期化
+function init() {
+  renderButtons();
+  setupEvents();
+  updateAnalysis(true);
+}
+
+// ボタングリッドの描画
+function renderButtons() {
+  const matGrid = document.getElementById('material-grid');
+  matGrid.innerHTML = MATERIALS.map(m => `
+    <button class="btn-select ${m.id === state.material ? 'active' : ''}" data-type="mat" data-val="${m.id}">
+      ${m.name}
+      <span class="desc">${m.sub}</span>
+    </button>
+  `).join('');
+
+  const toolGrid = document.getElementById('tool-grid');
+  toolGrid.innerHTML = TOOLS.map(t => `
+    <button class="btn-select ${t.id === state.tool ? 'active' : ''}" data-type="tool" data-val="${t.id}">
+      ${t.name}
+      <span class="desc">${t.sub}</span>
+    </button>
+  `).join('');
+}
+
+// イベントリスナー
+function setupEvents() {
+  document.getElementById('material-grid').addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    state.material = btn.dataset.val;
+    updateActiveButtons();
+    updateAnalysis(true); // パラメータも推奨値にリセット
+  });
+
+  document.getElementById('tool-grid').addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    state.tool = btn.dataset.val;
+    updateActiveButtons();
+    updateAnalysis(true);
+  });
+
+  // 計算用入力変更
+  ['tool-dia', 'tool-flutes', 'vc-input', 'fz-input'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      calculateSpeedFeed();
+    });
+  });
+}
+
+function updateActiveButtons() {
+  document.querySelectorAll('#material-grid .btn-select').forEach(b => {
+    b.classList.toggle('active', b.dataset.val === state.material);
+  });
+  document.querySelectorAll('#tool-grid .btn-select').forEach(b => {
+    b.classList.toggle('active', b.dataset.val === state.tool);
+  });
+}
+
+// 判定ロジックと画面更新
+function updateAnalysis(resetParams = false) {
+  const matData = MATERIALS.find(m => m.id === state.material);
+  const toolData = TOOLS.find(t => t.id === state.tool);
+  const result = MATRIX[state.material][state.tool];
+
+  // パネル更新
+  const panel = document.getElementById('status-panel');
+  const pill = document.getElementById('status-pill');
+  const pair = document.getElementById('status-pair');
+  const reason = document.getElementById('status-reason');
+
+  panel.className = `status-panel ${result.status}`;
+  pill.textContent = result.status;
+  pair.textContent = `【${matData.name}】×【${toolData.name}】`;
+  reason.textContent = result.reason;
+
+  // 切削パラメータの推奨値プリセット（刃径比を微調整）
+  if (resetParams) {
+    const dia = parseFloat(document.getElementById('tool-dia').value) || 10;
+    // 刃径に応じたfz微調整 (D10基準比)
+    const diaScale = Math.sqrt(Math.max(dia, 2) / 10);
+    const scaledFz = +(result.fz * diaScale).toFixed(3);
+
+    document.getElementById('vc-input').value = result.vc;
+    document.getElementById('fz-input').value = scaledFz;
+  }
+
+  calculateSpeedFeed();
+}
+
+// 切削計算
+function calculateSpeedFeed() {
+  const dia = parseFloat(document.getElementById('tool-dia').value) || 0;
+  const z = parseInt(document.getElementById('tool-flutes').value, 10) || 0;
+  const vc = parseFloat(document.getElementById('vc-input').value) || 0;
+  const fz = parseFloat(document.getElementById('fz-input').value) || 0;
+
+  const rpmElem = document.getElementById('res-rpm');
+  const feedElem = document.getElementById('res-feed');
+
+  if (dia <= 0 || vc <= 0 || z <= 0 || fz <= 0) {
+    rpmElem.textContent = '---';
+    feedElem.textContent = '---';
+    return;
+  }
+
+  // S = (1000 * Vc) / (π * D)
+  const rpm = Math.round((1000 * vc) / (Math.PI * dia));
+  // F = S * Z * fz
+  const feed = Math.round(rpm * z * fz);
+
+  rpmElem.textContent = rpm.toLocaleString();
+  feedElem.textContent = feed.toLocaleString();
+}
+
+// 起動
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>献立・原価＆カロリー計算</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* iOSでの入力時自動ズームを防ぐフォント設定 */
+    input, select, textarea { font-size: 16px !important; }
+    * { -webkit-tap-highlight-color: transparent; }
+
+    /* 上品なゴールドの枠線と光彩 */
+    .gold-border {
+      border: 1px solid rgba(218, 179, 84, 0.55);
+      box-shadow: 0 4px 20px -2px rgba(218, 179, 84, 0.12);
+    }
+    .gold-border-focus:focus-within {
+      border-color: #f5d47a;
+      box-shadow: 0 0 12px rgba(245, 212, 122, 0.25);
+    }
+
+    /* 豪華なゴールドグラデーションボタン */
+    .btn-gold {
+      background: linear-gradient(135deg, #d4af37 0%, #f7e089 50%, #b8860b 100%);
+      color: #1a202c;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
+    }
+    .btn-gold:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(212, 175, 55, 0.45);
+    }
+    .btn-gold:active {
+      transform: translateY(0);
+      filter: brightness(0.95);
+    }
+
+    /* 数字の装飾用ゴールドテキスト */
+    .text-gold {
+      background: linear-gradient(135deg, #fce092 0%, #d4af37 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  </style>
+</head>
+<body class="bg-[#0e1726] text-slate-100 min-h-screen pb-16">
+
+  <!-- ヘッダー -->
+  <header class="bg-[#142036]/90 backdrop-blur-md border-b border-[#d4af37]/40 px-4 py-3 sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">⚜️</span>
+        <h1 class="text-base md:text-lg font-bold tracking-wide text-slate-100">
+          献立作成・原価＆カロリー計算
+        </h1>
+      </div>
+      <span class="text-[11px] md:text-xs text-[#e0c068] font-medium tracking-wider hidden sm:inline">
+        Cost & Nutrition Calculator
+      </span>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto p-3 md:p-6 space-y-5">
+
+    <!-- 重要サマリー（スマホ: 2×2 / PC: 4列の横並び） -->
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+      <div class="bg-[#17243c] p-3.5 md:p-4 rounded-2xl gold-border text-center">
+        <span class="text-xs text-slate-400 block mb-1">1人前の価格</span>
+        <span id="costPerServing" class="text-2xl md:text-3xl font-extrabold text-gold">¥0</span>
+      </div>
+      <div class="bg-[#17243c] p-3.5 md:p-4 rounded-2xl gold-border text-center">
+        <span class="text-xs text-slate-400 block mb-1">1人前 カロリー</span>
+        <span id="caloriePerServing" class="text-2xl md:text-3xl font-extrabold text-emerald-400">0 kcal</span>
+      </div>
+      <div class="bg-[#17243c] p-3.5 md:p-4 rounded-2xl gold-border text-center">
+        <span class="text-xs text-slate-400 block mb-1">総食材原価</span>
+        <span id="totalCost" class="text-xl md:text-2xl font-bold text-slate-200">¥0</span>
+      </div>
+      <div class="bg-[#17243c] p-3.5 md:p-4 rounded-2xl gold-border text-center">
+        <span class="text-xs text-slate-400 block mb-1">今日の買い足し実費</span>
+        <span id="buyTotal" class="text-xl md:text-2xl font-bold text-rose-400">¥0</span>
+      </div>
+    </section>
+
+    <!-- 基本設定 -->
+    <section class="bg-[#17243c] p-4 md:p-5 rounded-2xl gold-border">
+      <h2 class="text-xs md:text-sm font-bold text-[#e0c068] tracking-wider uppercase mb-3 flex items-center gap-1.5">
+        <span>❖</span> 基本情報
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+        <div class="md:col-span-2">
+          <label class="block text-xs text-slate-400 mb-1">料理名</label>
+          <input id="recipeName" type="text" value="豚肉とキャベツの卵炒め" 
+            class="w-full px-3 py-2 bg-[#0e1726] border border-[#d4af37]/40 rounded-xl outline-none text-slate-100 gold-border-focus transition text-sm">
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">ジャンル / 食事</label>
+          <select id="recipeGenre" class="w-full px-3 py-2 bg-[#0e1726] border border-[#d4af37]/40 rounded-xl outline-none text-slate-100 gold-border-focus transition text-sm">
+            <option>家庭料理</option>
+            <option>日本料理</option>
+            <option>中華料理</option>
+            <option>イタリア料理</option>
+            <option>フランス料理</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">人数</label>
+          <div class="flex items-center gap-2">
+            <input id="servings" type="number" inputmode="numeric" min="1" value="2" 
+              class="w-full px-3 py-2 bg-[#0e1726] border border-[#d4af37]/40 rounded-xl outline-none text-slate-100 gold-border-focus text-center font-bold text-sm" 
+              oninput="calculate()">
+            <span class="text-xs text-slate-300 font-semibold whitespace-nowrap">人前</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- レスポンシブ分割：PCは大画面2カラム、スマホは縦並び -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+
+      <!-- 左カラム: 食材リスト（PC: 幅7/12） -->
+      <section class="lg:col-span-7 space-y-3">
+        <div class="flex justify-between items-center px-1">
+          <h2 class="text-xs md:text-sm font-bold text-[#e0c068] tracking-wider uppercase flex items-center gap-1.5">
+            <span>❖</span> 使用食材リスト
+          </h2>
+          <button onclick="addIngredient()" class="btn-gold px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1 cursor-pointer">
+            <span>＋</span> 食材を追加
+          </button>
+        </div>
+
+        <!-- 食材カード一覧 -->
+        <div id="ingredientList" class="space-y-3">
+          <!-- JSでカードを描画 -->
+        </div>
+
+        <!-- 調味料一括バー -->
+        <div class="bg-[#1b2a47] border border-[#d4af37]/50 rounded-2xl p-3.5 flex justify-between items-center text-xs shadow-sm">
+          <div>
+            <span class="font-bold text-[#f7e089] text-sm block">基本調味料一括</span>
+            <span class="text-slate-400 text-[11px]">40円 × <span id="seasoningPerson" class="text-slate-200 font-bold">2</span>人前</span>
+          </div>
+          <span id="seasoningCost" class="font-extrabold text-base text-gold">¥80</span>
+        </div>
+      </section>
+
+      <!-- 右カラム: 買い物リスト＆作り方メモ（PC: 幅5/12） -->
+      <div class="lg:col-span-5 space-y-4">
+        
+        <!-- 今日の買い足しメモ -->
+        <section class="bg-[#17243c] p-4 md:p-5 rounded-2xl gold-border space-y-3">
+          <div class="flex items-center justify-between border-b border-[#d4af37]/30 pb-2.5">
+            <h3 class="text-xs md:text-sm font-bold text-[#e0c068] tracking-wider uppercase flex items-center gap-1.5">
+              <span>🛒</span> 今日の買い足しメモ
+            </h3>
+            <span class="text-[11px] text-slate-400">買い足しのみ表示</span>
+          </div>
+          <div id="shoppingList" class="space-y-2">
+            <!-- JSで買い足し食材のみ自動抽出 -->
+          </div>
+        </section>
+
+        <!-- 作り方手順 -->
+        <section class="bg-[#17243c] p-4 md:p-5 rounded-2xl gold-border space-y-2">
+          <h3 class="text-xs md:text-sm font-bold text-[#e0c068] tracking-wider uppercase flex items-center gap-1.5 mb-2">
+            <span>🍳</span> 作り方・調理メモ
+          </h3>
+          <textarea rows="6" 
+            class="w-full bg-[#0e1726] border border-[#d4af37]/40 rounded-xl p-3 text-sm text-slate-200 outline-none gold-border-focus leading-relaxed" 
+            placeholder="1. 下ごしらえ&#10;・野菜を食べやすい大きさに切る&#10;・肉に軽く下味をつける&#10;&#10;2. 加熱・調理&#10;・卵を先に強火で半熟にして取り出す&#10;・肉と野菜をサッと強火で炒める&#10;&#10;3. 仕上げ&#10;・調味料を絡め、最後に卵を戻し入れる"></textarea>
+        </section>
+
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    let ingredients = [
+      { name: "豚こま切れ肉", type: "手持ち", pricePer100g: 130, amount: 200, calPer100g: 235 },
+      { name: "キャベツ", type: "手持ち", pricePer100g: 20, amount: 250, calPer100g: 23 },
+      { name: "卵", type: "手持ち", pricePer100g: 45, amount: 100, calPer100g: 142 }
+    ];
+
+    function renderList() {
+      const container = document.getElementById("ingredientList");
+      container.innerHTML = "";
+
+      ingredients.forEach((item, index) => {
+        const cost = Math.round((item.pricePer100g / 100) * (item.amount || 0));
+        const card = document.createElement("div");
+        card.className = "bg-[#17243c] p-3.5 rounded-2xl gold-border space-y-2.5 transition";
+        
+        card.innerHTML = `
+          <div class="flex items-center gap-2">
+            <input type="text" value="${item.name}" placeholder="食材名を入力" 
+              class="flex-1 font-bold text-slate-100 bg-transparent border-b border-dashed border-[#d4af37]/40 focus:border-[#f5d47a] outline-none pb-0.5 text-sm" 
+              oninput="updateItem(${index}, 'name', this.value)">
+            
+            <select class="text-xs px-2.5 py-1.5 rounded-lg border font-bold outline-none cursor-pointer ${
+              item.type === '買い足し' 
+                ? 'bg-rose-950/70 text-rose-300 border-rose-500/60' 
+                : 'bg-emerald-950/70 text-emerald-300 border-emerald-500/60'
+            }" onchange="updateItem(${index}, 'type', this.value)">
+              <option value="手持ち" class="bg-[#17243c] text-emerald-300" ${item.type === '手持ち' ? 'selected' : ''}>手持ち</option>
+              <option value="買い足し" class="bg-[#17243c] text-rose-300" ${item.type === '買い足し' ? 'selected' : ''}>買い足し</option>
+            </select>
+
+            <button onclick="removeItem(${index})" title="削除" class="text-slate-400 hover:text-rose-400 px-1 text-lg active:scale-90 transition">✕</button>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 text-xs">
+            <div class="bg-[#0e1726] p-2 rounded-xl border border-[#d4af37]/30">
+              <label class="text-[10px] text-slate-400 block mb-0.5">100g単価</label>
+              <div class="flex items-center">
+                <input type="number" inputmode="numeric" min="0" value="${item.pricePer100g}" 
+                  class="w-full bg-transparent font-bold outline-none text-slate-100" 
+                  oninput="updateItem(${index}, 'pricePer100g', Number(this.value))">
+                <span class="text-slate-400 text-[10px]">円</span>
+              </div>
+            </div>
+
+            <div class="bg-[#0e1726] p-2 rounded-xl border border-[#d4af37]/30">
+              <label class="text-[10px] text-slate-400 block mb-0.5">使用量</label>
+              <div class="flex items-center">
+                <input type="number" inputmode="numeric" min="0" value="${item.amount}" 
+                  class="w-full bg-transparent font-bold outline-none text-slate-100" 
+                  oninput="updateItem(${index}, 'amount', Number(this.value))">
+                <span class="text-slate-400 text-[10px]">g</span>
+              </div>
+            </div>
+
+            <div class="bg-[#0e1726] p-2 rounded-xl border border-[#d4af37]/30">
+              <label class="text-[10px] text-slate-400 block mb-0.5">小計</label>
+              <div class="font-extrabold text-[#f7e089] pt-0.5">¥${cost.toLocaleString()}</div>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      calculate();
+    }
+
+    function updateItem(index, key, value) {
+      ingredients[index][key] = value;
+      if (key === 'type') {
+        renderList();
+      } else {
+        calculate();
+        const costEl = document.querySelectorAll("#ingredientList > div")[index]?.querySelectorAll(".font-extrabold")[0];
+        if (costEl) {
+          const item = ingredients[index];
+          const cost = Math.round((item.pricePer100g / 100) * (item.amount || 0));
+          costEl.textContent = `¥${cost.toLocaleString()}`;
+        }
+      }
+    }
+
+    function addIngredient() {
+      ingredients.push({ name: "", type: "買い足し", pricePer100g: 100, amount: 100, calPer100g: 100 });
+      renderList();
+    }
+
+    function removeItem(index) {
+      ingredients.splice(index, 1);
+      renderList();
+    }
+
+    function calculate() {
+      const servings = Math.max(1, Number(document.getElementById("servings").value) || 1);
+      document.getElementById("seasoningPerson").textContent = servings;
+      const seasoningCost = 40 * servings;
+      document.getElementById("seasoningCost").textContent = `¥${seasoningCost.toLocaleString()}`;
+
+      let totalIngredientCost = 0;
+      let buyCost = 0;
+      let totalCalories = 0;
+      const shoppingList = [];
+
+      ingredients.forEach(item => {
+        const cost = (item.pricePer100g / 100) * (item.amount || 0);
+        const cal = (item.calPer100g / 100) * (item.amount || 0);
+
+        totalIngredientCost += cost;
+        totalCalories += cal;
+
+        if (item.type === "買い足し") {
+          buyCost += cost;
+          shoppingList.push(`${item.name || "名称未定"}（約${item.amount}g）`);
+        }
+      });
+
+      // 調味料分カロリー（大さじ油等で1人あたり約80kcalと概算）
+      totalCalories += (80 * servings);
+
+      const grandTotalCost = Math.round(totalIngredientCost + seasoningCost);
+      const perServingCost = Math.round(grandTotalCost / servings);
+      const perServingCal = Math.round(totalCalories / servings);
+
+      document.getElementById("totalCost").textContent = `¥${grandTotalCost.toLocaleString()}`;
+      document.getElementById("costPerServing").textContent = `¥${perServingCost.toLocaleString()}`;
+      document.getElementById("buyTotal").textContent = `¥${Math.round(buyCost).toLocaleString()}`;
+      document.getElementById("caloriePerServing").textContent = `${perServingCal} kcal`;
+
+      // 買い物リストの更新
+      const listEl = document.getElementById("shoppingList");
+      if (shoppingList.length === 0) {
+        listEl.innerHTML = `
+          <div class="text-xs text-emerald-400 bg-emerald-950/40 border border-emerald-500/40 p-3 rounded-xl flex items-center gap-2">
+            <span>✨</span>
+            <span>買い足し食材はありません（手持ちのみでOK）</span>
+          </div>`;
+      } else {
+        listEl.innerHTML = shoppingList.map(item => `
+          <label class="flex items-center gap-2.5 text-xs text-slate-200 bg-[#0e1726] border border-[#d4af37]/30 p-2.5 rounded-xl cursor-pointer hover:border-[#d4af37]/70 transition">
+            <input type="checkbox" class="w-4 h-4 rounded accent-[#d4af37]">
+            <span class="font-medium">${item}</span>
+          </label>
+        `).join("");
+      }
+    }
+
+    renderList();
+  </script>
+</body>
+</html>
